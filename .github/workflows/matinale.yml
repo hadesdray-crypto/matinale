@@ -1,0 +1,68 @@
+# Matinale des Sciences : prépare l'édition chaque matin et publie le site sur GitHub Pages.
+# Se lance tout seul chaque matin, dès qu'un fichier .zip est envoyé à la racine du dépôt,
+# ou à la main : onglet Actions > Matinale des Sciences > Run workflow.
+name: Matinale des Sciences
+
+on:
+  schedule:
+    - cron: "17 3 * * *"   # 3 h 17 UTC, soit 5 h 17 à Paris en été et 4 h 17 en hiver
+  workflow_dispatch:
+  push:
+    paths:
+      - "*.zip"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: matinale
+  cancel-in-progress: false
+
+jobs:
+  edition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Installer le paquet envoyé (fichier .zip)
+        run: |
+          for z in *.zip; do
+            [ -f "$z" ] || continue
+            echo "Installation de $z"
+            if [ -f site/data/latest.json ]; then
+              unzip -o -q "$z" -x '.github/*' 'site/data/*' 'site/audio/*'
+            else
+              unzip -o -q "$z" -x '.github/*'
+            fi
+            git rm -q --cached "$z" 2>/dev/null || true
+            rm -f "$z"
+          done
+          test -f scripts/run.sh || { echo "::error::Le paquet est absent : envoie le fichier matinale.zip à la racine du dépôt."; exit 1; }
+
+      - name: Garder les outils audio d'un jour sur l'autre
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/matinale-outils
+          key: matinale-voix-sherpa-v1.12.14-siwis
+
+      - name: Préparer l'édition du jour, l'audio et l'archive
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: bash scripts/run.sh
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  publication:
+    needs: edition
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

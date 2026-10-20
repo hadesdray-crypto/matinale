@@ -1,0 +1,1814 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#123A70" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E2A54" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Matinale">
+<style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Matinale des Sciences</title>
+<meta name="description" content="Les nouvelles découvertes scientifiques chaque matin : vidéos, résumés, niveaux de preuve, sources et podcast.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,600;0,700;1,400&family=Syne:wght@600;700;800&display=swap">
+<style>
+/* Layout : appli de lecture « mobile d'abord ». Bandeau cyanotype daté en tête, fil de fiches où la vidéo passe avant le texte,
+   jauge de preuve à 4 niveaux sur chaque fiche, lecteur audio persistant, onglets en bas (mobile) ou en haut (écran large). */
+:root{
+  --paper:#F2F5F9; --card:#FFFFFF; --ink:#0E1A2C; --ink-2:#425069; --ink-3:#5A6780; --rule:#D7DEE8;
+  --accent:#1B4A8A; --accent-ink:#163F78; --accent-soft:#E2EAF6; --on-accent:#FFFFFF;
+  --band:#123A70; --band-2:#1D4C8B; --band-ink:#F3F7FD; --band-ink-2:#BED1EE;
+  --screen:#0D2240; --screen-2:#1C3F72; --screen-ink:#F2F6FC; --screen-ink-2:#A9BFDF;
+  --l4:#1D6E46; --l4-soft:#DFF0E6; --l3:#136870; --l3-soft:#DCEFF0; --l2:#955500; --l2-soft:#FAEDD4; --l1:#6A47A3; --l1-soft:#ECE5F7; --l0:#4A5568; --l0-soft:#E8ECF2;
+  --warn:#8F3A1C; --warn-soft:#FAE8E0;
+  --scrim:rgba(9,18,32,.5);
+  --shadow:0 1px 2px rgba(14,26,44,.06),0 10px 28px rgba(14,26,44,.10);
+  --display:"Syne","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --serif:"Spectral","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --mono:"DM Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#09121F; --card:#0F1B2D; --ink:#E6ECF5; --ink-2:#AAB7CB; --ink-3:#8794AB; --rule:#213149;
+  --accent:#86B6F2; --accent-ink:#A3C7F6; --accent-soft:#15294A; --on-accent:#08121F;
+  --band:#0E2A54; --band-2:#1A3E74; --band-ink:#EEF4FC; --band-ink-2:#A9C2E8;
+  --screen:#061428; --screen-2:#153360; --screen-ink:#EEF3FB; --screen-ink-2:#9DB4D8;
+  --l4:#63C995; --l4-soft:#10301F; --l3:#58C3CB; --l3-soft:#0E2E32; --l2:#F2AA45; --l2-soft:#33240D; --l1:#B79BEB; --l1-soft:#261B3C; --l0:#B4BFD0; --l0-soft:#1B2638;
+  --warn:#F2957A; --warn-soft:#3A1D13;
+  --scrim:rgba(0,0,0,.62);
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 12px 32px rgba(0,0,0,.42);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#09121F; --card:#0F1B2D; --ink:#E6ECF5; --ink-2:#AAB7CB; --ink-3:#8794AB; --rule:#213149;
+  --accent:#86B6F2; --accent-ink:#A3C7F6; --accent-soft:#15294A; --on-accent:#08121F;
+  --band:#0E2A54; --band-2:#1A3E74; --band-ink:#EEF4FC; --band-ink-2:#A9C2E8;
+  --screen:#061428; --screen-2:#153360; --screen-ink:#EEF3FB; --screen-ink-2:#9DB4D8;
+  --l4:#63C995; --l4-soft:#10301F; --l3:#58C3CB; --l3-soft:#0E2E32; --l2:#F2AA45; --l2-soft:#33240D; --l1:#B79BEB; --l1-soft:#261B3C; --l0:#B4BFD0; --l0-soft:#1B2638;
+  --warn:#F2957A; --warn-soft:#3A1D13;
+  --scrim:rgba(0,0,0,.62);
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 12px 32px rgba(0,0,0,.42);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html.locked,html.locked body{overflow:hidden}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--paper)}
+a{color:var(--accent-ink)}
+button{font:inherit;color:inherit}
+.ic{flex:none;display:block}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:6px}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.muted{color:var(--ink-3)}
+.small{font-size:14px}
+
+/* En-tête */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--paper);border-bottom:1px solid var(--rule)}
+.topbar-in{display:flex;align-items:center;gap:12px;min-height:60px;padding-block:9px}
+.brand{display:inline-flex;align-items:center;gap:10px;min-width:0;text-decoration:none;color:var(--ink)}
+.brand-mark{width:32px;height:32px;flex:none;color:var(--accent)}
+.brand-name{display:flex;flex-direction:column;line-height:1;font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.01em}
+.brand-sub{margin-top:4px;font-weight:600;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.top-nav{display:none;gap:2px;margin-left:auto}
+.top-nav button{background:none;border:0;padding:9px 12px;border-radius:10px;font-family:var(--display);font-weight:600;font-size:14px;color:var(--ink-2);cursor:pointer}
+.top-nav button:hover{background:var(--accent-soft);color:var(--accent-ink)}
+.top-nav button[aria-current="page"]{background:var(--accent-soft);color:var(--accent-ink)}
+.top-actions{margin-left:auto;display:flex;gap:8px}
+.edpill{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 12px;border-radius:999px;border:1px solid var(--rule);background:var(--card);color:var(--ink-2);font-family:var(--mono);font-size:12.5px;white-space:nowrap;cursor:pointer}
+.edpill:hover{border-color:var(--accent);color:var(--accent-ink)}
+@media (min-width:1000px){.top-nav{display:flex}.top-actions{margin-left:6px}.tabbar{display:none!important}}
+.hdr-fav[aria-current="page"]{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft)}
+.brand{flex:none}
+.top-actions{min-width:0;flex-shrink:1}
+.edpill{min-width:0;overflow:hidden}
+.edpill>span{overflow:hidden;text-overflow:ellipsis}
+@media (max-width:540px){.ed-n{display:none}}
+
+/* Onglets (mobile) */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);background:var(--card);border-top:1px solid var(--rule);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px))}
+.tabbar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;min-height:58px;padding:6px 1px;background:none;border:0;font-family:var(--display);font-weight:600;font-size:11px;color:var(--ink-3);cursor:pointer}
+.tabbar{grid-template-columns:1.05fr .8fr 1.3fr .85fr 1fr}
+.tabbar button span{white-space:nowrap}
+@media (max-width:380px){.tabbar button{font-size:10px}}
+.tabbar button[aria-current="page"]{color:var(--accent-ink)}
+.tabbar button[aria-current="page"] .ic{stroke-width:2.3}
+main{padding-bottom:calc(74px + env(safe-area-inset-bottom,0px))}
+body.has-mini main{padding-bottom:calc(144px + env(safe-area-inset-bottom,0px))}
+@media (min-width:1000px){main{padding-bottom:48px}body.has-mini main{padding-bottom:112px}}
+
+/* Bandeau de l'édition */
+.masthead{position:relative;overflow:hidden;isolation:isolate;background:var(--band);color:var(--band-ink)}
+.masthead::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.6;background:repeating-radial-gradient(circle at 96% -14%,transparent 0 30px,var(--band-2) 30px 31.5px);-webkit-mask-image:linear-gradient(to left,#000,transparent 72%);mask-image:linear-gradient(to left,#000,transparent 72%)}
+.mh-in{position:relative;z-index:1;padding-block:24px 28px}
+.mh-kicker{margin:0;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--band-ink-2)}
+.mh-date{display:flex;align-items:flex-end;gap:14px;margin:10px 0 16px;font-weight:inherit;font-size:inherit}
+.mh-day{font-family:var(--display);font-weight:800;font-size:clamp(78px,19vw,138px);line-height:.8;letter-spacing:-.05em}
+.mh-rest{display:flex;flex-direction:column;gap:5px;padding-bottom:4px;font-family:var(--display);font-weight:700;font-size:clamp(20px,5vw,30px);line-height:1}
+.mh-wd{font-weight:600;color:var(--band-ink-2);text-transform:capitalize}
+.mh-title{margin:0 0 10px;max-width:32ch;font-family:var(--display);font-weight:700;font-size:clamp(20px,4.8vw,27px);line-height:1.2;letter-spacing:-.01em;text-wrap:balance}
+.mh-intro{margin:0 0 16px;max-width:64ch;font-size:17px;line-height:1.55;color:var(--band-ink)}
+.mh-stats{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0;padding:0;list-style:none;font-family:var(--mono);font-size:12.5px;color:var(--band-ink-2)}
+.mh-stats b{font-weight:500;color:var(--band-ink)}
+.mh-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.btn-band{display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 16px;border-radius:12px;border:1px solid var(--band-ink);background:var(--band-ink);color:var(--band);font-family:var(--display);font-weight:700;font-size:15px;cursor:pointer}
+.btn-band.ghost{background:transparent;color:var(--band-ink);border-color:var(--band-ink-2)}
+.btn-band:hover{border-color:var(--band-ink)}
+.oldbar{position:relative;z-index:2;background:var(--band-2)}
+.oldbar-in{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding-block:8px;font-family:var(--display);font-weight:600;font-size:13.5px}
+.skel{opacity:.35}
+
+/* Sections */
+.section{padding-block:30px 6px;scroll-margin-top:68px}
+.sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 14px;margin-bottom:14px}
+.sec-title{margin:0;font-family:var(--display);font-weight:700;font-size:23px;letter-spacing:-.015em;text-wrap:balance}
+.sec-sub{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.sub-h{margin:26px 0 10px;font-family:var(--display);font-weight:700;font-size:16px}
+.sub-h.small{margin:16px 0 8px;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.lede{margin:0 0 16px;max-width:68ch;color:var(--ink-2)}
+.kicker{margin:0 0 6px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink)}
+
+/* Boutons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:0 14px;border-radius:12px;border:1px solid var(--rule);background:var(--card);color:var(--ink);font-family:var(--display);font-weight:600;font-size:14px;line-height:1;white-space:nowrap;text-decoration:none;cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{min-height:38px;padding:0 12px;border-radius:10px;font-size:13.5px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{color:var(--on-accent)}
+.btn.ghost{background:transparent}
+.iconbtn{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--rule);background:var(--card);color:var(--ink-2);cursor:pointer}
+.iconbtn:hover{border-color:var(--accent);color:var(--accent-ink)}
+.iconbtn.lg{width:52px;height:52px;border-radius:16px}
+.fav[aria-pressed="true"]{color:var(--l2);border-color:var(--l2)}
+.fav[aria-pressed="true"] .ic path{fill:currentColor}
+.linklike{all:unset;cursor:pointer}
+.linklike:hover{color:var(--accent-ink)}
+.linklike:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+/* Filtres */
+.filters{display:grid;gap:10px;margin-bottom:16px}
+.chips{display:flex;gap:8px;overflow-x:auto;margin:0 -2px;padding:2px 2px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chips.wrapchips{flex-wrap:wrap;overflow:visible}
+.chip{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--rule);background:var(--card);color:var(--ink-2);font-family:var(--display);font-weight:600;font-size:13px;white-space:nowrap;text-decoration:none;cursor:pointer}
+.chip:hover{border-color:var(--accent);color:var(--accent-ink)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chip:disabled{opacity:.45;cursor:default}
+.chip.sm{min-height:32px;padding:0 10px}
+.chip.ghost{background:transparent}
+.chip-n{font-family:var(--mono);font-weight:500;font-size:11.5px;opacity:.8}
+.lvchip.lv4[aria-pressed="true"]{background:var(--l4);border-color:var(--l4);color:var(--card)}
+.lvchip.lv3[aria-pressed="true"]{background:var(--l3);border-color:var(--l3);color:var(--card)}
+.lvchip.lv2[aria-pressed="true"]{background:var(--l2);border-color:var(--l2);color:var(--card)}
+.lvchip.lv1[aria-pressed="true"]{background:var(--l1);border-color:var(--l1);color:var(--card)}
+.search{display:flex;align-items:center;gap:8px;max-width:520px;height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--rule);background:var(--card);color:var(--ink-3)}
+.search:focus-within{border-color:var(--accent)}
+.search input{flex:1;min-width:0;border:0;outline:none;background:transparent;color:var(--ink);font-family:var(--serif);font-size:16px}
+
+/* Jauge de preuve */
+.ev{display:inline-flex;align-items:center;gap:7px;padding:4px 10px 4px 8px;border-radius:999px;font-family:var(--display);font-weight:700;font-size:12.5px;line-height:1.2;white-space:nowrap}
+.ev.big{padding:6px 12px 6px 10px;font-size:14px}
+.bars{display:inline-flex;align-items:flex-end;gap:2px;height:13px}
+.bars i{display:block;width:3.5px;border-radius:1px;background:currentColor;opacity:.25}
+.bars i:nth-child(1){height:4px}.bars i:nth-child(2){height:7px}.bars i:nth-child(3){height:10px}.bars i:nth-child(4){height:13px}
+.bars i.on{opacity:1}
+.lv4{color:var(--l4);background:var(--l4-soft)}
+.lv3{color:var(--l3);background:var(--l3-soft)}
+.lv2{color:var(--l2);background:var(--l2-soft)}
+.lv1{color:var(--l1);background:var(--l1-soft)}
+.lv0{color:var(--l0);background:var(--l0-soft)}
+.ev-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.ev-type{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%}
+.dot.lv4{background:var(--l4)}.dot.lv3{background:var(--l3)}.dot.lv2{background:var(--l2)}.dot.lv1{background:var(--l1)}.dot.lv0{background:var(--l0)}
+
+/* Fiches du fil */
+.feed{display:grid;grid-template-columns:1fr;gap:14px}
+@media (min-width:820px){.feed{grid-template-columns:1fr 1fr}}
+.card{display:flex;flex-direction:column;min-width:0;overflow:hidden;background:var(--card);border:1px solid var(--rule);border-radius:18px}
+.card-media{display:grid;gap:8px;padding:10px 10px 0}
+.more-v{justify-self:start;display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border:0;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-family:var(--display);font-weight:600;font-size:12.5px;cursor:pointer}
+.novid{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:10px 10px 0;padding:9px 12px;border-radius:12px;background:var(--paper);color:var(--ink-3);font-family:var(--display);font-weight:600;font-size:12.5px}
+.novid a{margin-left:auto;display:inline-flex;align-items:center;gap:4px;color:var(--accent-ink);text-decoration:none}
+.card-body{display:grid;gap:9px;min-width:0;padding:14px 16px 16px}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.cat-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--display);font-weight:700;font-size:12.5px;letter-spacing:.02em;color:var(--accent-ink)}
+.new{padding:1px 6px;border:1px solid var(--accent);border-radius:6px;font-family:var(--display);font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink)}
+.card-title{margin:0;font-family:var(--serif);font-weight:700;font-size:20.5px;line-height:1.22;letter-spacing:-.005em;text-wrap:balance}
+.dek{margin:0;font-size:16px;line-height:1.5;color:var(--ink-2)}
+.card-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:4px}
+.card-actions .fav{margin-left:auto}
+.empty{grid-column:1/-1;display:grid;justify-items:center;gap:8px;padding:28px 16px;text-align:center;border:1px dashed var(--rule);border-radius:16px;color:var(--ink-2)}
+.empty p{margin:0}
+
+/* Vidéos */
+.vt{display:flex;flex-direction:column;min-width:0;overflow:hidden;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:14px}
+.vt:hover{border-color:var(--accent)}
+.vt:hover .vt-play{transform:scale(1.06)}
+.vt-screen{position:relative;display:grid;place-items:center;aspect-ratio:16/9;max-width:100%;overflow:hidden;color:var(--screen-ink);background:radial-gradient(130% 100% at 18% 0%,var(--screen-2),var(--screen) 72%)}
+.vt-screen::before{content:"";position:absolute;inset:0;opacity:.28;background:repeating-linear-gradient(0deg,transparent 0 3px,var(--screen-2) 3px 4px)}
+.vt-play{position:relative;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:var(--screen-ink);color:var(--screen);transition:transform .15s ease}
+.vt-play .ic{transform:translateX(2px)}
+.vt-badges{position:absolute;left:10px;top:10px;right:10px;display:flex;flex-wrap:wrap;gap:6px}
+.vb{padding:4px 7px;border:1px solid var(--screen-ink-2);border-radius:6px;font-family:var(--mono);font-size:11px;line-height:1;color:var(--screen-ink)}
+.vt-body{display:grid;gap:4px;min-width:0;padding:10px 12px 12px}
+.vt-kind{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.vt-kind.k-officielle{color:var(--l4)}
+.vt-kind.k-tierce{color:var(--l2)}
+.vt-title{font-family:var(--serif);font-weight:600;font-size:15.5px;line-height:1.3;overflow-wrap:anywhere}
+.vt-note{font-size:13.5px;line-height:1.4;color:var(--ink-3)}
+.vt.row{flex-direction:row;align-items:stretch;border-radius:12px}
+.vt.row .vt-screen{flex:none;width:36%;max-width:168px;min-height:88px;aspect-ratio:auto}
+.vt.row .vt-play{width:38px;height:38px}
+.vt.row .vt-badges{left:6px;top:6px;right:6px}
+.vt.row .vt-badges .vb+.vb{display:none}
+.vt.row .vt-body{align-content:center;padding:8px 12px}
+.vt.row .vt-title{font-size:14.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.vt.row .vt-note{display:none}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.vsearch{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;font-family:var(--display);font-weight:600;font-size:13px;color:var(--ink-3)}
+
+/* À la une */
+.topcard{display:grid;grid-template-columns:1fr;overflow:hidden;background:var(--card);border:1px solid var(--rule);border-radius:20px}
+.top-media{padding:12px 12px 0}
+.top-media .vt{border:0;background:transparent}
+.top-media .vt-screen{border-radius:12px}
+.top-media .vt-play{width:74px;height:74px}
+.top-media .vt-body{padding:10px 4px 0}
+.top-body{display:grid;gap:10px;min-width:0;padding:16px 18px 18px}
+.top-title{margin:0;font-family:var(--serif);font-weight:700;font-size:clamp(24px,5.4vw,32px);line-height:1.15;text-wrap:balance}
+@media (min-width:900px){.topcard{grid-template-columns:1.15fr 1fr}.top-media{padding:14px}.top-body{align-content:center;padding:22px 24px 22px 8px}}
+
+/* Résumé par catégorie */
+.catgrid{display:grid;grid-template-columns:1fr;gap:10px}
+@media (min-width:640px){.catgrid{grid-template-columns:1fr 1fr}}
+@media (min-width:1080px){.catgrid{grid-template-columns:repeat(4,1fr)}}
+.catcard{display:grid;align-content:start;gap:8px;min-width:0;padding:14px 16px;text-align:left;border-radius:16px;border:1px solid var(--rule);background:var(--card);color:var(--ink);cursor:pointer}
+.catcard:hover{border-color:var(--accent)}
+.cc-head{display:flex;align-items:center;gap:8px;color:var(--accent-ink)}
+.cc-label{font-family:var(--display);font-weight:700;font-size:15px;color:var(--ink)}
+.cc-count{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.cc-sum{font-size:15px;line-height:1.5;color:var(--ink-2)}
+.cc-dots{display:flex;gap:5px}
+
+/* Concept, agenda, méthode */
+.concept,.method{padding:20px 18px;border-radius:20px;border:1px solid var(--rule);background:var(--card)}
+.concept-title{margin:0 0 12px;font-family:var(--display);font-weight:700;font-size:clamp(22px,4.6vw,28px);line-height:1.15;letter-spacing:-.015em;text-wrap:balance}
+.concept-grid{display:grid;gap:18px}
+@media (min-width:900px){.concept-grid{grid-template-columns:1.4fr 1fr;align-items:start}}
+.concept-text p{margin:0 0 12px;max-width:66ch}
+.concept-media{display:grid;gap:12px}
+.agenda{margin:0;padding:0;list-style:none;border-top:1px solid var(--rule)}
+.agenda li{display:grid;grid-template-columns:minmax(96px,auto) 1fr auto;align-items:start;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule)}
+.ag-date{padding-top:3px;font-family:var(--mono);font-size:12.5px;color:var(--accent-ink)}
+.ag-body{display:grid;gap:2px;min-width:0}
+.ag-body b{font-weight:600}
+.ag-body span{font-size:15px;color:var(--ink-2)}
+.ag-src{padding:4px;color:var(--ink-3)}
+.levels{display:grid;gap:10px;margin:0 0 18px;padding:0;list-style:none}
+.lvrow{display:grid;grid-template-columns:136px 1fr;align-items:start;gap:12px}
+.lvrow .ev{justify-self:start}
+.lvrow>span:last-child{font-size:15.5px;color:var(--ink-2)}
+@media (max-width:480px){.lvrow{grid-template-columns:1fr;gap:4px}}
+.method-cols{display:grid;gap:16px}
+@media (min-width:760px){.method-cols{grid-template-columns:1fr 1fr}}
+.method h3{margin:0 0 8px;font-family:var(--display);font-size:15px}
+.ticks{display:grid;gap:6px;margin:0;padding-left:18px;font-size:15.5px;color:var(--ink-2)}
+.foot{padding-block:28px 12px;font-size:14px;color:var(--ink-3)}
+.foot p{max-width:76ch;margin:0 0 8px}
+.foot-meta{font-family:var(--mono);font-size:12px}
+
+/* Fiche détaillée */
+.sheet-backdrop{position:fixed;inset:0;z-index:50;display:flex;justify-content:center;align-items:flex-end;background:var(--scrim)}
+.sheet{position:relative;width:100%;max-width:800px;height:100%;overflow-y:auto;overscroll-behavior:contain;background:var(--paper);padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+.pad{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sheet-head{position:sticky;top:0;z-index:3;padding-top:env(safe-area-inset-top,0px);background:var(--paper);border-bottom:1px solid var(--rule)}
+.sheet-head .in{display:flex;align-items:center;gap:10px;min-height:58px}
+.sheet-date{margin-right:auto;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.sheet-h{margin:0 auto 0 0;font-family:var(--display);font-size:18px}
+@media (min-width:860px){.sheet-backdrop{align-items:center;padding:24px}.sheet{height:auto;max-height:100%;border-radius:22px;border:1px solid var(--rule);box-shadow:var(--shadow)}.sheet-head{padding-top:0}.pad{padding-left:28px;padding-right:28px}}
+.sheet-body{padding-top:14px}
+.detail{padding-top:18px}
+.detail p{max-width:68ch}
+.d-title{margin:0 0 12px;font-family:var(--serif);font-weight:700;font-size:clamp(25px,6vw,34px);line-height:1.14;letter-spacing:-.01em;text-wrap:balance}
+.d-sec{margin-top:24px;scroll-margin-top:70px}
+.d-sec p{margin:0 0 12px}
+.d-h{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--ink)}
+.d-dek{margin:22px 0 0;font-size:19px;line-height:1.5}
+.status{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.reviewed{display:inline-flex;align-items:center;gap:5px;font-family:var(--display);font-weight:600;font-size:12px;color:var(--l4)}
+.reviewed.no{color:var(--l2)}
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:18px}
+.num{display:grid;gap:4px;padding:12px 14px;border-radius:14px;border:1px solid var(--rule);background:var(--card)}
+.num b{font-family:var(--display);font-weight:700;font-size:23px;letter-spacing:-.01em;color:var(--accent-ink);font-variant-numeric:tabular-nums}
+.num span{font-size:14px;line-height:1.35;color:var(--ink-2)}
+.why{padding:14px 16px;border-radius:14px;background:var(--accent-soft)}
+.why .d-h{color:var(--accent-ink)}
+.why p{margin:0}
+.proof-card{display:grid;gap:8px;padding:14px 16px;border-radius:14px;border:1px solid var(--rule);background:var(--card)}
+.proof-top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.proof-meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.proof-desc{margin:0;font-size:15px;color:var(--ink-2)}
+.proof-note{margin:0;font-size:15.5px}
+.su{display:grid;gap:12px;margin-top:12px}
+@media (min-width:640px){.su{grid-template-columns:1fr 1fr}}
+.su>div{padding:12px 14px;border-radius:14px;border:1px solid var(--rule);background:var(--card)}
+.su h4{display:flex;align-items:center;gap:7px;margin:0 0 8px;font-family:var(--display);font-size:14px}
+.su .ok h4{color:var(--l4)}
+.su .ko h4{color:var(--l2)}
+.su ul{display:grid;gap:6px;margin:0;padding-left:18px;font-size:15.5px;color:var(--ink-2)}
+.caution{display:flex;align-items:flex-start;gap:10px;margin-top:14px;padding:12px 14px;border-radius:14px;background:var(--warn-soft);color:var(--ink);font-size:15px}
+.caution .ic{margin-top:2px;color:var(--warn)}
+.caution p{margin:0}
+.srcs{display:grid;gap:8px;margin:0 0 10px;padding:0;list-style:none}
+.srcs a{display:grid;grid-template-columns:auto 1fr;align-items:start;gap:4px 10px;padding:10px 12px;border-radius:12px;border:1px solid var(--rule);background:var(--card);color:var(--ink);text-decoration:none}
+.srcs a:hover{border-color:var(--accent)}
+.src-kind{grid-row:span 2;padding:3px 7px;border-radius:6px;background:var(--paper);color:var(--ink-2);font-family:var(--display);font-weight:700;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.src-kind.k-etude{background:var(--accent-soft);color:var(--accent-ink)}
+.src-kind.k-officiel{background:var(--l4-soft);color:var(--l4)}
+.src-label{font-size:15px;line-height:1.35;overflow-wrap:anywhere}
+.src-host{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.srcs.compact a{padding:8px 10px}
+.d-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.ask{padding:16px;border-radius:16px;border:1px dashed var(--rule);background:var(--card)}
+.ask-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.ask-form{display:flex;gap:8px}
+.ask-form input{flex:1;min-width:0;height:42px;padding:0 12px;border-radius:10px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:16px}
+.ask-form input:focus{outline:none;border-color:var(--accent)}
+.ask-out{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);font-size:16px}
+.ask-out p{margin:0 0 10px}
+.ask-out ul{margin:0 0 10px;padding-left:20px}
+.ask-note{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+
+/* Listes (catégories, favoris, archives) */
+.rows{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.rows li{display:flex;align-items:center;gap:8px}
+.row{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:12px 14px;text-align:left;border-radius:14px;border:1px solid var(--rule);background:var(--card);color:var(--ink);cursor:pointer}
+.row:hover{border-color:var(--accent)}
+.row-main{flex:1;min-width:0;display:grid;gap:3px}
+.row-title{font-family:var(--serif);font-weight:600;font-size:16.5px;line-height:1.3}
+.row-meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.row .ev{flex:none}
+.pill{padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-family:var(--display);font-weight:700;font-size:11px}
+.catlist{display:grid;gap:24px}
+.catblock{display:grid;gap:10px}
+.cb-head{display:flex;align-items:center;gap:12px}
+.cb-icon{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:14px;background:var(--accent-soft);color:var(--accent-ink)}
+.cb-title{display:grid;gap:2px;min-width:0;margin-right:auto}
+.cb-title h3{margin:0;font-family:var(--display);font-weight:700;font-size:18px}
+.cb-sum{margin:0;max-width:72ch;color:var(--ink-2)}
+.vlist{display:grid;gap:28px}
+.vgroup{display:grid;gap:10px}
+.vg-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.vgroup h3{margin:0;font-family:var(--serif);font-weight:700;font-size:19px;line-height:1.25}
+.novid-list{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.novid-list li{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:12px 14px;border-radius:14px;border:1px solid var(--rule);background:var(--card)}
+.novid-list .linklike{flex:1;min-width:12em;font-weight:600}
+.nv-links{display:flex;gap:8px}
+
+/* Écouter */
+.notice{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;padding:12px 14px;border-radius:14px;background:var(--warn-soft);font-size:15px}
+.notice .ic{color:var(--warn);margin-top:2px}
+.notice p{margin:0}
+.notice.info{margin-bottom:0;background:var(--accent-soft)}
+.notice.info .ic{color:var(--accent-ink)}
+.notice .notice-actions{margin-top:10px}
+.install{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:16px;border:1px solid var(--accent);background:var(--accent-soft)}
+.install-ic{display:grid;place-items:center;flex:none;width:40px;height:40px;border-radius:12px;background:var(--card);color:var(--accent-ink)}
+.install-main{display:grid;gap:4px;min-width:0}
+.install-main b{font-family:var(--display);font-weight:700;font-size:15.5px;line-height:1.3}
+.install-main span{font-size:15px;line-height:1.45;color:var(--ink-2)}
+.install .card-actions{margin-top:6px}
+.steps{display:grid;gap:10px;margin:0 0 4px;padding-left:22px;font-size:16px;line-height:1.5}
+.steps li{padding-left:4px}
+.steps + .d-h{margin-top:20px}
+.listen-grid{display:grid;gap:16px}
+@media (min-width:900px){.listen-grid{grid-template-columns:1.3fr 1fr;align-items:start}}
+.player{display:grid;gap:12px;padding:20px 18px;border-radius:20px;background:var(--band);color:var(--band-ink)}
+.pl-label{margin:0;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--band-ink-2)}
+.pl-title{margin:0;min-height:2.5em;font-family:var(--serif);font-weight:700;font-size:21px;line-height:1.25;text-wrap:balance}
+.pl-bar{height:6px;overflow:hidden;border-radius:99px;background:var(--band-2)}
+.pl-bar i{display:block;width:0;height:100%;border-radius:99px;background:var(--band-ink);transition:width .3s ease}
+.pl-time{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:12px;color:var(--band-ink-2)}
+.pl-ctrls{display:flex;align-items:center;justify-content:center;gap:18px;padding-block:4px}
+.player .iconbtn{background:transparent;border-color:var(--band-ink-2);color:var(--band-ink)}
+.playbtn{display:grid;place-items:center;width:76px;height:76px;border:0;border-radius:50%;background:var(--band-ink);color:var(--band);cursor:pointer}
+.playbtn:disabled{opacity:.5;cursor:not-allowed}
+.pl-set{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.speeds{display:flex;flex-wrap:wrap;gap:6px}
+.player .chip{background:transparent;border-color:var(--band-ink-2);color:var(--band-ink)}
+.player .chip[aria-pressed="true"]{background:var(--band-ink);border-color:var(--band-ink);color:var(--band)}
+.voice{display:flex;align-items:center;gap:8px;min-width:0;font-family:var(--display);font-weight:600;font-size:13px;color:var(--band-ink-2)}
+.voice select{min-width:0;max-width:220px;height:36px;padding:0 8px;border-radius:10px;border:1px solid var(--band-ink-2);background:var(--band-2);color:var(--band-ink);font-family:var(--display);font-size:13px}
+.pl-note{margin:0;font-size:13.5px;color:var(--band-ink-2)}
+.modes{display:grid;gap:10px;align-content:start}
+.modes .sub-h{margin:0}
+.mode{display:flex;align-items:center;gap:12px;padding:14px 16px;text-align:left;border-radius:16px;border:1px solid var(--rule);background:var(--card);color:var(--ink);cursor:pointer}
+.mode:hover{border-color:var(--accent)}
+.mode b{display:block;font-family:var(--display);font-size:15px}
+.mode small{display:block;margin-top:2px;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.mode-ic{display:grid;place-items:center;flex:none;width:40px;height:40px;border-radius:12px;background:var(--accent-soft);color:var(--accent-ink)}
+.chapters{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.chap{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:10px;width:100%;padding:10px 12px;text-align:left;border-radius:12px;border:1px solid var(--rule);background:var(--card);color:var(--ink);cursor:pointer}
+.chap.on{border-color:var(--accent);background:var(--accent-soft)}
+.chap-n{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.chap-t{min-width:0;font-size:15px;line-height:1.3}
+.chap-d{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);white-space:nowrap}
+.transcript{display:grid;gap:16px;padding:18px;border-radius:18px;border:1px solid var(--rule);background:var(--card)}
+.tr-ch h4{margin:0 0 6px;font-family:var(--display);font-size:14px;color:var(--accent-ink)}
+.tr-ch p{margin:0;max-width:70ch;font-size:16.5px;line-height:1.65}
+.s{border-radius:4px;transition:background-color .2s ease;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.s.on{background:var(--accent-soft);box-shadow:0 0 0 2px var(--accent-soft)}
+
+/* Mini-lecteur et notifications */
+.mini{position:fixed;z-index:35;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px));pointer-events:none}
+.mini-box{display:flex;align-items:center;gap:8px;max-width:640px;margin:0 auto;padding:8px;border-radius:16px;background:var(--band);color:var(--band-ink);box-shadow:var(--shadow);pointer-events:auto}
+.mini-play{display:grid;place-items:center;flex:none;width:44px;height:44px;border:0;border-radius:50%;background:var(--band-ink);color:var(--band);cursor:pointer}
+.mini-info{all:unset;flex:1;min-width:0;display:grid;gap:1px;padding:2px 4px;cursor:pointer}
+.mini-info small{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--band-ink-2)}
+.mini-info b{overflow:hidden;font-family:var(--serif);font-weight:600;font-size:14.5px;white-space:nowrap;text-overflow:ellipsis}
+.mini .iconbtn{background:transparent;border-color:transparent;color:var(--band-ink)}
+@media (min-width:1000px){.mini{left:auto;right:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));width:440px;padding:0}}
+.toast{position:fixed;z-index:60;left:50%;top:calc(env(safe-area-inset-top,0px) + 72px);transform:translateX(-50%);max-width:min(92vw,520px);padding:10px 16px;border-radius:12px;background:var(--ink);color:var(--paper);font-family:var(--display);font-weight:600;font-size:14px;text-align:center;box-shadow:var(--shadow)}
+/* Francophonie */
+.vb.fr{background:var(--screen-ink);border-color:var(--screen-ink);color:var(--screen);font-weight:500}
+.hscroll{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,80%);gap:12px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;margin:0 -2px;padding:2px 2px 10px;-webkit-overflow-scrolling:touch}
+.hscroll>*{min-width:0;scroll-snap-align:start}
+.hscroll .vt{height:100%}
+@media (min-width:700px){.hscroll{grid-auto-columns:minmax(250px,31%)}}
+.fr-hl-row{display:grid;gap:10px;margin-bottom:14px}
+@media (min-width:760px){.fr-hl-row{grid-template-columns:1fr 1fr}}
+.fr-mini{display:grid;align-content:start;gap:4px;padding:14px 16px;text-align:left;border-radius:16px;border:1px solid var(--rule);background:var(--card);color:var(--ink);cursor:pointer}
+.fr-mini:hover{border-color:var(--accent)}
+.fr-mini .kicker{margin:0}
+.fr-mini b{font-family:var(--serif);font-weight:700;font-size:17.5px;line-height:1.3}
+.fr-head{position:relative;overflow:hidden;isolation:isolate;background:var(--band);color:var(--band-ink)}
+.fr-head::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.55;background:repeating-radial-gradient(circle at 4% 120%,transparent 0 26px,var(--band-2) 26px 27.5px);-webkit-mask-image:linear-gradient(to right,#000,transparent 70%);mask-image:linear-gradient(to right,#000,transparent 70%)}
+.fr-head-in{position:relative;z-index:1;padding-block:24px 26px}
+.fr-title{margin:8px 0 12px;font-family:var(--display);font-weight:800;font-size:clamp(36px,9vw,60px);line-height:1;letter-spacing:-.03em}
+.fr-intro{margin:0;max-width:64ch;font-size:17px;color:var(--band-ink)}
+.fr-jump{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.fr-jump a{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--band-ink-2);color:var(--band-ink);font-family:var(--display);font-weight:600;font-size:14px;text-decoration:none}
+.fr-jump a:hover{border-color:var(--band-ink)}
+.hl{display:grid;gap:12px;min-width:0;padding:18px 16px;border-radius:20px;border:1px solid var(--rule);background:var(--card);scroll-margin-top:72px}
+.hl+.hl{margin-top:14px}
+.hl .kicker{margin:0}
+.hl-title{margin:0;font-family:var(--serif);font-weight:700;font-size:clamp(22px,5.2vw,29px);line-height:1.18;text-wrap:balance}
+.hl-text p{margin:0 0 10px;max-width:68ch}
+.hl .nums{margin-top:0}
+.hl .srcs{margin:0}
+@media (min-width:860px){.hl{padding:22px 24px}}
+.frv{display:grid;gap:6px;align-content:start;min-width:0}
+.frv .btn{justify-content:flex-start;white-space:normal;text-align:left;line-height:1.25;padding-block:8px}
+.ch-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media (min-width:700px){.ch-grid{grid-template-columns:1fr 1fr}}
+@media (min-width:1080px){.ch-grid{grid-template-columns:repeat(3,1fr)}}
+.ch{display:grid;grid-template-columns:auto 1fr;align-content:start;gap:2px 12px;min-width:0;padding:14px;border-radius:16px;border:1px solid var(--rule);background:var(--card)}
+.mono{grid-row:span 2;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);font-family:var(--display);font-weight:700;font-size:15px}
+.mono.m-institutions{background:var(--l4-soft);color:var(--l4)}
+.mono.m-actu{background:var(--l3-soft);color:var(--l3)}
+.mono.m-personnalites{background:var(--l1-soft);color:var(--l1)}
+.ch-name{align-self:end;margin:0;font-family:var(--display);font-weight:700;font-size:16px;line-height:1.25}
+.ch-who{margin:0;font-size:14px;line-height:1.35;color:var(--ink-3)}
+.ch-desc{grid-column:1/-1;margin:8px 0 0;font-size:15px;line-height:1.45;color:var(--ink-2)}
+.ch-foot{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
+.ch-foot .btn{margin-left:auto}
+.tag{padding:3px 8px;border-radius:999px;background:var(--paper);color:var(--ink-2);font-family:var(--display);font-weight:600;font-size:11.5px;white-space:nowrap}
+.tag.search{background:var(--l2-soft);color:var(--l2)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="#aujourdhui" data-action="tab" data-tab="aujourdhui" aria-label="Matinale des Sciences, accueil">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="1" y="1" width="30" height="30" rx="9" fill="currentColor"/><path d="M8.5 21.5a7.5 7.5 0 0 1 15 0" style="fill:none;stroke:var(--on-accent);stroke-width:2.2;stroke-linecap:round"/><path d="M6.5 25h19M16 7.5v3.2M9.6 10.6l2 2M22.4 10.6l-2 2" style="fill:none;stroke:var(--on-accent);stroke-width:2.2;stroke-linecap:round"/></svg>
+      <span class="brand-name">Matinale<span class="brand-sub">des Sciences</span></span>
+    </a>
+    <nav class="top-nav" aria-label="Sections">
+      <button data-action="tab" data-tab="aujourdhui">Aujourd'hui</button>
+      <button data-action="tab" data-tab="videos">Vidéos</button>
+      <button data-action="tab" data-tab="franco">Francophonie</button>
+      <button data-action="tab" data-tab="ecouter">Écouter</button>
+      <button data-action="tab" data-tab="categories">Catégories</button>
+    </nav>
+    <div class="top-actions">
+      <button class="iconbtn hdr-fav" id="hdr-fav" data-action="tab" data-tab="favoris" aria-label="Mes favoris" title="Mes favoris"></button>
+      <button class="edpill" id="edpill" data-action="archive" aria-label="Choisir une édition">Éditions</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="view" id="view-aujourdhui"></div>
+  <div class="view" id="view-videos" hidden></div>
+  <div class="view" id="view-franco" hidden></div>
+  <div class="view" id="view-ecouter" hidden></div>
+  <div class="view" id="view-categories" hidden></div>
+  <div class="view" id="view-favoris" hidden></div>
+</main>
+
+<nav class="tabbar" id="tabbar" aria-label="Sections"></nav>
+
+<div class="mini" id="mini" hidden>
+  <div class="mini-box">
+    <button class="mini-play" id="mini-toggle" data-action="toggle" aria-label="Lecture"></button>
+    <button class="mini-info" data-action="tab" data-tab="ecouter" aria-label="Ouvrir le lecteur"><small id="mini-label"></small><b id="mini-title"></b></button>
+    <button class="iconbtn" id="mini-next" data-action="next" aria-label="Chapitre suivant"></button>
+    <button class="iconbtn" id="mini-stop" data-action="stop" aria-label="Arrêter l'écoute"></button>
+  </div>
+</div>
+
+<div class="sheet-backdrop" id="sheet" hidden>
+  <div class="sheet" id="sheet-panel" role="dialog" aria-modal="true" aria-label="Fiche"></div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- Référentiels ---------- */
+const CATS = [
+  { id:'espace',   label:'Espace',                short:'Espace',    icon:'planet' },
+  { id:'sante',    label:'Santé',                 short:'Santé',     icon:'heart' },
+  { id:'cerveau',  label:'Cerveau & psychologie', short:'Cerveau',   icon:'brain' },
+  { id:'physique', label:'Physique & chimie',     short:'Physique',  icon:'atom' },
+  { id:'terre',    label:'Terre & climat',        short:'Terre',     icon:'globe' },
+  { id:'vivant',   label:'Vivant & nature',       short:'Vivant',    icon:'leaf' },
+  { id:'archeo',   label:'Archéologie & paléo',   short:'Passé',     icon:'spiral' },
+  { id:'tech',     label:'Tech & IA',             short:'Tech & IA', icon:'chip' }
+];
+const CAT = Object.fromEntries(CATS.map(c => [c.id, c]));
+const CAT_IDS = CATS.map(c => c.id);
+const LEVELS = {
+  0: { name:'Non évalué',   desc:"Fiche composée automatiquement : le niveau de preuve n'a pas été évalué. Pour juger de la solidité du résultat, ouvre la source." },
+  4: { name:'Établi',       desc:"Fait mesuré directement ou consensus scientifique : confirmé par plusieurs sources ou équipes indépendantes." },
+  3: { name:'Solide',       desc:"Publié dans une revue relue par des pairs, avec des données et une méthode robustes, mais pas encore reproduit de façon indépendante." },
+  2: { name:'Préliminaire', desc:"Premiers indices : étude chez l'animal, corrélation, petit échantillon, présentation en congrès ou interprétation à confirmer." },
+  1: { name:'Hypothèse',    desc:"Proposition ou modèle théorique, pas encore vérifié par l'expérience ou l'observation." }
+};
+const KIND = { officielle:'Source officielle', reportage:'Reportage', contexte:'Contexte', tierce:'Chaîne tierce' };
+const SRC_KIND = { officiel:'Officiel', presse:'Presse', etude:'Étude originale' };
+const TABS = ['aujourdhui','videos','franco','ecouter','categories','favoris'];
+const NAV_TABS = TABS.filter(x => x !== 'favoris');
+const TAB_LABEL = { aujourdhui:"Aujourd'hui", videos:'Vidéos', franco:'Francophonie', ecouter:'Écouter', categories:'Catégories', favoris:'Favoris' };
+const TAB_ICON = { aujourdhui:'today', videos:'video', franco:'bubble', ecouter:'headphones', categories:'grid', favoris:'star' };
+const RATES = [0.85, 1, 1.15, 1.3, 1.5];
+const APP_URL = (typeof location !== 'undefined' && /^https?:/.test(location.protocol)) ? location.origin + location.pathname : ''; /* adresse de la Matinale */
+const UA = (typeof navigator !== 'undefined' && navigator.userAgent) || '';
+const IS_IOS = /iPhone|iPad|iPod/i.test(UA) || (/Macintosh/.test(UA) && ((typeof navigator !== 'undefined' && navigator.maxTouchPoints) || 0) > 1);
+const IS_ANDROID = /Android/i.test(UA);
+const IS_MOBILE = IS_IOS || IS_ANDROID;
+const IS_WEBVIEW = IS_ANDROID && (/; wv\)/.test(UA) || /Claude/i.test(UA)); /* page ouverte dans une application (ex. Claude), pas dans Chrome */
+const CPS = 14.5; /* caractères lus par seconde à vitesse 1 */
+const MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+const MOIS_C = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+const JOURS = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+const ASKS = [
+  { l:'Explique simplement', q:"Explique-moi cette découverte simplement, comme à quelqu'un qui n'est pas scientifique." },
+  { l:'Ce que ça change',    q:"Qu'est-ce que cette découverte change concrètement, pour la société ou la vie quotidienne ?" },
+  { l:'Les limites',         q:"Quelles sont les limites de cette étude, et qu'est-ce qui reste à prouver ?" }
+];
+
+/* ---------- Icônes ---------- */
+const P = {
+  planet:'<circle cx="12" cy="12" r="5"/><ellipse cx="12" cy="12" rx="10.4" ry="3.5" transform="rotate(-18 12 12)"/>',
+  heart:'<path d="M12 20.5s-7.5-4.6-7.5-10.2A4.1 4.1 0 0 1 12 7.8a4.1 4.1 0 0 1 7.5 2.5c0 5.6-7.5 10.2-7.5 10.2z"/><path d="M7.6 12.6h2.4l1.2-2.2 1.8 4 1.2-1.8h2.2"/>',
+  brain:'<path d="M9.6 4.6A2.8 2.8 0 0 0 6.8 7a2.8 2.8 0 0 0-2.2 4.3 2.8 2.8 0 0 0 1.4 4.9 2.8 2.8 0 0 0 3.6 3.1A2 2 0 0 0 12 17.7V6a1.9 1.9 0 0 0-2.4-1.4z"/><path d="M14.4 4.6A2.8 2.8 0 0 1 17.2 7a2.8 2.8 0 0 1 2.2 4.3 2.8 2.8 0 0 1-1.4 4.9 2.8 2.8 0 0 1-3.6 3.1A2 2 0 0 1 12 17.7"/>',
+  atom:'<circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(120 12 12)"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.4 2.6 3.7 5.6 3.7 9s-1.3 6.4-3.7 9c-2.4-2.6-3.7-5.6-3.7-9S9.6 5.6 12 3z"/>',
+  leaf:'<path d="M5 19.5C5 11 10.2 5.4 19.5 4.5c0 9.3-5.6 15-14.5 15z"/><path d="M5 19.5c2.6-4.3 6-7.2 9.5-9"/>',
+  spiral:'<path d="M12 20.5a8.5 8.5 0 1 1 8.5-8.5 5.6 5.6 0 0 1-5.6 5.6 3.7 3.7 0 0 1-3.7-3.7 2.3 2.3 0 0 1 2.3-2.3 1.3 1.3 0 0 1 1.3 1.3"/>',
+  chip:'<rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3.5V7M14 3.5V7M10 17v3.5M14 17v3.5M3.5 10H7M3.5 14H7M17 10h3.5M17 14h3.5"/>',
+  play:'<path d="M8 5.2v13.6L19 12z" fill="currentColor" stroke="none"/>',
+  pause:'<path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z" fill="currentColor" stroke="none"/>',
+  next:'<path d="M6 6.2v11.6L14.6 12z" fill="currentColor" stroke="none"/><path d="M18 6v12"/>',
+  prev:'<path d="M18 6.2v11.6L9.4 12z" fill="currentColor" stroke="none"/><path d="M6 6v12"/>',
+  headphones:'<path d="M4 15.5V12a8 8 0 0 1 16 0v3.5"/><rect x="3" y="14" width="4.5" height="6.5" rx="1.6"/><rect x="16.5" y="14" width="4.5" height="6.5" rx="1.6"/>',
+  video:'<rect x="3" y="6" width="13" height="12" rx="2.2"/><path d="M16 10.2l5-3v9.6l-5-3z"/>',
+  today:'<path d="M3.5 18.5h17M7 15a5 5 0 0 1 10 0"/><path d="M12 4.5v3M5.4 7.9l1.9 1.9M18.6 7.9l-1.9 1.9"/>',
+  grid:'<rect x="4" y="4" width="7" height="7" rx="1.6"/><rect x="13" y="4" width="7" height="7" rx="1.6"/><rect x="4" y="13" width="7" height="7" rx="1.6"/><rect x="13" y="13" width="7" height="7" rx="1.6"/>',
+  star:'<path d="M12 3.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/>',
+  calendar:'<rect x="4" y="5" width="16" height="15" rx="2.2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.3-4.3"/>',
+  close:'<path d="M6 6l12 12M18 6L6 18"/>',
+  ext:'<path d="M14 4h6v6M20 4l-8.5 8.5M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  quest:'<circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1.1.9-1.1 1.6v.4"/><path d="M12 16.8h.01"/>',
+  alert:'<path d="M12 4l9 16H3z"/><path d="M12 10v4.2M12 17h.01"/>',
+  spark:'<path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9z"/><path d="M19 16.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
+  copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
+  phone:'<rect x="6.5" y="2.5" width="11" height="19" rx="2.4"/><path d="M10.5 18.5h3"/>',
+  refresh:'<path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4.5V9h-4.5"/>',
+  doc:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>',
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  bubble:'<path d="M5 4.5h14a2 2 0 0 1 2 2V15a2 2 0 0 1-2 2h-8l-4.5 3.5V17H5a2 2 0 0 1-2-2V6.5a2 2 0 0 1 2-2z"/><path d="M7.5 9h9M7.5 12.5h6"/>'
+};
+function icon(n, s){ s = s || 20; return '<svg class="ic" viewBox="0 0 24 24" width="' + s + '" height="' + s + '" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + (P[n] || '') + '</svg>'; }
+
+/* ---------- Outils ---------- */
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+const arr = v => Array.isArray(v) ? v.filter(x => x != null && x !== '') : [];
+const isHttp = u => typeof u === 'string' && /^https:\/\//i.test(u);
+const norm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+const reduceMotion = () => { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
+const cssEsc = s => (window.CSS && CSS.escape) ? CSS.escape(s) : String(s).replace(/["\\]/g, '\\$&');
+/* Typographie française : espaces fines insécables avant ; : ! ? % » et dans les grands nombres. */
+function fr(s){
+  return String(s == null ? '' : s)
+    .replace(/(\d) (?=\d{3}(?!\d))/g, '$1\u202F')
+    .replace(/ ([%:;!?»])/g, '\u202F$1')
+    .replace(/« /g, '«\u202F');
+}
+const t = s => esc(fr(s));
+function parseISO(d){ const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(d || '')); return m ? new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], 12)) : null; }
+function dayNum(x){ const d = x.getUTCDate(); return d === 1 ? '1er' : String(d); }
+function longDate(d){ const x = parseISO(d); return x ? JOURS[x.getUTCDay()] + ' ' + dayNum(x) + ' ' + MOIS[x.getUTCMonth()] + ' ' + x.getUTCFullYear() : ''; }
+function shortDate(d){ const x = parseISO(d); return x ? dayNum(x) + ' ' + MOIS_C[x.getUTCMonth()] + ' ' + x.getUTCFullYear() : ''; }
+function shortDateNoYear(d){ const x = parseISO(d); return x ? dayNum(x) + ' ' + MOIS_C[x.getUTCMonth()] : ''; }
+function stampLabel(iso){ try { const d = new Date(iso); if (isNaN(d)) return ''; return d.toLocaleString('fr-FR', { day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit', timeZone:'Europe/Paris' }); } catch (e) { return ''; } }
+const dateLabel = it => it.dateLabel || (it.date ? shortDate(it.date) : '');
+const LS = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+function ytSearch(q){ return 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q); }
+function dmSearch(q){ return 'https://www.dailymotion.com/search/' + encodeURIComponent(q) + '/videos'; }
+function platformOf(u){ try { const h = new URL(u).hostname; if (/youtu/.test(h)) return 'YouTube'; if (/dailymotion/.test(h)) return 'Dailymotion'; if (/vimeo/.test(h)) return 'Vimeo'; if (/svs\.gsfc\.nasa\.gov/.test(h)) return 'NASA SVS'; return h.replace(/^www\./, ''); } catch (e) { return 'Vidéo'; } }
+
+/* ---------- État ---------- */
+const S = {
+  db:null, user:null, uid:null, sample:null,
+  status:'loading', latest:null, edition:null, editions:new Map(), archive:[], followLatest:true,
+  tab:'aujourdhui', filterCat:'all', filterLvl:0, query:'',
+  favs:[], read:new Set(), prefs:{ rate:1, voiceURI:null }, prefsReadOnly:false,
+  sheetOpen:false, detailKey:null, lastFocus:null, askCtl:null,
+  franco:null, frGroup:'all', frQuery:'', vidFilter:'all', fallback:false, audio:null
+};
+(function initLocal(){
+  const lp = LS.get('mds.prefs', null);
+  if (lp && typeof lp === 'object'){
+    if (Array.isArray(lp.favorites)) S.favs = lp.favorites.filter(f => f && f.k);
+    if (RATES.includes(lp.rate)) S.prefs.rate = lp.rate;
+    if (lp.voiceURI) S.prefs.voiceURI = lp.voiceURI;
+  }
+  S.read = new Set(arr(LS.get('mds.read', [])));
+})();
+
+function normalize(d, id){
+  const ed = Object.assign({}, d || {});
+  ed.date = (d && d.date) || id;
+  ed.items = arr(d && d.items).filter(x => x && x.id && x.title).map(x => Object.assign({}, x, {
+    key: ed.date + ':' + x.id,
+    cat: CAT_IDS.includes(x.cat) ? x.cat : 'tech',
+    videos: arr(x.videos).filter(v => v && isHttp(v.url)),
+    sources: arr(x.sources).filter(s => s && isHttp(s.url)),
+    evidence: x.evidence || {},
+    numbers: arr(x.numbers).filter(n => n && n.v),
+    body: Array.isArray(x.body) ? arr(x.body) : (x.body ? [x.body] : []),
+    sure: arr(x.sure), unsure: arr(x.unsure)
+  }));
+  ed.items.sort((a, b) => CAT_IDS.indexOf(a.cat) - CAT_IDS.indexOf(b.cat));
+  ed.categories = (d && d.categories) || {};
+  ed.agenda = arr(d && d.agenda);
+  ed.podcast = (d && d.podcast) || {};
+  return ed;
+}
+function itemByKey(key){
+  if (!key) return null;
+  const i = key.indexOf(':'); const date = key.slice(0, i), id = key.slice(i + 1);
+  const ed = S.editions.get(date); if (!ed) return null;
+  return ed.items.find(x => x.id === id) || null;
+}
+function lvl(it){ const v = it && it.evidence && it.evidence.level; if (v === 0 || v === '0') return 0; const n = Number(v); return [1,2,3,4].includes(n) ? n : 2; }
+function bars(n){ return [1,2,3,4].map(k => '<i class="' + (k <= n ? 'on' : '') + '"></i>').join(''); }
+function evHTMLn(n, big){ n = [0,1,2,3,4].includes(n) ? n : 2; return '<span class="ev lv' + n + (big ? ' big' : '') + '" title="' + esc(LEVELS[n].desc) + '"><span class="bars">' + bars(n) + '</span>' + esc(LEVELS[n].name) + '</span>'; }
+const evHTML = it => evHTMLn(lvl(it));
+function catSummary(ed, id){ const v = ed.categories && ed.categories[id]; return typeof v === 'string' ? v : (v && v.summary) || ''; }
+function countVideos(ed){ return ed.items.reduce((a, i) => a + i.videos.length, 0) + arr(ed.concept && ed.concept.videos).filter(v => v && isHttp(v.url)).length + arr(ed.francophonie && ed.francophonie.videos).filter(v => v && isHttp(v.url) && !v.item).length; }
+const isFav = key => S.favs.some(f => f.k === key);
+
+/* ---------- Gabarits ---------- */
+const catTag = c => '<span class="cat-tag">' + icon(c.icon, 16) + esc(c.label) + '</span>';
+const openBtn = (it, label) => '<button class="btn sm" data-action="open" data-key="' + esc(it.key) + '">' + esc(label || 'Lire la fiche') + ' ' + icon('arrow', 16) + '</button>';
+const listenBtn = it => '<button class="btn sm ghost" data-action="load" data-mode="item" data-key="' + esc(it.key) + '">' + icon('headphones', 16) + ' Écouter</button>';
+const favBtn = it => { const on = isFav(it.key); return '<button class="iconbtn fav" data-action="fav" data-key="' + esc(it.key) + '" aria-pressed="' + on + '" aria-label="' + (on ? 'Retirer des favoris' : 'Ajouter aux favoris') + '">' + icon('star', 19) + '</button>'; };
+
+function isFr(v){ return /^fr/i.test(String((v && v.lang) || '')); }
+function vtileHTML(v, opt){
+  opt = opt || {};
+  const plat = v.platform || platformOf(v.url);
+  const kind = KIND[v.kind] ? v.kind : 'tierce';
+  const fr = isFr(v);
+  const frB = '<span class="vb fr">En français</span>', platB = '<span class="vb">' + esc(plat) + '</span>';
+  const badges = opt.row ? (fr ? frB : platB) : platB + (fr ? frB : (v.lang ? '<span class="vb">' + esc(v.lang) + '</span>' : ''));
+  return '<a class="vt' + (opt.row ? ' row' : '') + '" href="' + esc(v.url) + '" target="_blank" rel="noopener noreferrer">' +
+    '<span class="vt-screen"><span class="vt-badges">' + badges + '</span>' +
+    '<span class="vt-play">' + icon('play', opt.row ? 18 : 26) + '</span></span>' +
+    '<span class="vt-body"><span class="vt-kind k-' + kind + '">' + esc(KIND[kind]) + (v.by ? ' · ' + esc(v.by) : '') + '</span>' +
+    '<span class="vt-title">' + t(v.title || 'Voir la vidéo') + '</span>' + (v.note ? '<span class="vt-note">' + t(v.note) + '</span>' : '') + '</span></a>';
+}
+function videosBlock(it){
+  const q = it.videoQuery || it.title;
+  const search = '<div class="vsearch"><span>Chercher d\'autres vidéos :</span><a class="btn sm" href="' + esc(ytSearch(q)) + '" target="_blank" rel="noopener noreferrer">YouTube ' + icon('ext', 14) + '</a><a class="btn sm" href="' + esc(dmSearch(q)) + '" target="_blank" rel="noopener noreferrer">Dailymotion ' + icon('ext', 14) + '</a></div>';
+  if (!it.videos.length) return '<p class="muted">Aucune vidéo vérifiée sur ce sujet pour l\'instant. Les vidéos paraissent souvent quelques jours après l\'annonce.</p>' + search;
+  return '<div class="vgrid">' + it.videos.map(v => vtileHTML(v)).join('') + '</div>' + search;
+}
+function srcLi(s){
+  let host = ''; try { host = new URL(s.url).hostname.replace(/^www\./, ''); } catch (e) {}
+  const k = SRC_KIND[s.kind] ? s.kind : 'presse';
+  return '<li><a href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer"><span class="src-kind k-' + k + '">' + esc(SRC_KIND[k]) + '</span><span class="src-label">' + t(s.label || host) + '</span><span class="src-host">' + esc(host) + ' ' + icon('ext', 12) + '</span></a></li>';
+}
+function cardHTML(it, ed){
+  const c = CAT[it.cat];
+  const isNew = S.latest && ed.date === S.latest.date && !S.read.has(it.key);
+  const media = it.videos.length
+    ? '<div class="card-media">' + vtileHTML(it.videos[0], { row:true }) + (it.videos.length > 1 ? '<button class="more-v" data-action="open" data-key="' + esc(it.key) + '" data-focus="videos">' + icon('video', 15) + ' + ' + (it.videos.length - 1) + ' vidéo' + (it.videos.length > 2 ? 's' : '') + '</button>' : '') + '</div>'
+    : '<div class="novid">' + icon('video', 16) + '<span>Pas encore de vidéo vérifiée</span><a href="' + esc(ytSearch(it.videoQuery || it.title)) + '" target="_blank" rel="noopener noreferrer">Chercher sur YouTube ' + icon('ext', 13) + '</a></div>';
+  return '<article class="card" data-key="' + esc(it.key) + '">' + media + '<div class="card-body">' +
+    '<div class="meta">' + catTag(c) + '<span>' + esc(dateLabel(it)) + '</span>' + (isNew ? '<span class="new">Nouveau</span>' : '') + '</div>' +
+    '<h3 class="card-title"><button class="linklike" data-action="open" data-key="' + esc(it.key) + '">' + t(it.title) + '</button></h3>' +
+    '<p class="dek">' + t(it.dek) + '</p>' +
+    '<div class="ev-row">' + evHTML(it) + '<span class="ev-type">' + t(it.evidence.type || '') + '</span></div>' +
+    '<div class="card-actions">' + openBtn(it) + listenBtn(it) + favBtn(it) + '</div></div></article>';
+}
+function rowHTML(it){
+  return '<li><button class="row" data-action="open" data-key="' + esc(it.key) + '"><span class="row-main"><span class="row-title">' + t(it.title) + '</span><span class="row-meta">' + esc(dateLabel(it)) + (it.videos.length ? ' · ' + icon('video', 14) + ' ' + it.videos.length : '') + '</span></span>' + evHTML(it) + '</button></li>';
+}
+function box(title, text, actions){ return '<section class="section"><div class="wrap"><div class="empty"><p class="sub-h" style="margin:0">' + esc(title) + '</p><p>' + esc(text) + '</p>' + (actions ? '<div class="card-actions" style="justify-content:center">' + actions + '</div>' : '') + '</div></div></section>'; }
+function fixActions(){ return '<button class="btn sm primary" data-action="reload">' + icon('refresh', 15) + ' Réessayer</button>'; }
+function stateHTML(){
+  if (S.status === 'loading') return '<section class="masthead"><div class="wrap mh-in"><p class="mh-kicker">Matinale des Sciences</p><h1 class="mh-date"><span class="mh-day skel">··</span><span class="mh-rest"><span class="mh-wd">Chargement</span><span>de l\'édition…</span></span></h1><p class="mh-intro">Les découvertes du jour, leurs vidéos, leurs sources et le podcast arrivent.</p></div></section>';
+  if (S.status === 'nodb') return box("Pas de connexion pour l'instant", "La Matinale n'arrive pas à charger l'édition. Vérifie ta connexion à internet puis réessaie : elle se remettra à jour toute seule.", fixActions());
+  if (S.status === 'empty') return box('La première édition est en préparation', "Elle apparaîtra ici automatiquement dès qu'elle sera prête. Une nouvelle édition arrive ensuite chaque matin.");
+  return box("Impossible de charger l'édition", "Réessaie dans un instant : la Matinale se remettra à jour toute seule.", fixActions());
+}
+
+/* ---------- Vue « Aujourd'hui » ---------- */
+function mastheadHTML(ed){
+  const x = parseISO(ed.date) || new Date();
+  const old = S.latest && ed.date !== S.latest.date;
+  const fl = estMin(buildChapters('flash', ed)), fu = estMin(buildChapters('full', ed));
+  return '<section class="masthead">' +
+    (old ? '<div class="oldbar"><div class="wrap oldbar-in"><span>Tu consultes l\'édition du ' + esc(longDate(ed.date)) + '.</span><button class="btn sm" data-action="latest">Revenir à la dernière édition</button></div></div>' : '') +
+    '<div class="wrap mh-in"><p class="mh-kicker">' + esc(ed.kind || 'Édition du jour') + (ed.number != null ? ' · n° ' + esc(ed.number) : '') + '</p>' +
+    '<h1 class="mh-date"><span class="mh-day">' + dayNum(x) + '</span><span class="mh-rest"><span class="mh-wd">' + esc(JOURS[x.getUTCDay()]) + '</span><span>' + esc(MOIS[x.getUTCMonth()] + ' ' + x.getUTCFullYear()) + '</span></span></h1>' +
+    (ed.title ? '<p class="mh-title">' + t(ed.title) + '</p>' : '') +
+    (ed.intro ? '<p class="mh-intro">' + t(ed.intro) + '</p>' : '') +
+    '<ul class="mh-stats"><li><b>' + ed.items.length + '</b> découvertes</li><li><b>' + countVideos(ed) + '</b> vidéos</li><li><b>≈ ' + fu + '</b> min d\'écoute</li>' + (ed.period ? '<li>' + t(ed.period) + '</li>' : '') + '</ul>' +
+    '<div class="mh-actions"><button class="btn-band" data-action="load" data-mode="flash">' + icon('play', 18) + ' Le flash · ' + fl + ' min</button><button class="btn-band ghost" data-action="load" data-mode="full">' + icon('headphones', 18) + ' Édition complète · ' + fu + ' min</button></div></div></section>';
+}
+function topHTML(ed){
+  const it = ed.items.find(i => i.id === ed.top) || ed.items[0]; if (!it) return '';
+  const v = it.videos[0];
+  return '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">À la une</h2>' + (it.videos.length ? '<span class="sec-sub">' + it.videos.length + ' vidéo' + (it.videos.length > 1 ? 's' : '') + '</span>' : '') + '</div>' +
+    '<article class="topcard">' + (v ? '<div class="top-media">' + vtileHTML(v) + '</div>' : '') +
+    '<div class="top-body"><div class="meta">' + catTag(CAT[it.cat]) + '<span>' + esc(dateLabel(it)) + '</span>' + (it.journal ? '<span>' + esc(it.journal) + '</span>' : '') + '</div>' +
+    '<h3 class="top-title"><button class="linklike" data-action="open" data-key="' + esc(it.key) + '">' + t(it.title) + '</button></h3>' +
+    '<p class="dek">' + t(it.dek) + '</p><div class="ev-row">' + evHTML(it) + '<span class="ev-type">' + t(it.evidence.type || '') + '</span></div>' +
+    '<div class="card-actions">' + openBtn(it, 'Lire la fiche complète') + listenBtn(it) + favBtn(it) + '</div></div></article></div></section>';
+}
+function catSumHTML(ed){
+  const cards = CATS.map(c => {
+    const its = ed.items.filter(i => i.cat === c.id); const sum = catSummary(ed, c.id);
+    if (!its.length) return '';
+    return '<button class="catcard" data-action="see-cat" data-cat="' + c.id + '"><span class="cc-head">' + icon(c.icon, 22) + '<span class="cc-label">' + esc(c.label) + '</span><span class="cc-count">' + its.length + '</span></span>' +
+      (sum ? '<span class="cc-sum">' + t(sum) + '</span>' : '') +
+      '<span class="cc-dots">' + its.map(i => '<i class="dot lv' + lvl(i) + '" title="' + esc(LEVELS[lvl(i)].name) + '"></i>').join('') + '</span></button>';
+  }).join('');
+  return '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Le résumé par catégorie</h2><span class="sec-sub">Touche une catégorie pour filtrer</span></div><div class="catgrid">' + cards + '</div></div></section>';
+}
+function feedSectionHTML(ed){
+  const catChips = ['all'].concat(CAT_IDS).map(id => {
+    const n = id === 'all' ? ed.items.length : ed.items.filter(i => i.cat === id).length;
+    if (id !== 'all' && !n) return '';
+    return '<button class="chip" data-action="filter-cat" data-cat="' + id + '" aria-pressed="' + (S.filterCat === id) + '">' + (id === 'all' ? 'Toutes' : esc(CAT[id].short)) + ' <span class="chip-n">' + n + '</span></button>';
+  }).join('');
+  const lvChips = ed.items.every(i => lvl(i) === 0) ? '' : [4,3,2,1].map(n => {
+    const k = ed.items.filter(i => lvl(i) === n).length;
+    return '<button class="chip lvchip lv' + n + '" data-action="filter-lvl" data-lvl="' + n + '" aria-pressed="' + (S.filterLvl === n) + '"' + (k ? '' : ' disabled') + '><span class="bars">' + bars(n) + '</span>' + esc(LEVELS[n].name) + ' <span class="chip-n">' + k + '</span></button>';
+  }).join('');
+  return '<section class="section" id="feed-sec"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Toutes les découvertes</h2><span class="sec-sub" id="feed-count"></span></div>' +
+    '<div class="filters"><div class="chips" role="group" aria-label="Filtrer par catégorie">' + catChips + '</div>' +
+    '<div class="chips" role="group" aria-label="Filtrer par niveau de preuve">' + lvChips + '<a class="chip ghost" href="#methode" data-action="goto-method">' + icon('quest', 16) + ' Comment on évalue</a></div>' +
+    '<label class="search"><span class="sr">Rechercher dans l\'édition</span>' + icon('search', 18) + '<input id="q" type="search" placeholder="Rechercher dans l\'édition" value="' + esc(S.query) + '" autocomplete="off"></label></div>' +
+    '<div class="feed" id="feed"></div></div></section>';
+}
+function filteredItems(ed){
+  const q = norm(S.query);
+  return ed.items.filter(it => (S.filterCat === 'all' || it.cat === S.filterCat) && (!S.filterLvl || lvl(it) === S.filterLvl) &&
+    (!q || norm([it.title, it.dek].concat(it.body, [it.who || '', it.journal || '']).join(' ')).includes(q)));
+}
+function renderFeed(){
+  const ed = S.edition, el = $('#feed'); if (!ed || !el) return;
+  const def = S.filterCat === 'all' && !S.filterLvl && !S.query;
+  let items = filteredItems(ed); if (def) items = items.filter(i => i.id !== ed.top);
+  el.innerHTML = items.length ? items.map(it => cardHTML(it, ed)).join('') : '<div class="empty"><p>Aucune découverte ne correspond à ces filtres.</p><button class="btn sm" data-action="clear-filters">Effacer les filtres</button></div>';
+  const fc = $('#feed-count'); if (fc) fc.textContent = def ? items.length + ' autres découvertes' : items.length + ' résultat' + (items.length > 1 ? 's' : '');
+  $$('[data-action="filter-cat"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cat === S.filterCat)));
+  $$('[data-action="filter-lvl"]').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.lvl) === S.filterLvl)));
+}
+function conceptHTML(ed){
+  const c = ed.concept; if (!c || !c.title) return '';
+  const vids = arr(c.videos).filter(v => v && isHttp(v.url));
+  const ev = c.evidence || {};
+  return '<section class="section"><div class="wrap"><div class="concept"><p class="kicker">Le concept du jour</p><h2 class="concept-title">' + t(c.title) + '</h2><div class="concept-grid"><div class="concept-text">' +
+    arr(c.text).map(p => '<p>' + t(p) + '</p>').join('') +
+    '<div class="ev-row">' + evHTMLn(Number(ev.level) || 3) + '<span class="ev-type">' + t(ev.status || '') + '</span></div>' +
+    (ev.note ? '<p class="muted small" style="margin-top:8px">' + t(ev.note) + '</p>' : '') +
+    '<div class="card-actions"><button class="btn sm" data-action="load" data-mode="concept">' + icon('headphones', 16) + ' Écouter</button></div>' +
+    '<ul class="srcs compact" style="margin-top:14px">' + arr(c.sources).filter(s => s && isHttp(s.url)).map(srcLi).join('') + '</ul></div>' +
+    (vids.length ? '<div class="concept-media">' + vids.map(v => vtileHTML(v)).join('') + '</div>' : '') + '</div></div></div></section>';
+}
+function agendaHTML(ed){
+  const a = ed.agenda.filter(x => x && x.title).slice().sort((p, q) => String(p.date || '').localeCompare(String(q.date || '')));
+  if (!a.length) return '';
+  return '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">À venir</h2><span class="sec-sub">Agenda scientifique</span></div><ol class="agenda">' +
+    a.map(x => '<li><span class="ag-date">' + esc(x.label || shortDate(x.date)) + '</span><div class="ag-body"><b>' + t(x.title) + '</b>' + (x.detail ? '<span>' + t(x.detail) + '</span>' : '') + '</div>' +
+      (isHttp(x.url) ? '<a class="ag-src" href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer" aria-label="Source : ' + esc(x.title) + '">' + icon('ext', 16) + '</a>' : '<span></span>') + '</li>').join('') + '</ol></div></section>';
+}
+function rulesList(){
+  const g = S.edition && S.edition.generator;
+  if (g === 'rss') return ["Chaque fiche renvoie à l'article ou au communiqué d'origine, avec un lien direct vérifié le matin même.", "Les fiches viennent uniquement de sources reconnues : organismes de recherche, agences spatiales, presse scientifique.", "Le titre et le résumé sont ceux publiés par la source, sans réécriture.", "Le niveau de preuve n'est pas évalué automatiquement : la fiche l'indique clairement.", "Les vidéos viennent des chaînes francophones de l'annuaire, avec leur provenance."];
+  if (g === 'gemini') return ["Chaque fiche renvoie à l'article ou au communiqué d'origine, avec un lien direct vérifié le matin même.", "Les fiches viennent uniquement de sources reconnues : organismes de recherche, agences spatiales, presse scientifique.", "Le résumé et le niveau de preuve sont proposés par une IA (Gemini, de Google) à partir du seul texte de la source. Une phrase qui contient un chiffre absent de la source est retirée.", "Une corrélation n'est jamais présentée comme une cause.", "Une vidéo n'est liée à une fiche que si elle porte sur le même résultat, et sa provenance est indiquée."];
+  return ["Chaque fiche cite le communiqué officiel ou l'étude originale, avec un lien.", "Une information sans source vérifiable n'est pas publiée.", "La date indiquée est celle de l'annonce ou de la publication originale, pas celle d'une reprise.", "Une corrélation n'est jamais présentée comme une cause.", "Une vidéo n'est liée que si elle porte sur le sujet, et sa provenance est indiquée."];
+}
+function creditText(ed){
+  const g = ed && ed.generator;
+  if (g === 'rss') return "Fiches composées automatiquement à partir des sources citées : titre et résumé de l'éditeur, sans réécriture. En cas de doute, la source originale fait foi. Les sujets de santé ne remplacent pas l'avis d'un professionnel.";
+  if (g === 'gemini') return "Résumés rédigés automatiquement par Gemini, une IA de Google, à partir des sources citées sur chaque fiche. Une erreur reste possible : en cas de doute, la source originale fait foi. Les sujets de santé ne remplacent pas l'avis d'un professionnel.";
+  return "Résumés rédigés par Claude, une IA d'Anthropic, à partir des sources citées sur chaque fiche. Malgré la vérification source par source, une erreur reste possible : en cas de doute, la source originale fait foi. Les sujets de santé ne remplacent pas l'avis d'un professionnel.";
+}
+function methodHTML(){
+  return '<section class="section" id="methode"><div class="wrap"><div class="method"><div class="sec-head"><h2 class="sec-title">Comment on évalue les preuves</h2></div>' +
+    '<p class="lede">Chaque découverte reçoit l\'un des quatre niveaux suivants. Il dit à quel point le résultat est sûr aujourd\'hui, pas s\'il est intéressant.</p>' +
+    '<ul class="levels">' + [4,3,2,1].concat(S.edition && S.edition.items.some(i => lvl(i) === 0) ? [0] : []).map(n => '<li class="lvrow">' + evHTMLn(n) + '<span>' + esc(LEVELS[n].desc) + '</span></li>').join('') + '</ul>' +
+    '<div class="method-cols"><div><h3>Les règles de la rédaction</h3><ul class="ticks">' + rulesList().map(x => '<li>' + t(x) + '</li>').join('') + '</ul></div>' +
+    '<div><h3>Les statuts de publication</h3><ul class="ticks">' +
+    '<li><b>Relu par des pairs</b> : publié dans une revue scientifique après évaluation par d\'autres chercheurs.</li>' +
+    '<li><b>Prépublication</b> : diffusé avant toute relecture (arXiv, bioRxiv…).</li>' +
+    '<li><b>Congrès</b> : présenté lors d\'une conférence, souvent sans article complet.</li>' +
+    '<li><b>Données officielles</b> : mesures publiées par une agence (NASA, NSIDC, INPE…).</li></ul></div></div></div></div></section>';
+}
+function footerHTML(ed){
+  const st = stampLabel(ed.updatedAt);
+  return '<footer class="foot"><div class="wrap"><p>' + esc(creditText(ed)) + '</p>' +
+    '<p class="foot-meta">' + (st ? 'Édition préparée le ' + esc(st) + ' · ' : '') + 'Nouvelle édition chaque matin.</p>' +
+    '<div class="card-actions" style="margin-top:12px"><button class="btn sm ghost" data-action="install-help">' + icon('phone', 16) + ' Installer sur mon téléphone</button></div></div></footer>';
+}
+function renderToday(){
+  const el = $('#view-aujourdhui'); if (!el) return;
+  const ed = S.edition;
+  if (S.status !== 'ready' || !ed){ el.innerHTML = stateHTML(); return; }
+  el.innerHTML = mastheadHTML(ed) + fallbackNoticeHTML() + installBannerHTML() + topHTML(ed) + frStripHTML(ed) + catSumHTML(ed) + feedSectionHTML(ed) + conceptHTML(ed) + agendaHTML(ed) + methodHTML() + footerHTML(ed);
+  renderFeed();
+}
+
+/* ---------- Installation sur le téléphone et mode de secours ---------- */
+function fallbackNoticeHTML(){
+  /* La copie de secours s'affiche sans message : l'application fonctionne, tout simplement. */
+  return '';
+}
+/* Installation : la Matinale est une application web installable (icône sur l'écran d'accueil, plein écran, hors ligne). */
+let installEvt = null;
+function isInstalled(){ try { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; } catch (e) { return false; } }
+function installShort(){
+  if (IS_IOS) return "Dans Safari : bouton Partager, puis « Sur l'écran d'accueil ».";
+  if (installEvt) return "Un seul geste : elle s'ouvrira ensuite comme une application, en plein écran.";
+  return "Dans Chrome : menu ⋮, puis « Installer l'application » ou « Ajouter à l'écran d'accueil ».";
+}
+function installInner(){
+  if (isInstalled() || (!IS_MOBILE && !installEvt)) return '';
+  const st = LS.get('mds.install', null);
+  if (st === 'done' || (typeof st === 'number' && st > Date.now())) return '';
+  return '<section class="section" style="padding-top:16px"><div class="wrap"><div class="install"><span class="install-ic">' + icon('phone', 22) + '</span><div class="install-main">' +
+    "<b>Mets la Matinale sur ton écran d'accueil</b><span>" + esc(installShort()) + '</span>' +
+    '<div class="card-actions">' + (installEvt
+      ? '<button class="btn sm primary" data-action="install-now">' + icon('phone', 15) + ' Installer</button>'
+      : '<button class="btn sm primary" data-action="install-help">Voir comment faire</button>') +
+    "<button class=\"btn sm ghost\" data-action=\"install-done\">C'est fait</button>" +
+    '<button class="btn sm ghost" data-action="install-later">Plus tard</button></div></div></div></div></section>';
+}
+function installBannerHTML(){ return '<div id="install-slot">' + installInner() + '</div>'; }
+function refreshInstall(){ const el = $('#install-slot'); if (el) el.innerHTML = installInner(); }
+function installNow(){
+  const e = installEvt; if (!e){ openInstallHelp(); return; }
+  installEvt = null;
+  try {
+    e.prompt();
+    Promise.resolve(e.userChoice).then(c => {
+      if (c && c.outcome === 'accepted'){ LS.set('mds.install', 'done'); closeSheet(); toast("C'est installé : la Matinale est sur ton écran d'accueil."); }
+      refreshInstall();
+    }).catch(() => refreshInstall());
+  } catch (err) { openInstallHelp(); }
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; refreshInstall(); });
+window.addEventListener('appinstalled', () => { installEvt = null; LS.set('mds.install', 'done'); refreshInstall(); });
+function openInstallHelp(){
+  const ol = list => '<ol class="steps">' + list.map(x => '<li>' + x + '</li>').join('') + '</ol>';
+  const android = '<h3 class="d-h">' + icon('phone', 18) + ' Android, avec Chrome</h3>' + ol([
+    "Ouvre la Matinale dans <b>Chrome</b>.",
+    "Touche le menu <b>⋮</b>, en haut à droite.",
+    "Choisis <b>« Installer l'application »</b> ou <b>« Ajouter à l'écran d'accueil »</b>, puis <b>« Installer »</b>.",
+    "C'est prêt : l'icône <b>Matinale</b> est sur ton écran d'accueil et s'ouvre en plein écran."
+  ]);
+  const ios = '<h3 class="d-h">' + icon('phone', 18) + ' iPhone, avec Safari</h3>' + ol([
+    "Ouvre la Matinale dans <b>Safari</b>.",
+    "Touche le bouton <b>Partager</b> (le carré avec une flèche vers le haut).",
+    "Choisis <b>« Sur l'écran d'accueil »</b>, puis touche <b>Ajouter</b>."
+  ]);
+  showSheet('<div class="sheet-head"><div class="in pad"><h2 class="sheet-h">Sur ton téléphone</h2><button class="iconbtn" data-action="close" aria-label="Fermer">' + icon('close') + '</button></div></div>' +
+    '<div class="pad sheet-body">' +
+    "<p>Avec l'icône, la Matinale s'ouvre comme une application. Elle se met à jour toute seule chaque matin, et la dernière édition reste lisible même sans réseau.</p>" +
+    (installEvt ? '<div class="d-actions"><button class="btn primary" data-action="install-now">' + icon('phone', 18) + ' Installer maintenant</button></div>' : '') +
+    '<section class="d-sec">' + (IS_IOS ? ios + android : android + ios) + '</section>' +
+    (APP_URL ? '<section class="d-sec"><h3 class="d-h">' + icon('copy', 18) + ' Le lien de la Matinale</h3><p class="mono small" style="word-break:break-all">' + esc(APP_URL) + '</p>' +
+      '<div class="d-actions"><button class="btn" data-action="copy" data-text="' + esc(APP_URL) + '">' + icon('copy', 16) + ' Copier le lien</button></div></section>' : '') +
+    '</div>', 'Sur ton téléphone');
+}
+
+/* ---------- Francophonie ---------- */
+const shorten = (s, n) => { s = String(s || ''); return s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s; };
+const hlVideos = h => arr(h && h.videos).filter(v => v && isHttp(v.url));
+function frHighlights(ed){ return arr(ed && ed.francophonie && ed.francophonie.highlights).filter(h => h && h.id && h.title); }
+function frVideos(ed){
+  const out = [], seen = new Set();
+  const add = (v, extra) => { if (!v || !isHttp(v.url) || !isFr(v) || seen.has(v.url)) return; seen.add(v.url); out.push(Object.assign({ v }, extra || {})); };
+  if (!ed) return out;
+  frHighlights(ed).forEach(h => hlVideos(h).forEach(v => add(v, { hl: h.id, hlTitle: h.title })));
+  arr(ed.francophonie && ed.francophonie.videos).forEach(v => add(v, { key: v.item ? ed.date + ':' + v.item : null }));
+  ed.items.forEach(it => it.videos.forEach(v => add(v, { key: it.key })));
+  return out;
+}
+function frStripHTML(ed){
+  const hls = frHighlights(ed), vids = frVideos(ed);
+  if (!hls.length && !vids.length) return '';
+  return '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">La science en français</h2><button class="btn sm" data-action="tab" data-tab="franco">' + icon('bubble', 16) + ' Section Francophonie</button></div>' +
+    (hls.length ? '<div class="fr-hl-row">' + hls.map(h => '<button class="fr-mini" data-action="goto-hl" data-hl="' + esc(h.id) + '"><span class="kicker">' + esc(h.kicker || 'Francophonie') + '</span><b>' + t(h.title) + '</b></button>').join('') + '</div>' : '') +
+    (vids.length ? '<div class="hscroll" role="list" aria-label="Vidéos en français">' + vids.map(x => '<div role="listitem">' + vtileHTML(x.v) + '</div>').join('') + '</div>' : '') +
+    '</div></section>';
+}
+function hlHTML(h){
+  const vids = hlVideos(h), srcs = arr(h.sources).filter(s => s && isHttp(s.url)), facts = arr(h.facts).filter(x => x && x.v);
+  return '<article class="hl" id="hl-' + esc(h.id) + '"><p class="kicker">' + esc(h.kicker || 'Francophonie') + '</p><h3 class="hl-title">' + t(h.title) + '</h3>' +
+    (vids.length ? '<div class="vgrid">' + vids.map(v => vtileHTML(v)).join('') + '</div>' : '') +
+    '<div class="hl-text">' + arr(h.text).map(p => '<p>' + t(p) + '</p>').join('') + '</div>' +
+    (facts.length ? '<div class="nums">' + facts.map(x => '<div class="num"><b>' + t(x.v) + '</b><span>' + t(x.l || '') + '</span></div>').join('') + '</div>' : '') +
+    (h.audio ? '<div class="card-actions"><button class="btn sm ghost" data-action="load" data-mode="hl" data-hl="' + esc(h.id) + '">' + icon('headphones', 16) + ' Écouter</button></div>' : '') +
+    (srcs.length ? '<ul class="srcs compact">' + srcs.map(srcLi).join('') + '</ul>' : '') + '</article>';
+}
+function initials(n){
+  const w = String(n || '').replace(/[^0-9A-Za-zÀ-ÖØ-öø-ÿŒœ\s'’-]/g, ' ').split(/[\s'’-]+/).filter(x => x && !/^(le|la|les|l|de|du|des|d|et|dr)$/i.test(x));
+  if (!w.length) return '·';
+  return (w[0].charAt(0) + (w[1] ? w[1].charAt(0) : w[0].charAt(1))).toUpperCase();
+}
+function chHTML(c, G){
+  const isSearch = c.type === 'search';
+  return '<article class="ch"><span class="mono m-' + esc(c.group) + '" aria-hidden="true">' + esc(initials(c.name)) + '</span><h4 class="ch-name">' + t(c.name) + '</h4><p class="ch-who">' + t(c.who || '') + '</p>' +
+    '<p class="ch-desc">' + t(c.desc || '') + '</p><div class="ch-foot">' + (c.country ? '<span class="tag">' + esc(c.country) + '</span>' : '') + (G[c.group] ? '<span class="tag">' + esc(G[c.group].label) + '</span>' : '') + (isSearch ? '<span class="tag search">Recherche YouTube</span>' : '') +
+    '<a class="btn sm" href="' + esc(c.url) + '" target="_blank" rel="noopener noreferrer">' + (isSearch ? 'Rechercher ses vidéos' : 'Voir la chaîne') + ' ' + icon('ext', 14) + '</a></div></article>';
+}
+function dirHTML(R){
+  const head = '<div class="sec-head"><h2 class="sec-title">Qui suivre en français</h2>' + (R && arr(R.channels).length ? '<span class="sec-sub">' + R.channels.length + ' chaînes et personnalités</span>' : '') + '</div>';
+  if (!R || !arr(R.channels).length) return head + '<div class="empty"><p>' + "L'annuaire des chaînes francophones arrive avec la prochaine mise à jour de l'édition." + '</p></div>';
+  const groups = arr(R.groups).filter(g => g && R.channels.some(c => c.group === g.id));
+  const chips = '<button class="chip" data-action="fr-filter" data-g="all" aria-pressed="' + (S.frGroup === 'all') + '">Toutes <span class="chip-n">' + R.channels.length + '</span></button>' +
+    groups.map(g => '<button class="chip" data-action="fr-filter" data-g="' + esc(g.id) + '" aria-pressed="' + (S.frGroup === g.id) + '">' + esc(g.label) + ' <span class="chip-n">' + R.channels.filter(c => c.group === g.id).length + '</span></button>').join('');
+  return head + (R.intro ? '<p class="lede">' + t(R.intro) + '</p>' : '') +
+    '<div class="filters"><div class="chips" role="group" aria-label="Filtrer par thème">' + chips + '</div>' +
+    '<label class="search"><span class="sr">Rechercher une chaîne</span>' + icon('search', 18) + '<input id="fq" type="search" placeholder="Rechercher une chaîne ou un sujet" value="' + esc(S.frQuery) + '" autocomplete="off"></label></div>' +
+    '<div class="ch-grid" id="ch-grid"></div>' +
+    (arr(R.criteria).length ? '<div class="method" style="margin-top:20px"><h3>Comment cette sélection est faite</h3><ul class="ticks">' + R.criteria.map(c => '<li>' + t(c) + '</li>').join('') + '</ul></div>' : '');
+}
+function renderDir(){
+  const grid = $('#ch-grid'), R = S.franco; if (!grid || !R) return;
+  const q = norm(S.frQuery), G = Object.fromEntries(arr(R.groups).filter(Boolean).map(g => [g.id, g]));
+  const list = arr(R.channels).filter(c => c && c.name && isHttp(c.url) && (S.frGroup === 'all' || c.group === S.frGroup) &&
+    (!q || norm([c.name, c.who, c.desc, c.country, (G[c.group] || {}).label].join(' ')).includes(q)));
+  grid.innerHTML = list.length ? list.map(c => chHTML(c, G)).join('') : '<div class="empty"><p>Aucune chaîne ne correspond à cette recherche.</p></div>';
+  $$('[data-action="fr-filter"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.g === S.frGroup)));
+}
+function renderFranco(){
+  const el = $('#view-franco'); if (!el) return;
+  const ed = S.status === 'ready' ? S.edition : null, R = S.franco;
+  if (!ed && !R){ el.innerHTML = stateHTML(); return; }
+  const F = (ed && ed.francophonie) || {}, hls = frHighlights(ed), vids = frVideos(ed);
+  const intro = F.intro || (R && R.intro) || "La science en français : temps forts, vidéos et chaînes à suivre.";
+  const jumps = [hls.length ? ['#fr-forts', 'Temps forts'] : null, vids.length ? ['#fr-videos', 'Vidéos en français'] : null, ['#annuaire', 'Qui suivre']].filter(Boolean);
+  el.innerHTML = '<section class="fr-head"><div class="wrap fr-head-in"><p class="mh-kicker">Section spéciale' + (ed ? ' · ' + esc(longDate(ed.date)) : '') + '</p><h2 class="fr-title">Francophonie</h2><p class="fr-intro">' + t(intro) + '</p>' +
+    '<nav class="fr-jump" aria-label="Dans cette section">' + jumps.map(j => '<a href="' + j[0] + '" data-action="jump" data-target="' + j[0].slice(1) + '">' + esc(j[1]) + '</a>').join('') + '</nav></div></section>' +
+    (hls.length ? '<section class="section" id="fr-forts"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Les temps forts francophones</h2></div>' + hls.map(hlHTML).join('') + '</div></section>' : '') +
+    (vids.length ? '<section class="section" id="fr-videos"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Les vidéos en français</h2><span class="sec-sub">' + vids.length + ' vidéo' + (vids.length > 1 ? 's' : '') + '</span></div>' +
+      '<p class="lede">Les reportages et explications en français repérés pour cette édition. Les vidéos de contexte, plus anciennes, aident à comprendre le sujet.</p><div class="vgrid">' +
+      vids.map(x => { const it = x.key ? itemByKey(x.key) : null; return '<div class="frv">' + vtileHTML(x.v) + (it ? '<button class="btn sm ghost" data-action="open" data-key="' + esc(x.key) + '">' + icon('doc', 15) + ' Fiche : ' + t(shorten(it.title, 52)) + '</button>' : (x.hl ? '<button class="btn sm ghost" data-action="jump" data-target="hl-' + esc(x.hl) + '">' + icon('bubble', 15) + ' ' + t(shorten(x.hlTitle, 52)) + '</button>' : '')) + '</div>'; }).join('') +
+      '</div></div></section>' : '') +
+    '<section class="section" id="annuaire"><div class="wrap">' + dirHTML(R) + '</div></section>';
+  renderDir();
+}
+
+/* ---------- Vue « Vidéos » ---------- */
+function renderVideos(){
+  const el = $('#view-videos'); const ed = S.edition;
+  if (S.status !== 'ready' || !ed){ el.innerHTML = stateHTML(); return; }
+  const frOnly = S.vidFilter === 'fr';
+  const pick = vs => frOnly ? vs.filter(isFr) : vs;
+  const withV = ed.items.filter(i => pick(i.videos).length), without = ed.items.filter(i => !i.videos.length);
+  const cv = pick(ed.concept ? arr(ed.concept.videos).filter(v => v && isHttp(v.url)) : []);
+  const hls = frHighlights(ed).filter(h => pick(hlVideos(h)).length);
+  const fvs = arr(ed.francophonie && ed.francophonie.videos).filter(v => v && isHttp(v.url) && !v.item);
+  const nAll = countVideos(ed) + frHighlights(ed).reduce((a, h) => a + hlVideos(h).length, 0), nFr = frVideos(ed).length;
+  const nShown = withV.reduce((a, i) => a + pick(i.videos).length, 0) + cv.length + hls.reduce((a, h) => a + pick(hlVideos(h)).length, 0) + pick(fvs).length;
+  el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Les vidéos de l\'édition</h2><span class="sec-sub">' + nShown + ' vidéo' + (nShown > 1 ? 's' : '') + '</span></div>' +
+    '<div class="chips" role="group" aria-label="Langue des vidéos" style="margin-bottom:12px"><button class="chip" data-action="vid-filter" data-f="all" aria-pressed="' + !frOnly + '">Toutes <span class="chip-n">' + nAll + '</span></button><button class="chip" data-action="vid-filter" data-f="fr" aria-pressed="' + frOnly + '">' + icon('bubble', 15) + ' En français <span class="chip-n">' + nFr + '</span></button></div>' +
+    '<p class="lede">Pour chaque découverte, les vidéos repérées et vérifiées. « Source officielle » signale une vidéo publiée par l\'institution elle-même ; « Contexte » une vidéo plus ancienne qui aide à comprendre ; « Chaîne tierce » une vidéo à regarder avec recul.</p>' +
+    '<div class="vlist">' + withV.map(it => '<article class="vgroup"><div class="vg-head">' + catTag(CAT[it.cat]) + evHTML(it) + '</div><h3><button class="linklike" data-action="open" data-key="' + esc(it.key) + '">' + t(it.title) + '</button></h3><div class="vgrid">' + pick(it.videos).map(v => vtileHTML(v)).join('') + '</div></article>').join('') +
+    hls.map(h => '<article class="vgroup"><div class="vg-head"><span class="cat-tag">' + icon('bubble', 16) + 'Francophonie</span></div><h3><button class="linklike" data-action="goto-hl" data-hl="' + esc(h.id) + '">' + t(h.title) + '</button></h3><div class="vgrid">' + pick(hlVideos(h)).map(v => vtileHTML(v)).join('') + '</div></article>').join('') +
+    (cv.length ? '<article class="vgroup"><div class="vg-head"><span class="cat-tag">' + icon('spark', 16) + 'Le concept du jour</span></div><h3>' + t(ed.concept.title) + '</h3><div class="vgrid">' + cv.map(v => vtileHTML(v)).join('') + '</div></article>' : '') +
+    (pick(fvs).length ? '<article class="vgroup"><div class="vg-head"><span class="cat-tag">' + icon('bubble', 16) + 'Francophonie</span></div><h3>Les nouvelles vidéos des chaînes francophones</h3><div class="vgrid">' + pick(fvs).map(v => vtileHTML(v)).join('') + '</div></article>' : '') + '</div>' +
+    (!frOnly && without.length ? '<h3 class="sub-h">Pas encore de vidéo vérifiée</h3><ul class="novid-list">' + without.map(it => { const q = it.videoQuery || it.title; return '<li><button class="linklike" data-action="open" data-key="' + esc(it.key) + '">' + t(it.title) + '</button><span class="nv-links"><a class="btn sm" href="' + esc(ytSearch(q)) + '" target="_blank" rel="noopener noreferrer">YouTube ' + icon('ext', 14) + '</a><a class="btn sm" href="' + esc(dmSearch(q)) + '" target="_blank" rel="noopener noreferrer">Dailymotion ' + icon('ext', 14) + '</a></span></li>'; }).join('') + '</ul>' : '') +
+    '</div></section>';
+}
+
+/* ---------- Vue « Catégories » ---------- */
+function renderCats(){
+  const el = $('#view-categories'); const ed = S.edition;
+  if (S.status !== 'ready' || !ed){ el.innerHTML = stateHTML(); return; }
+  el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Par catégorie</h2><span class="sec-sub">' + esc(cap(longDate(ed.date))) + '</span></div><div class="catlist">' +
+    CATS.map(c => {
+      const its = ed.items.filter(i => i.cat === c.id); if (!its.length) return '';
+      const sum = catSummary(ed, c.id);
+      return '<section class="catblock"><header class="cb-head"><span class="cb-icon">' + icon(c.icon, 24) + '</span><div class="cb-title"><h3>' + esc(c.label) + '</h3><span class="sec-sub">' + its.length + ' découverte' + (its.length > 1 ? 's' : '') + '</span></div><button class="btn sm ghost" data-action="load" data-mode="cat" data-cat="' + c.id + '">' + icon('headphones', 16) + ' Écouter</button></header>' +
+        (sum ? '<p class="cb-sum">' + t(sum) + '</p>' : '') + '<ul class="rows">' + its.map(rowHTML).join('') + '</ul></section>';
+    }).join('') + '</div></div></section>';
+}
+
+/* ---------- Vue « Favoris » ---------- */
+function renderFavs(){
+  const el = $('#view-favoris');
+  const where = (S.uid && S.db && !S.prefsReadOnly) ? 'Tes favoris sont enregistrés dans ton compte et te suivent sur tous tes appareils.' : 'Tes favoris sont enregistrés dans ce navigateur.';
+  el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Favoris</h2><span class="sec-sub">' + S.favs.length + ' enregistré' + (S.favs.length > 1 ? 's' : '') + '</span></div>' +
+    (S.favs.length ? '<ul class="rows">' + S.favs.map(f => '<li><button class="row" data-action="open-fav" data-key="' + esc(f.k) + '"><span class="row-main"><span class="row-title">' + t(f.title) + '</span><span class="row-meta">' + esc((CAT[f.cat] || CAT.tech).label) + ' · édition du ' + esc(shortDate(f.date)) + '</span></span>' + evHTMLn(Number(f.level)) + '</button><button class="iconbtn fav" data-action="fav" data-key="' + esc(f.k) + '" aria-pressed="true" aria-label="Retirer des favoris">' + icon('star', 19) + '</button></li>').join('') + '</ul>'
+      : '<div class="empty">' + icon('star', 28) + '<p>Aucun favori pour l\'instant.</p><p class="muted">Touche l\'étoile d\'une découverte pour la retrouver ici.</p></div>') +
+    '<p class="muted small" style="margin-top:14px">' + esc(where) + '</p></div></section>';
+}
+
+/* ---------- Vue « Écouter » ---------- */
+function renderListen(){
+  const el = $('#view-ecouter'); const ed = S.edition;
+  if (S.status !== 'ready' || !ed){ el.innerHTML = stateHTML(); return; }
+  if (!Player.chapters.length || (!Player.started && (Player.edDate !== ed.date || (Player.engine !== 'file' && fileSegment('full'))))){
+    const seg = fileSegment('full');
+    Player.load('full', seg ? seg.chapters : buildChapters('full', ed), 'Édition complète', ed.date, seg);
+  }
+  const fl = estMin(buildChapters('flash', ed)), fu = estMin(buildChapters('full', ed));
+  el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Écouter</h2><span class="sec-sub">' + esc(cap(longDate(ed.date))) + '</span></div>' +
+    listenNoteHTML() +
+    '<div class="listen-grid"><div class="player"><p class="pl-label" id="pl-label"></p><h3 class="pl-title" id="pl-title"></h3><div class="pl-bar" aria-hidden="true"><i id="pl-fill"></i></div><div class="pl-time"><span id="pl-pos"></span><span id="pl-left"></span></div>' +
+    '<div class="pl-ctrls"><button class="iconbtn lg" data-action="prev" aria-label="Chapitre précédent">' + icon('prev', 22) + '</button><button class="playbtn" id="pl-toggle" data-action="toggle" aria-label="Lecture">' + icon('play', 30) + '</button><button class="iconbtn lg" data-action="next" aria-label="Chapitre suivant">' + icon('next', 22) + '</button></div>' +
+    '<div class="pl-set"><div class="speeds" role="group" aria-label="Vitesse de lecture">' + RATES.map(r => '<button class="chip sm" data-action="rate" data-rate="' + r + '" aria-pressed="' + (r === S.prefs.rate) + '">' + String(r).replace('.', ',') + '×</button>').join('') + '</div><label class="voice"><span>Voix</span><select id="voice-select"></select></label></div>' +
+    '<p class="pl-note">Lecture par la voix de synthèse de ton appareil. Pour une écoute continue, garde l\'écran allumé.</p></div>' +
+    '<div class="modes"><h3 class="sub-h">Choisir une émission</h3>' +
+    '<button class="mode" data-action="load" data-mode="flash"><span class="mode-ic">' + icon('play', 18) + '</span><span><b>Le flash</b><small>' + ed.items.length + ' titres · ≈ ' + fl + ' min</small></span></button>' +
+    '<button class="mode" data-action="load" data-mode="full"><span class="mode-ic">' + icon('headphones', 18) + '</span><span><b>L\'édition complète</b><small>Tous les sujets en détail · ≈ ' + fu + ' min</small></span></button>' +
+    (frHighlights(ed).length ? '<button class="mode" data-action="load" data-mode="franco"><span class="mode-ic">' + icon('bubble', 18) + '</span><span><b>Les temps forts francophones</b><small>' + frHighlights(ed).length + ' sujets · ≈ ' + estMin(buildChapters('franco', ed)) + ' min</small></span></button>' : '') +
+    '<p class="sub-h small">Par catégorie</p><div class="chips wrapchips">' + CATS.filter(c => ed.items.some(i => i.cat === c.id)).map(c => '<button class="chip" data-action="load" data-mode="cat" data-cat="' + c.id + '">' + icon(c.icon, 15) + ' ' + esc(c.short) + '</button>').join('') + '</div></div></div>' +
+    '<h3 class="sub-h">Chapitres</h3><ol class="chapters" id="chapters"></ol><h3 class="sub-h">Texte de l\'émission</h3><div class="transcript" id="transcript"></div></div></section>';
+  renderVoiceSelect(); renderChapters(); renderTranscript(); updatePlayerUI();
+}
+
+/* ---------- Podcast : construction des émissions ---------- */
+function itemAudio(it){ return it.audio || [it.title + '.', it.dek].concat(it.body, ['Niveau de preuve : ' + LEVELS[lvl(it)].name + '.']).join(' '); }
+function conceptAudio(c){ return c.audio || ['Le concept du jour : ' + c.title + '.'].concat(arr(c.text)).join(' '); }
+function buildChapters(mode, ed, cat){
+  if (!ed) return [];
+  const Pd = ed.podcast || {}; const items = ed.items; const ch = []; const dt = longDate(ed.date);
+  if (mode === 'flash'){
+    ch.push({ title:'Ouverture', text: Pd.flashIntro || ('Bonjour, voici le flash de la Matinale des sciences du ' + dt + '.') });
+    items.forEach(it => ch.push({ key: it.key, title: it.title, text: it.flash || it.dek || it.title }));
+    ch.push({ title:'Clôture', text: Pd.flashOutro || "Les détails, les vidéos et les sources sont dans l'application. Belle journée !" });
+  } else if (mode === 'full'){
+    ch.push({ title:'Ouverture', text: Pd.intro || ('Bonjour et bienvenue dans la Matinale des sciences du ' + dt + '.') });
+    items.forEach(it => ch.push({ key: it.key, title: it.title, text: itemAudio(it) }));
+    if (ed.concept && ed.concept.title) ch.push({ title:'Le concept du jour', text: conceptAudio(ed.concept) });
+    const fh = frHighlights(ed).filter(h => h.audio);
+    if (fh.length) ch.push({ title:'Francophonie', text: [Pd.franco || 'Place à la francophonie.'].concat(fh.map(h => h.audio)).join(' ') });
+    ch.push({ title:'Clôture', text: Pd.outro || "C'est la fin de cette édition. Rendez-vous demain matin pour de nouvelles découvertes." });
+  } else if (mode === 'cat'){
+    const c = CAT[cat]; const its = items.filter(i => i.cat === cat); if (!c || !its.length) return [];
+    ch.push({ title: c.label, text: 'Les nouvelles de la catégorie ' + c.label + ', dans la Matinale des sciences du ' + dt + '.' });
+    its.forEach(it => ch.push({ key: it.key, title: it.title, text: itemAudio(it) }));
+  } else if (mode === 'concept'){
+    if (ed.concept && ed.concept.title) ch.push({ title:'Le concept du jour', text: conceptAudio(ed.concept) });
+  } else if (mode === 'franco'){
+    frHighlights(ed).forEach(h => ch.push({ title: h.title, text: h.audio || arr(h.text).join(' ') }));
+  }
+  return ch.filter(c => c.text && String(c.text).trim());
+}
+function speechify(s){
+  return String(s || '')
+    .replace(/≈\s?/g, 'environ ').replace(/×\s?/g, 'fois ').replace(/&/g, ' et ')
+    .replace(/km²/g, ' kilomètres carrés').replace(/km\/h/g, ' kilomètres à l’heure')
+    .replace(/10⁻¹⁵/g, 'dix puissance moins quinze')
+    .replace(/\s[–—]\s/g, ', ').replace(/[«»]/g, '').replace(/\s+/g, ' ').trim();
+}
+function splitSentences(text){
+  const s = String(text || '').replace(/\s+/g, ' ').trim(); if (!s) return [];
+  let parts = null;
+  if (window.Intl && Intl.Segmenter){ try { parts = Array.from(new Intl.Segmenter('fr', { granularity:'sentence' }).segment(s), x => x.segment.trim()).filter(Boolean); } catch (e) { parts = null; } }
+  if (!parts || !parts.length) parts = (s.match(/[^.!?…]+[.!?…]+["»)]*|[^.!?…]+$/g) || [s]).map(x => x.trim()).filter(Boolean);
+  const out = [];
+  parts.forEach(p => {
+    if (p.length <= 200){ out.push(p); return; }
+    let cur = '';
+    p.replace(/([,;:])\s+/g, '$1\u0000').split('\u0000').forEach(seg => {
+      if (cur && (cur + ' ' + seg).length > 200){ out.push(cur.trim()); cur = seg; } else cur = cur ? cur + ' ' + seg : seg;
+    });
+    if (cur.trim()) out.push(cur.trim());
+  });
+  return out;
+}
+function estMin(chs){ const n = chs.reduce((a, c) => a + splitSentences(speechify(c.text)).reduce((x, s) => x + s.length, 0), 0); return Math.max(1, Math.round(n / CPS / 60)); }
+function fmtDur(chars){ const sec = chars / (CPS * (S.prefs.rate || 1)); return sec < 60 ? '< 1 min' : Math.round(sec / 60) + ' min'; }
+
+/* ---------- Podcast : lecteur (synthèse vocale) ---------- */
+const Player = {
+  synth: ('speechSynthesis' in window && typeof window.SpeechSynthesisUtterance === 'function') ? window.speechSynthesis : null,
+  chapters:[], sents:[], lens:[], totalChars:0, ci:0, si:0, playing:false, started:false, done:false,
+  token:0, label:'', mode:null, edDate:null, wake:null, voices:[],
+  engine:'tts', seg:null, au:null, lastUI:0, _ci:-1,
+  load(mode, chapters, label, edDate, seg){
+    this.stop();
+    this.engine = seg ? 'file' : 'tts'; this.seg = seg || null;
+    this.mode = mode; this.label = label || ''; this.edDate = edDate || null; this.chapters = chapters;
+    this.sents = chapters.map(c => splitSentences(speechify(c.text)));
+    this.lens = this.sents.map(a => a.map(x => x.length));
+    this.totalChars = this.lens.reduce((a, l) => a + l.reduce((x, y) => x + y, 0), 0);
+    this.ci = 0; this.si = 0; this.done = false;
+  },
+  chapterChars(i){ return (this.lens[i] || []).reduce((x, y) => x + y, 0); },
+  doneChars(){ let n = 0; for (let i = 0; i < this.ci && i < this.lens.length; i++) n += this.chapterChars(i); const cur = this.lens[this.ci] || []; for (let j = 0; j < this.si && j < cur.length; j++) n += cur[j]; return n; },
+  /* Lecture d'un enregistrement (fichier audio) : fonctionne partout, même sans voix de synthèse. */
+  audioEl(){
+    if (this.au) return this.au;
+    const au = new Audio(); au.preload = 'auto';
+    au.addEventListener('timeupdate', () => this.onTime());
+    au.addEventListener('ended', () => { if (this.engine === 'file') this.finish(); });
+    au.addEventListener('pause', () => { if (this.engine === 'file' && this.playing && !au.ended){ this.playing = false; this.unlock(); updatePlayerUI(); } });
+    au.addEventListener('play', () => { if (this.engine === 'file' && !this.playing){ this.playing = true; this.started = true; updatePlayerUI(); } });
+    au.addEventListener('error', () => { if (this.engine === 'file' && this.started) this.fileFailed(); });
+    this.au = au; return au;
+  },
+  playFile(){
+    const seg = this.seg; if (!seg || !this.chapters.length) return;
+    const au = this.audioEl();
+    if (this.done){ this.ci = 0; this.si = 0; this.done = false; }
+    let abs = seg.src; try { abs = new URL(seg.src, location.href).href; } catch (e) {}
+    if (au.src !== abs) au.src = seg.src;
+    const ch = this.chapters[this.ci] || this.chapters[0];
+    const cur = au.currentTime || 0;
+    if (!(cur >= ch.start - 0.3 && cur < ch.end)){ try { au.currentTime = ch.start; } catch (e) {} }
+    try { au.playbackRate = S.prefs.rate || 1; } catch (e) {}
+    this.playing = true; this.started = true;
+    let p; try { p = au.play(); } catch (e) { p = null; this.fileFailed(); return; }
+    if (p && p.catch) p.catch(err => {
+      this.playing = false; updatePlayerUI();
+      if (err && err.name === 'NotAllowedError') toast("Touche Lecture pour démarrer l'écoute."); else if (!(err && err.name === 'AbortError')) this.fileFailed();
+    });
+    this.lock(); updatePlayerUI();
+  },
+  fileFailed(){
+    this.playing = false; this.unlock(); updatePlayerUI();
+    if (this.synth){
+      const ed = S.edition; const chs = this.chapters.map(c => ({ key: c.key ? (ed && ed.date) + ':' + c.key : undefined, title: c.title, text: c.text }));
+      const ci = this.ci; this.load(this.mode, chs, this.label, this.edDate, null); this.ci = Math.min(ci, chs.length - 1); this.play(); return;
+    }
+    openListenElsewhere();
+  },
+  onTime(){
+    if (this.engine !== 'file' || !this.au || !this.chapters.length) return;
+    const t = this.au.currentTime || 0, chs = this.chapters;
+    let c = chs[this.ci];
+    if (c && this.playing && t >= c.end - 0.05){
+      if (this.ci < chs.length - 1){ this.ci++; this.si = 0; const nx = chs[this.ci]; if (Math.abs(t - nx.start) > 1.2){ try { this.au.currentTime = nx.start; } catch (e) {} } }
+      else { try { this.au.pause(); } catch (e) {} this.finish(); return; }
+    }
+    for (let i = 0; i < chs.length; i++){ if (t >= chs[i].start - 0.05 && t < chs[i].end){ this.ci = i; break; } }
+    c = chs[this.ci];
+    const f = Math.max(0, Math.min(1, (t - c.start) / Math.max(0.1, c.end - c.start)));
+    const L = this.lens[this.ci] || [], tot = L.reduce((a, b) => a + b, 0) || 1;
+    let acc = 0, si = 0;
+    for (let j = 0; j < L.length; j++){ acc += L[j]; si = j; if (acc / tot >= f) break; }
+    const changed = si !== this.si || this._ci !== this.ci; this.si = si; this._ci = this.ci;
+    const now = Date.now(); if (changed || now - this.lastUI > 900){ this.lastUI = now; updatePlayerUI(); }
+  },
+  progress(){
+    if (this.done) return 1;
+    if (this.engine === 'file' && this.seg){ const s = this.seg, t = this.au ? (this.au.currentTime || s.start) : s.start; return Math.max(0, Math.min(1, (t - s.start) / Math.max(1, s.end - s.start))); }
+    return this.doneChars() / (this.totalChars || 1);
+  },
+  durLabel(sec){ sec = sec / (S.prefs.rate || 1); return sec < 60 ? '< 1 min' : Math.round(sec / 60) + ' min'; },
+  leftLabel(){
+    if (this.engine === 'file' && this.seg){ const s = this.seg, t = this.au ? Math.max(this.au.currentTime || 0, s.start) : s.start; return this.durLabel(Math.max(0, s.end - t)); }
+    return fmtDur((this.totalChars || 1) - this.doneChars());
+  },
+  chapterDur(i){
+    const c = this.chapters[i];
+    if (this.engine === 'file' && c && c.end != null) return this.durLabel(c.end - c.start);
+    return fmtDur(this.chapterChars(i));
+  },
+  play(){
+    if (!this.chapters.length) return;
+    if (this.engine === 'file'){ this.playFile(); return; }
+    if (!this.synth){ openListenElsewhere(); return; }
+    if (this.done){ this.ci = 0; this.si = 0; this.done = false; }
+    this.playing = true; this.started = true;
+    const tk = ++this.token;
+    const busy = this.synth.speaking || this.synth.pending;
+    if (busy){ try { this.synth.cancel(); } catch (e) {} setTimeout(() => { if (this.playing && tk === this.token) this.speak(); }, 90); }
+    else this.speak();
+    this.lock(); updatePlayerUI();
+  },
+  pause(){
+    this.playing = false; this.token++;
+    if (this.engine === 'file'){ try { this.au && this.au.pause(); } catch (e) {} }
+    else { try { this.synth && this.synth.cancel(); } catch (e) {} }
+    this.unlock(); updatePlayerUI();
+  },
+  toggle(){ if (this.playing) this.pause(); else this.play(); },
+  speak(){
+    const tk = this.token;
+    const txt = (this.sents[this.ci] || [])[this.si];
+    if (txt == null){ this.finish(); return; }
+    let u; try { u = new SpeechSynthesisUtterance(txt); } catch (e) { this.finish(); return; }
+    this.cur = u; /* garde une référence : sans elle, certains navigateurs perdent l'événement de fin */
+    const v = pickVoice(); if (v){ u.voice = v; u.lang = v.lang; } else u.lang = 'fr-FR';
+    u.rate = S.prefs.rate || 1; u.pitch = 1; u.volume = 1;
+    u.onend = () => { if (tk !== this.token) return; this.advance(); };
+    u.onerror = ev => {
+      if (tk !== this.token) return;
+      const er = ev && ev.error;
+      if (er === 'interrupted' || er === 'canceled') return;
+      if (er === 'not-allowed'){ this.playing = false; updatePlayerUI(); toast("Touche Lecture pour démarrer l'écoute."); return; }
+      this.advance();
+    };
+    try { this.synth.speak(u); } catch (e) { this.advance(); return; }
+    updatePlayerUI();
+  },
+  advance(){
+    this.si++;
+    if (this.si >= (this.sents[this.ci] || []).length){ this.ci++; this.si = 0; }
+    if (this.ci >= this.chapters.length){ this.finish(); return; }
+    this.speak();
+  },
+  finish(){ this.playing = false; this.token++; this.done = true; if (this.engine === 'file'){ try { this.au && this.au.pause(); } catch (e) {} } this.unlock(); updatePlayerUI(); },
+  jump(ci){
+    if (this.engine === 'file'){
+      this.ci = Math.min(Math.max(ci, 0), Math.max(0, this.chapters.length - 1)); this.si = 0; this.done = false;
+      const c = this.chapters[this.ci]; if (c){ try { this.audioEl().currentTime = c.start; } catch (e) {} }
+      updatePlayerUI(); return;
+    }
+    this.token++;
+    try { if (this.synth && (this.synth.speaking || this.synth.pending)) this.synth.cancel(); } catch (e) {}
+    this.ci = Math.min(Math.max(ci, 0), Math.max(0, this.chapters.length - 1)); this.si = 0; this.done = false;
+    if (this.playing){ const tk = this.token; setTimeout(() => { if (this.playing && tk === this.token) this.speak(); }, 90); }
+    updatePlayerUI();
+  },
+  next(){ if (this.ci < this.chapters.length - 1) this.jump(this.ci + 1); },
+  prev(){ if (this.si > 1 || this.ci === 0) this.jump(this.ci); else this.jump(this.ci - 1); },
+  restartSentence(){
+    if (this.engine === 'file'){ try { if (this.au) this.au.playbackRate = S.prefs.rate || 1; } catch (e) {} updatePlayerUI(); return; }
+    if (!this.playing){ updatePlayerUI(); return; }
+    this.token++; try { this.synth.cancel(); } catch (e) {}
+    const tk = this.token; setTimeout(() => { if (this.playing && tk === this.token) this.speak(); }, 90);
+  },
+  stop(){ this.token++; this.playing = false; try { if (this.au) this.au.pause(); } catch (e) {} try { if (this.synth && (this.synth.speaking || this.synth.pending)) this.synth.cancel(); } catch (e) {} this.unlock(); },
+  lock(){
+    try {
+      if (!('wakeLock' in navigator) || this.wake || document.visibilityState !== 'visible') return;
+      navigator.wakeLock.request('screen').then(w => { this.wake = w; if (w && w.addEventListener) w.addEventListener('release', () => { this.wake = null; }); }).catch(() => { this.wake = null; });
+    } catch (e) { this.wake = null; }
+  },
+  unlock(){ try { if (this.wake) this.wake.release(); } catch (e) {} this.wake = null; }
+};
+function voiceScore(v){
+  let s = 0; const l = v.lang || '', n = v.name || '';
+  if (/fr[-_]FR/i.test(l)) s += 4; else if (/fr[-_](BE|CH)/i.test(l)) s += 2; else if (/fr[-_]CA/i.test(l)) s += 1;
+  if (/natural|neural|online|premium|enhanced|améliorée|siri/i.test(n)) s += 3;
+  if (/google/i.test(n)) s += 2;
+  return s;
+}
+function loadVoices(){
+  if (!Player.synth) return;
+  let all = []; try { all = Player.synth.getVoices() || []; } catch (e) {}
+  Player.voices = all.filter(v => /^fr([-_]|$)/i.test(v.lang || '')).sort((a, b) => voiceScore(b) - voiceScore(a));
+  renderVoiceSelect();
+}
+function pickVoice(){
+  const vs = Player.voices; if (!vs || !vs.length) return null;
+  if (S.prefs.voiceURI){ const m = vs.find(v => v.voiceURI === S.prefs.voiceURI); if (m) return m; }
+  return vs[0];
+}
+function renderVoiceSelect(){
+  const sel = $('#voice-select'); if (!sel) return;
+  const vs = Player.voices || [];
+  if (!vs.length){ sel.innerHTML = '<option value="">Voix française par défaut</option>'; sel.disabled = !Player.synth; return; }
+  const cur = pickVoice(); sel.disabled = false;
+  sel.innerHTML = vs.map(v => { const reg = /CA/i.test(v.lang) ? ' (Canada)' : /BE/i.test(v.lang) ? ' (Belgique)' : /CH/i.test(v.lang) ? ' (Suisse)' : ''; return '<option value="' + esc(v.voiceURI) + '"' + (cur && cur.voiceURI === v.voiceURI ? ' selected' : '') + '>' + esc(v.name + reg) + '</option>'; }).join('');
+}
+function startMode(mode, opt){
+  opt = opt || {};
+  const ed = S.edition; let chapters = [], label = '', edDate = ed && ed.date;
+  if (mode === 'item'){
+    const it = itemByKey(opt.key); if (!it) return;
+    chapters = [{ key: it.key, title: it.title, text: itemAudio(it) }]; label = 'Un sujet · ' + CAT[it.cat].short; edDate = opt.key.split(':')[0];
+  } else if (mode === 'cat'){ chapters = buildChapters('cat', ed, opt.cat); label = (CAT[opt.cat] || {}).label || 'Catégorie'; }
+  else if (mode === 'concept'){ chapters = buildChapters('concept', ed); label = 'Le concept du jour'; }
+  else if (mode === 'franco'){ chapters = buildChapters('franco', ed); label = 'Francophonie'; }
+  else if (mode === 'hl'){ const h = frHighlights(ed).find(x => x.id === opt.hl); if (!h) return; chapters = [{ title: h.title, text: h.audio || arr(h.text).join(' ') }]; label = 'Francophonie'; }
+  else if (mode === 'flash'){ chapters = buildChapters('flash', ed); label = 'Le flash'; }
+  else { chapters = buildChapters('full', ed); label = 'Édition complète'; }
+  if (!chapters.length) return;
+  /* L'enregistrement du jour passe en premier (il continue écran éteint) ; sinon, la voix du téléphone. */
+  const seg = fileSegment(mode, opt);
+  if (seg) Player.load(mode, seg.chapters, label, edDate, seg);
+  else if (Player.synth) Player.load(mode, chapters, label, edDate);
+  else { openListenElsewhere(); return; }
+  renderChapters(); renderTranscript();
+  Player.play();
+}
+/* Enregistrements audio publiés avec l'application (préparés chaque matin). */
+function loadAudioIndex(){
+  try {
+    fetch('audio/audio.json', { cache:'no-store' }).then(r => r.ok ? r.json() : null).then(a => {
+      if (!a || !a.date || !(a.flash || a.full)) return;
+      S.audio = a;
+      if (S.tab === 'ecouter' && !Player.started) renderListen();
+    }).catch(() => {});
+  } catch (e) {}
+}
+function fileSegment(mode, opt){
+  opt = opt || {};
+  const A = S.audio, ed = S.edition;
+  if (!A || !ed || A.date !== ed.date) return null;
+  const pick = (rec, chs) => {
+    chs = arr(chs).filter(c => c && typeof c.start === 'number' && typeof c.end === 'number' && c.end > c.start);
+    if (!rec || !rec.src || /^[a-z]+:/i.test(rec.src) || !chs.length) return null;
+    return { src: rec.src, start: chs[0].start, end: chs[chs.length - 1].end, chapters: chs.map(c => ({ key: c.key, title: c.title, text: c.text || c.title, start: c.start, end: c.end })) };
+  };
+  if (mode === 'flash') return A.flash ? pick(A.flash, A.flash.chapters) : null;
+  if (!A.full) return null;
+  const fc = arr(A.full.chapters);
+  if (mode === 'full') return pick(A.full, fc);
+  if (mode === 'item'){ const id = String(opt.key || '').split(':').slice(1).join(':'); return pick(A.full, fc.filter(c => c.key === id)); }
+  if (mode === 'cat'){ const ids = new Set(ed.items.filter(i => i.cat === opt.cat).map(i => i.id)); return pick(A.full, fc.filter(c => c.key && ids.has(c.key))); }
+  if (mode === 'concept') return pick(A.full, fc.filter(c => c.title === 'Le concept du jour'));
+  if (mode === 'franco' || mode === 'hl') return pick(A.full, fc.filter(c => c.title === 'Francophonie'));
+  return null;
+}
+function listenNoteHTML(){
+  if (Player.synth || fileSegment('full')) return '';
+  return '<div class="notice info">' + icon('headphones', 20) + '<div><p>' + "L'enregistrement audio se prépare chaque matin avec l'édition. S'il n'est pas encore là, réessaie dans quelques minutes." + '</p>' +
+    '<p class="notice-actions"><button class="btn sm" data-action="reload">' + icon('refresh', 15) + ' Réessayer</button></p></div></div>';
+}
+function openListenElsewhere(){
+  showSheet('<div class="sheet-head"><div class="in pad"><h2 class="sheet-h">Écouter la Matinale</h2><button class="iconbtn" data-action="close" aria-label="Fermer">' + icon('close') + '</button></div></div>' +
+    '<div class="pad sheet-body"><p>' + "L'enregistrement de cette édition n'est pas encore prêt, et cet appareil ne propose pas de voix de lecture. L'enregistrement se prépare chaque matin avec l'édition : réessaie dans quelques minutes." + '</p>' +
+    '<div class="d-actions"><button class="btn primary" data-action="reload">' + icon('refresh', 18) + ' Réessayer</button></div></div>', 'Écouter la Matinale');
+}
+function renderChapters(){
+  const ol = $('#chapters'); if (!ol) return;
+  ol.innerHTML = Player.chapters.map((c, i) => '<li><button class="chap' + (i === Player.ci ? ' on' : '') + '" data-action="chapter" data-ci="' + i + '"><span class="chap-n">' + String(i + 1).padStart(2, '0') + '</span><span class="chap-t">' + t(c.title) + '</span><span class="chap-d">' + Player.chapterDur(i) + '</span></button></li>').join('');
+}
+function renderTranscript(){
+  const el = $('#transcript'); if (!el) return;
+  el.innerHTML = Player.chapters.map((c, ci) => '<div class="tr-ch"><h4>' + t(c.title) + '</h4><p>' + (Player.sents[ci] || []).map((s, si) => '<span class="s" data-ci="' + ci + '" data-si="' + si + '">' + t(s) + '</span>').join(' ') + '</p></div>').join('');
+  highlight();
+}
+function highlight(){
+  $$('.transcript .s.on').forEach(x => x.classList.remove('on'));
+  if (!Player.started) return;
+  const cur = document.querySelector('.transcript .s[data-ci="' + Player.ci + '"][data-si="' + Player.si + '"]');
+  if (!cur) return;
+  cur.classList.add('on');
+  if (S.tab === 'ecouter' && Player.playing && !S.sheetOpen){
+    const r = cur.getBoundingClientRect(), vh = window.innerHeight || 800;
+    if (r.top < 96 || r.bottom > vh - 150) cur.scrollIntoView({ block:'center', behavior: reduceMotion() ? 'auto' : 'smooth' });
+  }
+}
+function updatePlayerUI(){
+  const ch = Player.chapters[Player.ci];
+  const tog = $('#pl-toggle'); if (tog){ tog.innerHTML = icon(Player.playing ? 'pause' : 'play', 30); tog.setAttribute('aria-label', Player.playing ? 'Pause' : 'Lecture'); tog.disabled = false; }
+  const lb = $('#pl-label'); if (lb) lb.textContent = Player.label || '';
+  const tt = $('#pl-title'); if (tt) tt.textContent = ch ? fr(ch.title) : '';
+  const fill = $('#pl-fill'); if (fill) fill.style.width = Math.min(100, Math.round(Player.progress() * 100)) + '%';
+  const pos = $('#pl-pos'); if (pos) pos.textContent = Player.chapters.length ? (Player.done ? 'Émission terminée' : 'Chapitre ' + (Player.ci + 1) + ' sur ' + Player.chapters.length) : '';
+  const left = $('#pl-left'); if (left) left.textContent = Player.chapters.length && !Player.done ? '≈ ' + Player.leftLabel() + ' restantes' : '';
+  const note = $('.pl-note'); if (note) note.textContent = Player.engine === 'file' ? "Enregistrement audio de l'édition, préparé chaque matin." : "Lecture par la voix de synthèse de ton appareil. Pour une écoute continue, garde l'écran allumé.";
+  const vw = $('.player .voice'); if (vw) vw.hidden = Player.engine === 'file' || !Player.synth;
+  $$('#chapters .chap').forEach((b, i) => b.classList.toggle('on', i === Player.ci));
+  $$('[data-action="rate"]').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.rate) === S.prefs.rate)));
+  highlight(); updateMini();
+}
+function updateMini(){
+  const m = $('#mini'); if (!m) return;
+  const show = !!(Player.started && Player.chapters.length && S.tab !== 'ecouter');
+  m.hidden = !show; document.body.classList.toggle('has-mini', show);
+  if (!show) return;
+  $('#mini-label').textContent = Player.label || '';
+  const ch = Player.chapters[Player.ci]; $('#mini-title').textContent = ch ? fr(ch.title) : '';
+  const b = $('#mini-toggle'); b.innerHTML = icon(Player.playing ? 'pause' : 'play', 22); b.setAttribute('aria-label', Player.playing ? 'Pause' : 'Lecture');
+}
+
+/* ---------- Fiche détaillée ---------- */
+function askHTML(){
+  if (!S.sample) return '';
+  return '<section class="d-sec ask" id="ask-sec"' + (S.sample ? '' : ' hidden') + '><h3 class="d-h">' + icon('spark', 18) + ' Une question sur cette découverte ?</h3>' +
+    '<p class="muted small" style="margin:0">Claude répond à partir de cette fiche. La première fois, ton accord est demandé.</p>' +
+    '<div class="ask-chips">' + ASKS.map(a => '<button class="chip" data-action="ask" data-q="' + esc(a.q) + '">' + esc(a.l) + '</button>').join('') + '</div>' +
+    '<form class="ask-form" id="ask-form"><label class="sr" for="ask-input">Ta question</label><input id="ask-input" type="text" maxlength="300" placeholder="Pose ta question…" autocomplete="off"><button class="btn primary sm" type="submit">Demander</button></form>' +
+    '<div class="ask-out" id="ask-out" hidden aria-live="polite"></div></section>';
+}
+function openDetail(key, focus){
+  const it = itemByKey(key); if (!it) return;
+  S.detailKey = key; markRead(key);
+  const n = lvl(it), L = LEVELS[n], ev = it.evidence || {};
+  const study = isHttp(it.studyUrl) ? it.studyUrl : (it.doi ? 'https://doi.org/' + it.doi : null);
+  const html = '<div class="sheet-head"><div class="in pad">' + catTag(CAT[it.cat]) + '<span class="sheet-date">' + esc(dateLabel(it)) + '</span>' + favBtn(it) + '<button class="iconbtn" data-action="close" aria-label="Fermer la fiche">' + icon('close') + '</button></div></div>' +
+    '<article class="detail pad"><h2 class="d-title">' + t(it.title) + '</h2>' +
+    '<div class="ev-row">' + evHTML(it) + (ev.reviewed === true ? '<span class="reviewed">' + icon('check', 15) + ' Relu par des pairs</span>' : '') + (ev.reviewed === false ? '<span class="reviewed no">' + icon('alert', 15) + ' Non relu par des pairs</span>' : '') + '<span class="status">' + t(ev.status || '') + '</span></div>' +
+    '<section class="d-sec" id="d-videos"><h3 class="d-h">' + icon('video', 18) + ' Les vidéos</h3>' + videosBlock(it) + '</section>' +
+    '<p class="d-dek">' + t(it.dek) + '</p>' +
+    (it.numbers.length ? '<div class="nums">' + it.numbers.map(x => '<div class="num"><b>' + t(x.v) + '</b><span>' + t(x.l || '') + '</span></div>').join('') + '</div>' : '') +
+    '<section class="d-sec"><h3 class="d-h">' + icon('doc', 18) + ' Ce qu\'il faut savoir</h3>' + it.body.map(p => '<p>' + t(p) + '</p>').join('') + '</section>' +
+    (it.why ? '<section class="d-sec why"><h3 class="d-h">Pourquoi c\'est important</h3><p>' + t(it.why) + '</p></section>' : '') +
+    '<section class="d-sec"><h3 class="d-h">' + icon('quest', 18) + ' Est-ce prouvé ?</h3><div class="proof-card"><div class="proof-top">' + evHTMLn(n, true) + '<span class="proof-meta"><span>' + t(ev.type || '') + '</span>' + (it.journal ? '<span>' + esc(it.journal) + '</span>' : '') + '</span></div>' +
+    '<p class="proof-desc">' + esc(L.desc) + '</p>' + (ev.note ? '<p class="proof-note">' + t(ev.note) + '</p>' : '') + '</div>' +
+    ((it.sure.length || it.unsure.length) ? '<div class="su">' + (it.sure.length ? '<div class="ok"><h4>' + icon('check', 17) + ' Ce qui est établi</h4><ul>' + it.sure.map(x => '<li>' + t(x) + '</li>').join('') + '</ul></div>' : '') + (it.unsure.length ? '<div class="ko"><h4>' + icon('quest', 17) + ' Ce qui reste à prouver</h4><ul>' + it.unsure.map(x => '<li>' + t(x) + '</li>').join('') + '</ul></div>' : '') + '</div>' : '') +
+    (it.health ? '<div class="caution">' + icon('alert', 18) + '<p>Information scientifique, pas un conseil médical : ne modifie pas un traitement sans l\'avis d\'un professionnel de santé.</p></div>' : '') +
+    (it.coi ? '<div class="caution">' + icon('alert', 18) + '<p><b>Conflits d\'intérêts déclarés.</b> ' + t(it.coi) + '</p></div>' : '') + '</section>' +
+    '<section class="d-sec"><h3 class="d-h">' + icon('ext', 18) + ' Sources</h3><ul class="srcs">' + it.sources.map(srcLi).join('') + '</ul>' + (it.who ? '<p class="muted small">Recherche : ' + t(it.who) + '</p>' : '') + '</section>' +
+    '<div class="d-actions"><button class="btn primary" data-action="load" data-mode="item" data-key="' + esc(key) + '">' + icon('headphones', 18) + ' Écouter ce sujet</button>' +
+    (study ? '<a class="btn" href="' + esc(study) + '" target="_blank" rel="noopener noreferrer">' + icon('doc', 18) + ' Étude originale</a><button class="btn ghost" data-action="copy" data-text="' + esc(study) + '">' + icon('copy', 18) + ' Copier le lien</button>' : '') + '</div>' +
+    askHTML() + '</article>';
+  showSheet(html, it.title);
+  if (focus === 'videos') requestAnimationFrame(() => { const v = $('#d-videos'); if (v) v.scrollIntoView({ block:'start' }); });
+}
+function showSheet(html, label){
+  const bd = $('#sheet'), pn = $('#sheet-panel');
+  if (!S.sheetOpen) S.lastFocus = document.activeElement;
+  pn.innerHTML = html; pn.setAttribute('aria-label', label || 'Fiche');
+  bd.hidden = false; document.documentElement.classList.add('locked'); pn.scrollTop = 0; S.sheetOpen = true;
+  const cb = pn.querySelector('[data-action="close"]'); if (cb) { try { cb.focus({ preventScroll:true }); } catch (e) { cb.focus(); } }
+}
+function closeSheet(){
+  const bd = $('#sheet'); if (bd.hidden) return;
+  if (S.askCtl){ try { S.askCtl.abort(); } catch (e) {} S.askCtl = null; }
+  bd.hidden = true; $('#sheet-panel').innerHTML = ''; document.documentElement.classList.remove('locked');
+  S.sheetOpen = false; S.detailKey = null;
+  try { if (S.lastFocus && document.contains(S.lastFocus)) S.lastFocus.focus({ preventScroll:true }); } catch (e) {}
+}
+function trapFocus(e){
+  const pn = $('#sheet-panel');
+  const f = $$('a[href],button:not([disabled]),input,select,textarea', pn).filter(x => x.offsetParent !== null);
+  if (!f.length) return;
+  const first = f[0], last = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+}
+function openArchive(){
+  let list = S.archive.length ? S.archive.slice() : (S.latest ? [{ date:S.latest.date, number:S.latest.number, title:S.latest.title, count:S.latest.items.length }] : []);
+  list.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  showSheet('<div class="sheet-head"><div class="in pad"><h2 class="sheet-h">Les éditions</h2><button class="iconbtn" data-action="close" aria-label="Fermer">' + icon('close') + '</button></div></div>' +
+    '<div class="pad sheet-body"><p class="muted">Une nouvelle édition est préparée chaque matin. Les précédentes restent consultables ici.</p><ul class="rows">' +
+    (list.map(a => '<li><button class="row" data-action="load-edition" data-date="' + esc(a.date) + '"><span class="row-main"><span class="row-title">' + esc(cap(longDate(a.date))) + '</span><span class="row-meta">' + (a.number != null ? 'Édition n° ' + esc(a.number) : 'Édition') + (a.count ? ' · ' + esc(a.count) + ' découvertes' : '') + '</span>' + (a.title ? '<span class="row-meta">' + t(a.title) + '</span>' : '') + '</span>' + (S.edition && S.edition.date === a.date ? '<span class="pill">Affichée</span>' : '') + '</button></li>').join('') || '<li class="muted">Aucune édition pour l\'instant.</li>') +
+    '</ul></div>', 'Les éditions');
+}
+async function fetchEdition(date){
+  if (S.editions.has(date)) return S.editions.get(date);
+  if (!S.db){
+    const r = await fetch('data/editions/' + encodeURIComponent(date) + '.json', { cache:'no-store' });
+    if (!r.ok) return null;
+    const ed = normalize(await r.json(), date); if (!ed.items.length) return null;
+    S.editions.set(ed.date, ed); return ed;
+  }
+  const snap = await S.db.doc('editions/' + date).get();
+  if (!snap.exists) return null;
+  const ed = normalize(snap.data(), snap.id); S.editions.set(ed.date, ed); return ed;
+}
+async function loadEdition(date){
+  let ed = null;
+  try { ed = await fetchEdition(date); } catch (e) { toast("Impossible de charger cette édition. Réessaie dans un instant."); return; }
+  if (!ed){ toast('Cette édition est introuvable.'); return; }
+  S.edition = ed; S.followLatest = !!(S.latest && ed.date === S.latest.date);
+  S.filterCat = 'all'; S.filterLvl = 0; S.query = '';
+  closeSheet(); renderEdPill();
+  if (S.tab !== 'aujourdhui') setTab('aujourdhui'); else { renderToday(); window.scrollTo(0, 0); }
+}
+async function openFav(key){
+  const date = key.split(':')[0];
+  try { const ed = await fetchEdition(date); if (!ed){ toast("Cette édition n'est plus disponible."); return; } } catch (e) { toast("Impossible de charger cette fiche pour l'instant."); return; }
+  if (!itemByKey(key)){ toast("Cette fiche n'existe plus dans l'édition."); return; }
+  openDetail(key);
+}
+
+/* ---------- Questions à Claude ---------- */
+function inline(s){ return esc(fr(s)).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); }
+function mdLite(s){
+  const lines = String(s || '').split(/\r?\n/); let html = '', inList = false, para = [];
+  const flush = () => { if (para.length){ html += '<p>' + inline(para.join(' ')) + '</p>'; para = []; } };
+  lines.forEach(raw => {
+    const l = raw.trim();
+    if (/^[-*•]\s+/.test(l)){ flush(); if (!inList){ html += '<ul>'; inList = true; } html += '<li>' + inline(l.replace(/^[-*•]\s+/, '')) + '</li>'; }
+    else if (!l){ flush(); if (inList){ html += '</ul>'; inList = false; } }
+    else { if (inList){ html += '</ul>'; inList = false; } para.push(l.replace(/^#+\s*/, '')); }
+  });
+  flush(); if (inList) html += '</ul>';
+  return html;
+}
+async function ask(q){
+  const it = itemByKey(S.detailKey); const out = $('#ask-out');
+  if (!S.sample || !it || !out || !q) return;
+  if (S.askCtl){ try { S.askCtl.abort(); } catch (e) {} }
+  const ctl = new AbortController(); S.askCtl = ctl;
+  out.hidden = false; out.innerHTML = '<p class="muted">Claude réfléchit…</p>';
+  const ev = it.evidence || {};
+  const fiche = { titre:it.title, chapo:it.dek, resume:it.body, pourquoi_c_est_important:it.why || null, ce_qui_est_etabli:it.sure, ce_qui_reste_a_prouver:it.unsure, chiffres_cles:it.numbers,
+    niveau_de_preuve:LEVELS[lvl(it)].name, type_d_etude:ev.type || null, statut:ev.status || null, note_sur_la_preuve:ev.note || null,
+    revue:it.journal || null, date:dateLabel(it), institutions:it.who || null, conflits_d_interets:it.coi || null, sujet_de_sante:!!it.health };
+  const prompt = "Tu es le rédacteur scientifique de l'application « Matinale des Sciences ». Réponds en français, en 180 mots maximum, de façon claire et exacte, sans jargon inutile. Utilise des paragraphes courts, et une liste à puces seulement si elle aide.\n\n" +
+    "Règles :\n- Appuie-toi d'abord sur la fiche ci-dessous. Tu peux ajouter des connaissances scientifiques générales bien établies, mais n'invente aucun chiffre, aucune étude, aucun nom et aucune source.\n" +
+    "- Si la fiche ne permet pas de répondre, dis-le simplement.\n- Respecte le niveau de preuve indiqué : ne présente jamais un résultat préliminaire comme une certitude, et ne confonds pas corrélation et cause.\n" +
+    "- Pour un sujet de santé, ne donne aucun conseil médical personnel et rappelle de consulter un professionnel si la question le justifie.\n\n" +
+    "FICHE (JSON) :\n" + JSON.stringify(fiche) + "\n\nQUESTION : " + q;
+  try {
+    const r = await S.sample(prompt, { signal: ctl.signal, onText: u => { if (S.askCtl === ctl) out.innerHTML = mdLite(u.text); } });
+    if (S.askCtl !== ctl) return;
+    out.innerHTML = mdLite(r.text) + (r.truncated ? '<p class="muted small">Réponse coupée : pose une question plus précise.</p>' : '') + '<p class="ask-note">Réponse générée par Claude à partir de la fiche. Vérifie toujours dans les sources.</p>';
+  } catch (e) {
+    if (S.askCtl !== ctl) return;
+    const code = e && e.code;
+    if (code === 'cancelled') return;
+    if (['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(code)){ out.innerHTML = '<p class="muted">Les questions à Claude ne sont pas disponibles ici.</p>'; S.sample = null; return; }
+    const msg = code === 'rate_limited' ? "Trop de questions d'un coup : réessaie dans quelques minutes."
+      : code === 'session_expired' ? 'Ta session a expiré : reconnecte-toi à Claude.'
+      : code === 'refused' ? "Claude n'a pas pu répondre à cette question. Essaie de la reformuler."
+      : 'La réponse a été interrompue. Réessaie dans un instant.';
+    out.innerHTML = (e && e.text && code !== 'refused' ? mdLite(e.text) : '') + '<p class="muted">' + esc(msg) + '</p>';
+  }
+}
+
+/* ---------- Favoris, lecture, préférences ---------- */
+function markRead(key){
+  if (!key || S.read.has(key)) return;
+  S.read.add(key); LS.set('mds.read', Array.from(S.read).slice(-600));
+  const tag = document.querySelector('.card[data-key="' + cssEsc(key) + '"] .new'); if (tag) tag.remove();
+}
+function toggleFav(key){
+  if (!key) return;
+  if (isFav(key)){ S.favs = S.favs.filter(f => f.k !== key); toast('Retiré des favoris'); }
+  else {
+    const it = itemByKey(key); if (!it) return;
+    S.favs = [{ k:key, title:it.title, cat:it.cat, level:lvl(it), date:key.split(':')[0], savedAt:new Date().toISOString() }].concat(S.favs).slice(0, 300);
+    toast('Ajouté aux favoris');
+  }
+  savePrefs(); refreshFavButtons(); if (S.tab === 'favoris') renderFavs();
+}
+function refreshFavButtons(){
+  $$('[data-action="fav"]').forEach(b => { const on = isFav(b.dataset.key); b.setAttribute('aria-pressed', String(on)); b.setAttribute('aria-label', on ? 'Retirer des favoris' : 'Ajouter aux favoris'); });
+}
+let saveTimer = null, saving = false, saveAgain = false;
+function savePrefs(){
+  LS.set('mds.prefs', { favorites:S.favs, rate:S.prefs.rate, voiceURI:S.prefs.voiceURI });
+  if (!S.db || !S.uid || S.prefsReadOnly) return;
+  clearTimeout(saveTimer); saveTimer = setTimeout(doSave, 700);
+}
+async function doSave(){
+  if (saving){ saveAgain = true; return; }
+  saving = true;
+  try { await S.db.doc('data/users/' + S.uid + '/prefs').set({ favorites:S.favs.map(f => Object.assign({}, f)), rate:S.prefs.rate, voiceURI:S.prefs.voiceURI || null, updatedAt:new Date().toISOString() }); }
+  catch (e) { if (e && e.code === 'invalid_argument') S.prefsReadOnly = true; }
+  saving = false; if (saveAgain){ saveAgain = false; doSave(); }
+}
+async function loadPrefs(){
+  try {
+    const snap = await S.db.doc('data/users/' + S.uid + '/prefs').get();
+    if (snap.exists){
+      const d = snap.data() || {};
+      if (Array.isArray(d.favorites)){
+        const m = new Map(); d.favorites.concat(S.favs).forEach(f => { if (f && f.k && !m.has(f.k)) m.set(f.k, f); });
+        const merged = Array.from(m.values()); const grew = merged.length !== d.favorites.length; S.favs = merged; if (grew) savePrefs();
+      }
+      if (RATES.includes(d.rate)) S.prefs.rate = d.rate;
+      if (d.voiceURI) S.prefs.voiceURI = d.voiceURI;
+      LS.set('mds.prefs', { favorites:S.favs, rate:S.prefs.rate, voiceURI:S.prefs.voiceURI });
+    } else if (S.favs.length) savePrefs();
+  } catch (e) {}
+  refreshFavButtons(); renderVoiceSelect(); updatePlayerUI();
+  if (S.tab === 'favoris') renderFavs();
+}
+
+/* ---------- Navigation ---------- */
+function renderEdPill(){
+  const p = $('#edpill'); if (!p) return; const ed = S.edition;
+  p.innerHTML = icon('calendar', 17) + '<span>' + (ed ? (ed.number != null ? '<span class="ed-n">n° ' + esc(ed.number) + ' · </span>' : '') + esc(shortDateNoYear(ed.date)) : 'Éditions') + '</span>';
+}
+function renderView(tab){
+  if (tab === 'aujourdhui') renderToday();
+  else if (tab === 'videos') renderVideos();
+  else if (tab === 'franco') renderFranco();
+  else if (tab === 'ecouter') renderListen();
+  else if (tab === 'categories') renderCats();
+  else if (tab === 'favoris') renderFavs();
+}
+function renderAll(){ renderEdPill(); renderView(S.tab); updateMini(); }
+function setTab(tab, opt){
+  opt = opt || {};
+  if (!TABS.includes(tab)) tab = 'aujourdhui';
+  S.tab = tab;
+  TABS.forEach(x => { const v = $('#view-' + x); if (v) v.hidden = x !== tab; });
+  $$('.top-nav [data-tab], .tabbar [data-tab], #hdr-fav').forEach(b => b.setAttribute('aria-current', b.dataset.tab === tab ? 'page' : 'false'));
+  try { history.replaceState(null, '', '#' + tab); } catch (e) {}
+  renderView(tab); updateMini();
+  if (opt.scroll !== false) window.scrollTo(0, 0);
+}
+function toast(msg){
+  const el = $('#toast'); el.textContent = msg; el.hidden = false;
+  clearTimeout(toast.timer); toast.timer = setTimeout(() => { el.hidden = true; }, 2400);
+}
+function copyText(txt){
+  if (!txt) return;
+  const fail = () => toast('Copie impossible ici. Lien : ' + txt);
+  try { navigator.clipboard.writeText(txt).then(() => toast('Lien copié'), fail); } catch (e) { fail(); }
+}
+function onClick(e){
+  const a = e.target.closest('[data-action]'); if (!a) return;
+  const act = a.dataset.action;
+  switch (act){
+    case 'tab': e.preventDefault(); if (S.sheetOpen) closeSheet(); setTab(a.dataset.tab); break;
+    case 'open': openDetail(a.dataset.key, a.dataset.focus); break;
+    case 'open-fav': openFav(a.dataset.key); break;
+    case 'close': closeSheet(); break;
+    case 'fav': toggleFav(a.dataset.key); break;
+    case 'load': startMode(a.dataset.mode, { cat:a.dataset.cat, key:a.dataset.key, hl:a.dataset.hl }); break;
+    case 'fr-filter': S.frGroup = a.dataset.g || 'all'; renderDir(); break;
+    case 'vid-filter': S.vidFilter = a.dataset.f === 'fr' ? 'fr' : 'all'; renderVideos(); break;
+    case 'jump': { e.preventDefault(); const target = document.getElementById(a.dataset.target || ''); if (target) target.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block:'start' }); break; }
+    case 'goto-hl': {
+      if (S.sheetOpen) closeSheet();
+      if (S.tab !== 'franco') setTab('franco', { scroll:false });
+      requestAnimationFrame(() => { const h = document.getElementById('hl-' + (a.dataset.hl || '')); if (h) h.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block:'start' }); else window.scrollTo(0, 0); });
+      break;
+    }
+    case 'toggle': if (!Player.chapters.length) startMode('full'); else Player.toggle(); break;
+    case 'next': Player.next(); break;
+    case 'prev': Player.prev(); break;
+    case 'stop': Player.stop(); Player.started = false; updatePlayerUI(); break;
+    case 'chapter': Player.jump(Number(a.dataset.ci)); break;
+    case 'rate': S.prefs.rate = Number(a.dataset.rate) || 1; savePrefs(); renderChapters(); Player.restartSentence(); updatePlayerUI(); break;
+    case 'filter-cat': S.filterCat = a.dataset.cat || 'all'; renderFeed(); break;
+    case 'filter-lvl': { const n = Number(a.dataset.lvl); S.filterLvl = S.filterLvl === n ? 0 : n; renderFeed(); break; }
+    case 'clear-filters': { S.filterCat = 'all'; S.filterLvl = 0; S.query = ''; const q = $('#q'); if (q) q.value = ''; renderFeed(); break; }
+    case 'see-cat': {
+      S.filterCat = a.dataset.cat || 'all'; S.filterLvl = 0;
+      if (S.tab !== 'aujourdhui') setTab('aujourdhui', { scroll:false }); else renderFeed();
+      requestAnimationFrame(() => { const f = $('#feed-sec'); if (f) f.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block:'start' }); });
+      break;
+    }
+    case 'goto-method': { e.preventDefault(); const m = $('#methode'); if (m) m.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block:'start' }); break; }
+    case 'archive': openArchive(); break;
+    case 'load-edition': loadEdition(a.dataset.date); break;
+    case 'latest': if (S.latest){ S.edition = S.latest; S.followLatest = true; S.filterCat = 'all'; S.filterLvl = 0; S.query = ''; renderAll(); window.scrollTo(0, 0); } break;
+    case 'ask': ask(a.dataset.q); break;
+    case 'copy': copyText(a.dataset.text); break;
+    case 'install-help': openInstallHelp(); break;
+    case 'install-now': installNow(); break;
+    case 'install-done': LS.set('mds.install', 'done'); renderToday(); toast('Parfait, bonne lecture !'); break;
+    case 'install-later': LS.set('mds.install', Date.now() + 7 * 864e5); renderToday(); break;
+    case 'reload': if (S.status === 'ready') { try { location.reload(); } catch (err) { checkUpdate(); } } else { toast('Nouvelle tentative…'); fbPromise = null; loadFallback(true); loadAudioIndex(); } break;
+  }
+}
+function bindEvents(){
+  $('#tabbar').innerHTML = NAV_TABS.map(x => '<button data-action="tab" data-tab="' + x + '" aria-current="false">' + icon(TAB_ICON[x], 22) + '<span>' + esc(TAB_LABEL[x]) + '</span></button>').join('');
+  $('#hdr-fav').innerHTML = icon('star', 19);
+  $('#mini-next').innerHTML = icon('next', 20); $('#mini-stop').innerHTML = icon('close', 20);
+  document.addEventListener('input', e => { if (e.target && e.target.id === 'fq'){ S.frQuery = e.target.value; renderDir(); } });
+  document.addEventListener('click', onClick);
+  document.addEventListener('submit', e => { if (e.target && e.target.id === 'ask-form'){ e.preventDefault(); const inp = $('#ask-input'); const v = inp ? inp.value.trim() : ''; if (v) ask(v); } });
+  document.addEventListener('input', e => { if (e.target && e.target.id === 'q'){ S.query = e.target.value; renderFeed(); } });
+  document.addEventListener('change', e => { if (e.target && e.target.id === 'voice-select'){ S.prefs.voiceURI = e.target.value || null; savePrefs(); Player.restartSentence(); } });
+  document.addEventListener('keydown', e => { if (!S.sheetOpen) return; if (e.key === 'Escape') closeSheet(); else if (e.key === 'Tab') trapFocus(e); });
+  $('#sheet').addEventListener('click', e => { if (e.target === e.currentTarget) closeSheet(); });
+  window.addEventListener('hashchange', () => { const h = (location.hash || '').slice(1); if (TABS.includes(h) && h !== S.tab) setTab(h); });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && Player.playing) Player.lock(); });
+  window.addEventListener('pagehide', () => Player.stop());
+  if (Player.synth){ loadVoices(); try { Player.synth.addEventListener('voiceschanged', loadVoices); } catch (e) { Player.synth.onvoiceschanged = loadVoices; } }
+}
+
+/* ---------- Données ---------- */
+function subscribe(){
+  try {
+    S.db.collection('editions').orderBy('date', 'desc').limit(1).onSnapshot(snap => {
+      if (!snap.docs.length){ if (!S.latest){ S.status = 'empty'; renderAll(); loadFallback(false); } return; }
+      const doc = snap.docs[0]; const ed = normalize(doc.data(), doc.id);
+      S.editions.set(ed.date, ed); S.latest = ed;
+      if (!S.edition || S.followLatest || S.fallback || S.edition.date === ed.date) S.edition = ed;
+      S.fallback = false; S.status = 'ready'; renderAll();
+    }, () => { if (!S.latest){ S.status = 'error'; renderAll(); } loadFallback(false); });
+  } catch (e) { S.status = 'error'; renderAll(); loadFallback(false); }
+  try {
+    S.db.collection('archive').orderBy('date', 'desc').limit(120).onSnapshot(snap => {
+      S.archive = snap.docs.map(d => Object.assign({ date:d.id }, d.data()));
+    }, () => {});
+  } catch (e) {}
+  try {
+    S.db.doc('refs/francophonie').onSnapshot(snap => {
+      S.franco = snap.exists ? (snap.data() || null) : null;
+      if (S.tab === 'franco') renderFranco();
+    }, () => {});
+  } catch (e) {}
+}
+/* Secours : si la base de l'application est indisponible ou lente, on lit la copie publiée avec la page. */
+let fbPromise = null;
+function loadFallback(final){
+  if (S.status === 'ready' && !S.fallback) return;
+  if (!fbPromise){
+    fbPromise = fetch('data/latest.json', { cache:'no-store' })
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(d => {
+        const raw = d && d.edition;
+        const ed = normalize(raw, raw && raw.date);
+        if (!ed.items.length) throw new Error('copie vide');
+        return { ed, refs: (d && d.refs) || null, archive: arr(d && d.archive).filter(a => a && a.date) };
+      });
+  }
+  fbPromise.then(x => {
+    if (S.status === 'ready' && !S.fallback) return;
+    S.editions.set(x.ed.date, x.ed); S.latest = x.ed; S.edition = x.ed; S.fallback = true;
+    if (x.refs && !S.franco) S.franco = x.refs;
+    if (x.archive.length && !S.archive.length) S.archive = x.archive;
+    S.status = 'ready'; renderAll();
+  }).catch(() => {
+    fbPromise = null;
+    if (final && S.status !== 'ready'){ S.status = 'nodb'; renderAll(); }
+  });
+}
+function registerSW(){
+  try {
+    const okHost = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    if (okHost && 'serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+  } catch (e) {}
+}
+let lastCheck = Date.now();
+function checkUpdate(){
+  lastCheck = Date.now();
+  fetch('data/latest.json', { cache:'no-store' }).then(r => r.ok ? r.json() : null).then(d => {
+    const raw = d && d.edition; if (!raw || !raw.date) return;
+    const fresh = !S.latest || raw.date > S.latest.date || (raw.date === S.latest.date && raw.updatedAt && raw.updatedAt !== S.latest.updatedAt);
+    if (!fresh) return;
+    const ed = normalize(raw, raw.date); if (!ed.items.length) return;
+    const follow = !S.edition || S.followLatest || !S.latest || S.edition.date === S.latest.date;
+    S.editions.set(ed.date, ed); S.latest = ed; if (follow) S.edition = ed;
+    if (d.refs) S.franco = d.refs;
+    const ar = arr(d.archive).filter(a => a && a.date); if (ar.length) S.archive = ar;
+    S.status = 'ready'; S.fallback = true; loadAudioIndex(); renderAll();
+    if (follow) toast('Nouvelle édition du ' + shortDateNoYear(ed.date) + ' !');
+  }).catch(() => {});
+}
+function watchUpdates(){
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && Date.now() - lastCheck > 15 * 60e3) checkUpdate(); });
+  window.addEventListener('online', () => { if (S.status !== 'ready') checkUpdate(); });
+}
+function boot(){
+  bindEvents();
+  const h = (location.hash || '').slice(1);
+  setTab(TABS.includes(h) ? h : 'aujourdhui', { scroll:false });
+  setTimeout(() => { if (S.status === 'loading') loadFallback(false); }, 4000);
+  loadAudioIndex();
+  /* Version autonome : ni compte ni base, les fichiers publiés avec le site suffisent. */
+  loadFallback(true); registerSW(); watchUpdates(); return;
+  const cl = window.claude;
+  if (!cl || typeof cl.use !== 'function'){ loadFallback(true); return; }
+  const userP = cl.use('user');
+  cl.use('sample').then(s => { S.sample = typeof s === 'function' ? s : null; const sec = $('#ask-sec'); if (sec) sec.hidden = !S.sample; }).catch(() => {});
+  cl.use('db').then(db => {
+    if (!db){ loadFallback(true); return; }
+    S.db = db; subscribe();
+    userP.then(u => { if (!u) return; S.user = u; return Promise.resolve(u.id()).then(id => { S.uid = id || null; if (S.uid) loadPrefs(); }); }).catch(() => {});
+  }).catch(() => loadFallback(true));
+}
+boot();
+})();
+</script>
+</body>
+</html>

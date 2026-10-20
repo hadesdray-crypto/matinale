@@ -1,0 +1,24 @@
+{
+ "aide": "Sources lues chaque matin. feed = adresse du flux RSS/Atom ; site = page d'accueil (plan B : le flux y est cherché automatiquement si l'adresse ne marche plus) ; lang = fr ou en (les sources en anglais ne servent qu'avec Gemini, qui traduit) ; kind = officiel ou presse ; priority = 3 (organisme de recherche), 2 (presse scientifique), 1 (presse générale) ; cat = catégorie favorite ; fixed = true pour toujours ranger la source dans cette catégorie ; verifie = date du dernier contrôle manuel du flux.",
+ "feeds": [
+  {"name": "CNRS Le journal", "feed": "https://lejournal.cnrs.fr/rss", "site": "https://lejournal.cnrs.fr", "lang": "fr", "kind": "officiel", "priority": 3, "verifie": "2026-10-20"},
+  {"name": "Inserm (salle de presse)", "feed": "https://presse.inserm.fr/feed/", "site": "https://presse.inserm.fr", "lang": "fr", "kind": "officiel", "priority": 3, "cat": "sante", "verifie": "2026-10-20"},
+  {"name": "Inserm", "feed": "https://www.inserm.fr/feed/", "site": "https://www.inserm.fr", "lang": "fr", "kind": "officiel", "priority": 3, "cat": "sante", "verifie": "2026-10-20"},
+  {"name": "CNES", "feed": "https://cnes.fr/rss.xml", "site": "https://cnes.fr", "lang": "fr", "kind": "officiel", "priority": 3, "cat": "espace", "fixed": true, "verifie": false},
+  {"name": "INRAE", "feed": "https://www.inrae.fr/rss.xml", "site": "https://www.inrae.fr", "lang": "fr", "kind": "officiel", "priority": 3, "cat": "vivant", "verifie": false},
+  {"name": "Le Monde (Sciences)", "feed": "https://www.lemonde.fr/sciences/rss_full.xml", "site": "https://www.lemonde.fr/sciences/", "lang": "fr", "kind": "presse", "priority": 2, "verifie": false},
+  {"name": "Sciences et Avenir", "feed": "https://www.sciencesetavenir.fr/rss.xml", "site": "https://www.sciencesetavenir.fr", "lang": "fr", "kind": "presse", "priority": 2, "verifie": false},
+  {"name": "Québec Science", "feed": "https://www.quebecscience.qc.ca/feed/", "site": "https://www.quebecscience.qc.ca", "lang": "fr", "kind": "presse", "priority": 2, "verifie": "2026-10-20"},
+  {"name": "Futura Sciences", "feed": "https://www.futura-sciences.com/rss/actualites.xml", "site": "https://www.futura-sciences.com", "lang": "fr", "kind": "presse", "priority": 1, "verifie": "2026-10-20"},
+  {"name": "franceinfo (Sciences)", "feed": "https://www.francetvinfo.fr/sciences.rss", "site": "https://www.francetvinfo.fr/sciences/", "lang": "fr", "kind": "presse", "priority": 1, "verifie": false},
+  {"name": "Numerama (Sciences)", "feed": "https://www.numerama.com/sciences/feed/", "site": "https://www.numerama.com/sciences/", "lang": "fr", "kind": "presse", "priority": 1, "verifie": false},
+  {"name": "Le Figaro (Sciences)", "feed": "https://www.lefigaro.fr/rss/figaro_sciences.xml", "site": "https://www.lefigaro.fr/sciences", "lang": "fr", "kind": "presse", "priority": 1, "verifie": false},
+  {"name": "The Conversation France", "feed": "https://theconversation.com/fr/articles.atom", "site": "https://theconversation.com/fr", "lang": "fr", "kind": "presse", "priority": 1, "verifie": false},
+  {"name": "ESA", "feed": "https://www.esa.int/rssfeed/TopNews", "site": "https://www.esa.int", "lang": "en", "kind": "officiel", "priority": 3, "cat": "espace", "verifie": "2026-10-20"},
+  {"name": "NASA", "feed": "https://www.nasa.gov/news-release/feed/", "site": "https://www.nasa.gov", "lang": "en", "kind": "officiel", "priority": 3, "cat": "espace", "verifie": "2026-10-20"},
+  {"name": "ScienceDaily", "feed": "https://www.sciencedaily.com/rss/top/science.xml", "site": "https://www.sciencedaily.com", "lang": "en", "kind": "presse", "priority": 2, "verifie": "2026-10-20"},
+  {"name": "Quanta Magazine", "feed": "https://www.quantamagazine.org/feed/", "site": "https://www.quantamagazine.org", "lang": "en", "kind": "presse", "priority": 2, "verifie": "2026-10-20"},
+  {"name": "Science (AAAS)", "feed": "https://www.science.org/rss/news_current.xml", "site": "https://www.science.org/news", "lang": "en", "kind": "presse", "priority": 2, "verifie": false},
+  {"name": "Phys.org", "feed": "https://phys.org/rss-feed/", "site": "https://phys.org", "lang": "en", "kind": "presse", "priority": 1, "verifie": "2026-10-20"}
+ ]
+}

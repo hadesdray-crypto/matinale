@@ -1,0 +1,510 @@
+{
+ "channels": [
+  {
+   "country": "France",
+   "desc": "Le média de la Cité des sciences : reportages, entretiens avec des chercheurs et décryptages de l'actualité scientifique.",
+   "group": "actu",
+   "id": "le-blob",
+   "name": "Le Blob, l'extra-média",
+   "platform": "YouTube",
+   "type": "media",
+   "url": "https://www.youtube.com/channel/UC3E2DhYIqnoc6H3WXwTVnlA",
+   "who": "Universcience (Cité des sciences et Palais de la découverte)"
+  },
+  {
+   "country": "France",
+   "desc": "Le magazine de Fred Courant : des questions de science et d'actualité expliquées simplement, en reportages.",
+   "group": "actu",
+   "id": "esprit-sorcier",
+   "name": "L'Esprit Sorcier TV",
+   "platform": "YouTube",
+   "type": "media",
+   "url": "https://www.youtube.com/channel/UCH6rAZUDfVIoVSJjm3vlcnw",
+   "who": "Fred Courant, ancien coprésentateur de C'est pas sorcier"
+  },
+  {
+   "country": "France",
+   "desc": "Actualité des sciences et des technologies, en formats courts et en émissions.",
+   "group": "actu",
+   "id": "futura",
+   "name": "Futura",
+   "platform": "YouTube",
+   "type": "media",
+   "url": "https://www.youtube.com/@futurasciences",
+   "who": "Le média de vulgarisation Futura"
+  },
+  {
+   "country": "France",
+   "desc": "Rencontres avec des chercheurs, replays de directs et coulisses du magazine.",
+   "group": "actu",
+   "id": "sciences-avenir",
+   "name": "Sciences et Avenir",
+   "platform": "YouTube",
+   "type": "media",
+   "url": "https://www.youtube.com/channel/UCCwmwAUaTQcHNLjEBwkXGLA",
+   "who": "Le magazine Sciences et Avenir – La Recherche"
+  },
+  {
+   "country": "Canada",
+   "desc": "Les reportages scientifiques de Radio-Canada, dont des extraits du magazine Découverte.",
+   "group": "actu",
+   "id": "radio-canada",
+   "name": "Radio-Canada Info",
+   "platform": "YouTube",
+   "type": "media",
+   "url": "https://www.youtube.com/@RadioCanadaInfo",
+   "who": "Le service public canadien de langue française"
+  },
+  {
+   "country": "Suisse",
+   "desc": "Documentaires et enquêtes, dont des sujets scientifiques comme la fraude dans la recherche.",
+   "group": "actu",
+   "id": "rts",
+   "name": "RTS – Radio Télévision Suisse",
+   "platform": "YouTube",
+   "type": "media",
+   "url": "https://www.youtube.com/@RadioTelevisionSuisse",
+   "who": "Le service public suisse de langue française"
+  },
+  {
+   "country": "Belgique",
+   "desc": "Le magazine scientifique de la télévision publique belge, souvent tourné vers la recherche belge.",
+   "group": "actu",
+   "id": "rtbf-matiere-grise",
+   "name": "Matière Grise",
+   "platform": "YouTube",
+   "type": "media",
+   "url": "https://www.youtube.com/playlist?list=PLThnUt_5q6GO4OlBMSa1CrFi7WbgiFUcq",
+   "who": "Le magazine scientifique de la RTBF"
+  },
+  {
+   "country": "France",
+   "desc": "L'actualité internationale, dont les grandes nouvelles scientifiques, en reportages courts.",
+   "group": "actu",
+   "id": "france24",
+   "name": "FRANCE 24",
+   "platform": "YouTube",
+   "type": "media",
+   "url": "https://www.youtube.com/@FRANCE24",
+   "who": "La chaîne d'information internationale française"
+  },
+  {
+   "country": "France",
+   "desc": "Plusieurs vidéastes scientifiques réunis par ARTE, chacun expliquant un sujet à sa manière.",
+   "group": "actu",
+   "id": "vortex",
+   "name": "Le Vortex",
+   "platform": "YouTube",
+   "type": "media",
+   "url": "https://www.youtube.com/playlist?list=PLm3LHwxRUEeleZobGES5KNk7B7uLN226z",
+   "who": "Une série d'ARTE"
+  },
+  {
+   "country": "France",
+   "desc": "Découvertes, portraits de chercheurs et coulisses des laboratoires du premier organisme de recherche français.",
+   "group": "institutions",
+   "id": "cnrs",
+   "name": "CNRS",
+   "platform": "YouTube",
+   "type": "institution",
+   "url": "https://www.youtube.com/channel/UCRHBpvcASQs852H0t4mt1zA",
+   "who": "Centre national de la recherche scientifique"
+  },
+  {
+   "country": "France",
+   "desc": "Des formats courts du CNRS pour comprendre la recherche en train de se faire.",
+   "group": "institutions",
+   "id": "zeste",
+   "name": "Zeste de science",
+   "platform": "YouTube",
+   "type": "institution",
+   "url": "https://www.youtube.com/ZestedeScience",
+   "who": "Les séries originales du CNRS"
+  },
+  {
+   "country": "France",
+   "desc": "La recherche médicale française. Sa série Canal Détox démêle le vrai du faux sur les idées reçues en santé.",
+   "group": "institutions",
+   "id": "inserm",
+   "name": "Inserm",
+   "platform": "YouTube",
+   "type": "institution",
+   "url": "https://www.youtube.com/c/inserm",
+   "who": "Institut national de la santé et de la recherche médicale"
+  },
+  {
+   "country": "France",
+   "desc": "Microbes, virus, vaccins : la recherche de l'Institut Pasteur expliquée par ses chercheurs.",
+   "group": "institutions",
+   "id": "pasteur",
+   "name": "Institut Pasteur",
+   "platform": "YouTube",
+   "type": "institution",
+   "url": "https://www.youtube.com/@institutpasteurvideo",
+   "who": "Fondation de recherche biomédicale"
+  },
+  {
+   "country": "France",
+   "desc": "Lancements en direct, missions spatiales et astronautes.",
+   "group": "institutions",
+   "id": "cnes",
+   "name": "CNES",
+   "platform": "YouTube",
+   "type": "institution",
+   "url": "https://www.youtube.com/@CnesFrance",
+   "who": "L'agence spatiale française"
+  },
+  {
+   "country": "France",
+   "desc": "Les fouilles archéologiques menées en France, leurs découvertes et les métiers de l'archéologie.",
+   "group": "institutions",
+   "id": "inrap",
+   "name": "Inrap",
+   "platform": "YouTube",
+   "type": "institution",
+   "url": "https://www.youtube.com/@Inrap",
+   "who": "Institut national de recherches archéologiques préventives"
+  },
+  {
+   "country": "France",
+   "desc": "Biodiversité, évolution et collections : les chercheurs du Muséum racontent le vivant.",
+   "group": "institutions",
+   "id": "mnhn",
+   "name": "Muséum national d'Histoire naturelle",
+   "platform": "YouTube",
+   "type": "institution",
+   "url": "https://www.youtube.com/channel/UCyQuKkNt-Jiqw45eNfXWBXw",
+   "who": "Muséum de Paris"
+  },
+  {
+   "country": "France",
+   "desc": "L'exploration spatiale et ses technologies : lanceurs, missions de la NASA et de SpaceX, futur de l'espace.",
+   "group": "espace",
+   "id": "hugo-lisoir",
+   "name": "Hugo Lisoir",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/@hugolisoiryoutube",
+   "who": "Vidéaste"
+  },
+  {
+   "country": "France",
+   "desc": "Astronomie et astrophotographie, avec une bonne dose d'histoire des sciences.",
+   "group": "espace",
+   "id": "astronogeek",
+   "name": "AstronoGeek",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/@AstronoGeek",
+   "who": "Vidéaste"
+  },
+  {
+   "country": "France",
+   "desc": "Physique, cosmologie, intelligence artificielle : des sujets pointus expliqués avec rigueur.",
+   "group": "physique",
+   "id": "science-etonnante",
+   "name": "Science Étonnante",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/scienceetonnante",
+   "who": "David Louapre, physicien"
+  },
+  {
+   "country": "",
+   "desc": "La physique, de la relativité au monde quantique, expliquée par l'animation.",
+   "group": "physique",
+   "id": "scienceclic",
+   "name": "ScienceClic",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/ScienceClic",
+   "who": "Alessandro Roussel"
+  },
+  {
+   "country": "",
+   "desc": "Des expériences pour comprendre la science du quotidien, et un regard sur le monde de la recherche.",
+   "group": "physique",
+   "id": "scilabus",
+   "name": "Scilabus",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/@scilabus",
+   "who": "Viviane Lalande"
+  },
+  {
+   "country": "France",
+   "desc": "Les mathématiques racontées de façon ludique.",
+   "group": "physique",
+   "id": "micmaths",
+   "name": "Micmaths",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/@Micmaths",
+   "who": "Mickaël Launay, mathématicien"
+  },
+  {
+   "country": "France",
+   "desc": "De grands voyages dans l'Univers, la matière et le vivant, en documentaires très visuels.",
+   "group": "physique",
+   "id": "balade-mentale",
+   "name": "Balade Mentale",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/@BaladeMentale",
+   "who": "Théo Drieu"
+  },
+  {
+   "country": "France",
+   "desc": "Le climat et l'énergie expliqués en détail, sources à l'appui.",
+   "group": "terre",
+   "id": "reveilleur",
+   "name": "Le Réveilleur",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/channel/UC1EacOJoqsKaYxaDomTCTEQ",
+   "who": "Rodolphe Meyer"
+  },
+  {
+   "country": "",
+   "desc": "L'écologie et l'environnement avec humour : plastique dans les océans, biodiversité, pollution numérique.",
+   "group": "terre",
+   "id": "feuillage",
+   "name": "Professeur Feuillage",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/@ProfesseurFeuillage",
+   "who": "Vidéaste"
+  },
+  {
+   "country": "",
+   "desc": "L'histoire de la médecine et de ses grandes découvertes.",
+   "group": "sante",
+   "id": "asclepios",
+   "name": "Asclépios",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/channel/UCDqEttzOpPbDoeC05HRPPDQ",
+   "who": "Vidéaste"
+  },
+  {
+   "country": "",
+   "desc": "La psychologie scientifique, expliquée simplement.",
+   "group": "sante",
+   "id": "psylab",
+   "name": "Le PsyLab",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/LePsyLab",
+   "who": "Vidéastes"
+  },
+  {
+   "country": "France",
+   "desc": "La science des foules et des comportements collectifs, par un chercheur du domaine.",
+   "group": "sante",
+   "id": "fouloscopie",
+   "name": "Fouloscopie",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/@Fouloscopie",
+   "who": "Mehdi Moussaïd, chercheur"
+  },
+  {
+   "country": "",
+   "desc": "Préhistoire, paléontologie et archéologie, racontées avec humour.",
+   "group": "passe",
+   "id": "passe-sauvage",
+   "name": "Passé sauvage",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/channel/UCLhOJJbPciPdocXTaAk2SdA",
+   "who": "Vidéaste"
+  },
+  {
+   "country": "France",
+   "desc": "L'émission tech : intelligence artificielle, informatique et innovations, avec des invités.",
+   "group": "tech",
+   "id": "underscore",
+   "name": "Underscore_",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/@Underscore_",
+   "who": "L'émission de Micode"
+  },
+  {
+   "country": "France",
+   "desc": "L'actualité de l'intelligence artificielle, décortiquée.",
+   "group": "tech",
+   "id": "defend-intelligence",
+   "name": "Defend Intelligence",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/@DefendIntelligence",
+   "who": "Vidéaste"
+  },
+  {
+   "country": "France",
+   "desc": "La philosophie, avec de nombreuses réflexions sur l'intelligence artificielle et la conscience.",
+   "group": "tech",
+   "id": "monsieur-phi",
+   "name": "Monsieur Phi",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/channel/UCqA8H22FwgBVcF3GJpp0MQw",
+   "who": "Thibaut Giraud, philosophe"
+  },
+  {
+   "country": "France",
+   "desc": "Esprit critique et zététique : biais cognitifs, méthode scientifique, idées reçues.",
+   "group": "critique",
+   "id": "tronche-en-biais",
+   "name": "La Tronche en Biais",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/@TroncheEnBiais",
+   "who": "Vidéastes"
+  },
+  {
+   "country": "France",
+   "desc": "Les outils de l'esprit critique, expliqués pas à pas.",
+   "group": "critique",
+   "id": "hygiene-mentale",
+   "name": "Hygiène Mentale",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/@HygieneMentale",
+   "who": "Christophe Michel"
+  },
+  {
+   "country": "France",
+   "desc": "Les sciences du quotidien, de l'alimentation à l'environnement.",
+   "group": "generaliste",
+   "id": "jamy",
+   "name": "Jamy – Épicurieux",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/channel/UCG9G2dyRv04FDSH1FSYuLBg",
+   "who": "Jamy Gourmaud, ancien coprésentateur de C'est pas sorcier"
+  },
+  {
+   "country": "France",
+   "desc": "Phénomènes étonnants et expériences : l'une des chaînes de vulgarisation les plus suivies en France.",
+   "group": "generaliste",
+   "id": "nozman",
+   "name": "Dr Nozman",
+   "platform": "YouTube",
+   "type": "createur",
+   "url": "https://www.youtube.com/channel/UCWnfDPdZw6A23UtuBpYBbAg",
+   "who": "Vidéaste"
+  },
+  {
+   "country": "France",
+   "desc": "Ses conférences sur le temps, le vide ou la physique quantique sont très nombreuses en ligne.",
+   "group": "personnalites",
+   "id": "etienne-klein",
+   "name": "Étienne Klein",
+   "platform": "YouTube",
+   "type": "search",
+   "url": "https://www.youtube.com/results?search_query=%C3%89tienne+Klein+conf%C3%A9rence",
+   "who": "Physicien et philosophe des sciences"
+  },
+  {
+   "country": "France",
+   "desc": "Première Française à sortir dans l'espace, revenue sur Terre le 8 octobre 2026 après 237 jours en orbite.",
+   "group": "personnalites",
+   "id": "sophie-adenot",
+   "name": "Sophie Adenot",
+   "platform": "YouTube",
+   "type": "search",
+   "url": "https://www.youtube.com/results?search_query=Sophie+Adenot",
+   "who": "Astronaute de l'ESA"
+  },
+  {
+   "country": "France",
+   "desc": "Deux longs séjours à bord de la Station spatiale internationale, et de nombreuses interventions sur l'espace.",
+   "group": "personnalites",
+   "id": "thomas-pesquet",
+   "name": "Thomas Pesquet",
+   "platform": "YouTube",
+   "type": "search",
+   "url": "https://www.youtube.com/results?search_query=Thomas+Pesquet",
+   "who": "Astronaute de l'ESA"
+  },
+  {
+   "country": "France",
+   "desc": "Ancienne coprésidente du groupe 1 du GIEC, qui évalue les bases physiques du changement climatique.",
+   "group": "personnalites",
+   "id": "masson-delmotte",
+   "name": "Valérie Masson-Delmotte",
+   "platform": "YouTube",
+   "type": "search",
+   "url": "https://www.youtube.com/results?search_query=Val%C3%A9rie+Masson-Delmotte",
+   "who": "Climatologue"
+  }
+ ],
+ "criteria": [
+  "Des chaînes officielles d'organismes de recherche et de médias publics francophones.",
+  "Des vidéastes reconnus pour leur rigueur, qui citent leurs sources.",
+  "Aucune chaîne qui diffuse des pseudo-sciences ou de la désinformation.",
+  "Pour les personnalités sans chaîne officielle, le lien lance une recherche YouTube, signalée comme telle.",
+  "Une sélection n'est pas une garantie : chaque vidéo se regarde avec esprit critique."
+ ],
+ "groups": [
+  {
+   "desc": "Médias et émissions qui suivent les nouvelles découvertes.",
+   "id": "actu",
+   "label": "Actualité scientifique"
+  },
+  {
+   "desc": "Les chaînes officielles de ceux qui font la recherche.",
+   "id": "institutions",
+   "label": "Institutions de recherche"
+  },
+  {
+   "desc": "Astronomie, lancements et exploration spatiale.",
+   "id": "espace",
+   "label": "Espace"
+  },
+  {
+   "desc": "Des sujets pointus, expliqués avec rigueur.",
+   "id": "physique",
+   "label": "Physique & maths"
+  },
+  {
+   "desc": "Climat, énergie, écologie et biodiversité.",
+   "id": "terre",
+   "label": "Climat, Terre & vivant"
+  },
+  {
+   "desc": "Médecine, psychologie et comportements humains.",
+   "id": "sante",
+   "label": "Santé, cerveau & société"
+  },
+  {
+   "desc": "Fouilles, fossiles et premières sociétés.",
+   "id": "passe",
+   "label": "Archéologie & préhistoire"
+  },
+  {
+   "desc": "Intelligence artificielle et informatique.",
+   "id": "tech",
+   "label": "Tech & IA"
+  },
+  {
+   "desc": "Pour démêler le vrai du faux.",
+   "id": "critique",
+   "label": "Esprit critique"
+  },
+  {
+   "desc": "Des chaînes très suivies, tous sujets confondus.",
+   "id": "generaliste",
+   "label": "Grands vulgarisateurs"
+  },
+  {
+   "desc": "Scientifiques et astronautes à retrouver en vidéo.",
+   "id": "personnalites",
+   "label": "Personnalités"
+  }
+ ],
+ "intro": "Une sélection de médias, d'institutions et de vidéastes francophones sérieux pour suivre la science en français.",
+ "updatedAt": "2026-10-19T15:30:00+02:00"
+}

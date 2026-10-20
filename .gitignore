@@ -1,0 +1,5 @@
+# L'audio est refait chaque matin : inutile de le garder dans l'historique.
+site/audio/*.mp3
+site/audio/audio.json
+__pycache__/
+*.tmp
