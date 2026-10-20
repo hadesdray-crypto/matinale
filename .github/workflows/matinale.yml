@@ -51,6 +51,8 @@ jobs:
       - name: Préparer l'édition du jour, l'audio et l'archive
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # Un lancement manuel (Run workflow) refait toujours l'édition du jour, même si elle existe déjà.
+          MATINALE_FORCE: ${{ github.event_name == 'workflow_dispatch' && '1' || '' }}
         run: bash scripts/run.sh
 
       - uses: actions/upload-pages-artifact@v4
