@@ -439,6 +439,28 @@
    "type": "search",
    "url": "https://www.youtube.com/results?search_query=Val%C3%A9rie+Masson-Delmotte",
    "who": "Climatologue"
+  },
+  {
+   "country": "France",
+   "desc": "Culture scientifique, histoire des sciences et vulgarisation générale.",
+   "group": "generaliste",
+   "id": "e-penser",
+   "name": "e-penser",
+   "platform": "YouTube",
+   "type": "search",
+   "url": "https://www.youtube.com/results?search_query=e-penser+Bruce+Benamran",
+   "who": "Bruce Benamran"
+  },
+  {
+   "country": "France",
+   "desc": "Santé, médecine et fonctionnement du corps humain, avec humour.",
+   "group": "sante",
+   "id": "dans-ton-corps",
+   "name": "Dans Ton Corps",
+   "platform": "YouTube",
+   "type": "search",
+   "url": "https://www.youtube.com/results?search_query=Dans+Ton+Corps+Julien+M%C3%A9nielle",
+   "who": "Julien Ménielle"
   }
  ],
  "criteria": [
