@@ -1,0 +1,6 @@
+Lecture de 31 sources (avec Gemini)…
+  · INRAE : https://www.inrae.fr/rss.xml ne répond pas (HTTPError)
+Sources lues : 30 ; muettes : 1 ['INRAE']
+Articles retenus après tri : 369
+Vidéos francophones récentes : 12
+Édition n° 3 du 2026-10-21 : 20 fiches, mode Gemini (gemini-flash-latest), 12 vidéos francophones.
