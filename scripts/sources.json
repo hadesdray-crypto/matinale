@@ -187,6 +187,51 @@
    "kind": "presse",
    "priority": 1,
    "verifie": "2026-10-20"
+  },
+  {
+   "name": "Nature",
+   "feed": "https://www.nature.com/nature.rss",
+   "site": "https://www.nature.com",
+   "lang": "en",
+   "kind": "presse",
+   "priority": 2,
+   "verifie": "2026-10-21"
+  },
+  {
+   "name": "JAMA",
+   "feed": "https://jamanetwork.com/rss/site_3/67.xml",
+   "site": "https://jamanetwork.com",
+   "lang": "en",
+   "kind": "etude",
+   "priority": 2,
+   "verifie": "2026-10-21"
+  },
+  {
+   "name": "arXiv astrophysique (prépublication)",
+   "feed": "https://rss.arxiv.org/rss/astro-ph",
+   "site": "https://arxiv.org",
+   "lang": "en",
+   "kind": "etude",
+   "priority": 1,
+   "verifie": "2026-10-21"
+  },
+  {
+   "name": "bioRxiv (prépublication)",
+   "feed": "https://connect.biorxiv.org/biorxiv_xml.php?subject=all",
+   "site": "https://www.biorxiv.org",
+   "lang": "en",
+   "kind": "etude",
+   "priority": 1,
+   "verifie": "2026-10-21"
+  },
+  {
+   "name": "medRxiv (prépublication)",
+   "feed": "https://connect.medrxiv.org/medrxiv_xml.php?subject=all",
+   "site": "https://www.medrxiv.org",
+   "lang": "en",
+   "kind": "etude",
+   "priority": 1,
+   "verifie": "2026-10-21"
   }
  ]
 }
