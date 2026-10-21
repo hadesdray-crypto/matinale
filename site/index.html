@@ -14,10 +14,26 @@
 <style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Matinale des Sciences</title>
 <meta name="description" content="Les nouvelles découvertes scientifiques chaque matin : vidéos, résumés, niveaux de preuve, sources et podcast.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,600;0,700;1,400&family=Syne:wght@600;700;800&display=swap">
 <style>
+/* Polices rangées avec l'appli (licence SIL Open Font License, voir fonts/) : elles s'affichent aussi sans réseau. */
+@font-face{font-family:"Syne";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/syne-latin-600-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Syne";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/syne-latin-ext-600-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Syne";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/syne-latin-700-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Syne";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/syne-latin-ext-700-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Syne";font-style:normal;font-weight:800;font-display:swap;src:url(fonts/syne-latin-800-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Syne";font-style:normal;font-weight:800;font-display:swap;src:url(fonts/syne-latin-ext-800-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Spectral";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/spectral-latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Spectral";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/spectral-latin-ext-400-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Spectral";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/spectral-latin-600-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Spectral";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/spectral-latin-ext-600-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Spectral";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/spectral-latin-700-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Spectral";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/spectral-latin-ext-700-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Spectral";font-style:italic;font-weight:400;font-display:swap;src:url(fonts/spectral-latin-400-italic.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Spectral";font-style:italic;font-weight:400;font-display:swap;src:url(fonts/spectral-latin-ext-400-italic.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"DM Mono";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/dm-mono-latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"DM Mono";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/dm-mono-latin-ext-400-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"DM Mono";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/dm-mono-latin-500-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"DM Mono";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/dm-mono-latin-ext-500-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
 /* Layout : appli de lecture « mobile d'abord ». Bandeau cyanotype daté en tête, fil de fiches où la vidéo passe avant le texte,
    jauge de preuve à 4 niveaux sur chaque fiche, lecteur audio persistant, onglets en bas (mobile) ou en haut (écran large). */
 :root{
@@ -750,7 +766,7 @@ function box(title, text, actions){ return '<section class="section"><div class=
 function fixActions(){ return '<button class="btn sm primary" data-action="reload">' + icon('refresh', 15) + ' Réessayer</button>'; }
 function stateHTML(){
   if (S.status === 'loading') return '<section class="masthead"><div class="wrap mh-in"><p class="mh-kicker">Matinale des Sciences</p><h1 class="mh-date"><span class="mh-day skel">··</span><span class="mh-rest"><span class="mh-wd">Chargement</span><span>de l\'édition…</span></span></h1><p class="mh-intro">Les découvertes du jour, leurs vidéos, leurs sources et le podcast arrivent.</p></div></section>';
-  if (S.status === 'nodb') return box("Pas de connexion pour l'instant", "La Matinale n'arrive pas à charger l'édition. Vérifie ta connexion à internet puis réessaie : elle se remettra à jour toute seule.", fixActions());
+  if (S.status === 'nodb') return box("Pas de connexion pour l'instant", "La toute première ouverture de la Matinale a besoin d'internet. Ensuite, elle s'ouvre même sans réseau, avec la dernière édition gardée dans le téléphone.", fixActions());
   if (S.status === 'empty') return box('La première édition est en préparation', "Elle apparaîtra ici automatiquement dès qu'elle sera prête. Une nouvelle édition arrive ensuite chaque matin.");
   return box("Impossible de charger l'édition", "Réessaie dans un instant : la Matinale se remettra à jour toute seule.", fixActions());
 }
@@ -1180,6 +1196,8 @@ const Player = {
     if (!(cur >= ch.start - 0.3 && cur < ch.end)){ try { au.currentTime = ch.start; } catch (e) {} }
     try { au.playbackRate = S.prefs.rate || 1; } catch (e) {}
     this.playing = true; this.started = true;
+    const tk = this.token, from = au.currentTime || 0;
+    setTimeout(() => { if (tk === this.token && this.engine === 'file' && this.playing && this.au === au && au.readyState < 3 && Math.abs((au.currentTime || 0) - from) < 0.05) this.fileFailed(); }, 10000);
     let p; try { p = au.play(); } catch (e) { p = null; this.fileFailed(); return; }
     if (p && p.catch) p.catch(err => {
       this.playing = false; updatePlayerUI();
@@ -1190,6 +1208,7 @@ const Player = {
   fileFailed(){
     this.playing = false; this.unlock(); updatePlayerUI();
     if (this.synth){
+      toast("L'enregistrement ne se charge pas : la voix du téléphone prend le relais.");
       const ed = S.edition; const chs = this.chapters.map(c => ({ key: c.key ? (ed && ed.date) + ':' + c.key : undefined, title: c.title, text: c.text }));
       const ci = this.ci; this.load(this.mode, chs, this.label, this.edDate, null); this.ci = Math.min(ci, chs.length - 1); this.play(); return;
     }
@@ -1340,7 +1359,9 @@ function startMode(mode, opt){
   else { chapters = buildChapters('full', ed); label = 'Édition complète'; }
   if (!chapters.length) return;
   /* L'enregistrement du jour passe en premier (il continue écran éteint) ; sinon, la voix du téléphone. */
-  const seg = fileSegment(mode, opt);
+  const offline = navigator.onLine === false;
+  const seg = offline ? null : fileSegment(mode, opt);
+  if (offline && Player.synth && fileSegment(mode, opt)) toast('Sans réseau : la voix du téléphone lit l\'édition.');
   if (seg) Player.load(mode, seg.chapters, label, edDate, seg);
   else if (Player.synth) Player.load(mode, chapters, label, edDate);
   else { openListenElsewhere(); return; }
@@ -1508,7 +1529,7 @@ async function fetchEdition(date){
 }
 async function loadEdition(date){
   let ed = null;
-  try { ed = await fetchEdition(date); } catch (e) { toast("Impossible de charger cette édition. Réessaie dans un instant."); return; }
+  try { ed = await fetchEdition(date); } catch (e) { toast(navigator.onLine === false ? "Sans réseau, cette édition n'est pas disponible : elle n'a pas encore été gardée dans le téléphone." : "Impossible de charger cette édition. Réessaie dans un instant.", 4000); return; }
   if (!ed){ toast('Cette édition est introuvable.'); return; }
   S.edition = ed; S.followLatest = !!(S.latest && ed.date === S.latest.date);
   S.filterCat = 'all'; S.filterLvl = 0; S.query = '';
@@ -1517,7 +1538,7 @@ async function loadEdition(date){
 }
 async function openFav(key){
   const date = key.split(':')[0];
-  try { const ed = await fetchEdition(date); if (!ed){ toast("Cette édition n'est plus disponible."); return; } } catch (e) { toast("Impossible de charger cette fiche pour l'instant."); return; }
+  try { const ed = await fetchEdition(date); if (!ed){ toast("Cette édition n'est plus disponible."); return; } } catch (e) { toast(navigator.onLine === false ? "Sans réseau, cette fiche n'est pas disponible pour l'instant." : "Impossible de charger cette fiche pour l'instant."); return; }
   if (!itemByKey(key)){ toast("Cette fiche n'existe plus dans l'édition."); return; }
   openDetail(key);
 }
@@ -1642,9 +1663,9 @@ function setTab(tab, opt){
   renderView(tab); updateMini();
   if (opt.scroll !== false) window.scrollTo(0, 0);
 }
-function toast(msg){
+function toast(msg, ms){
   const el = $('#toast'); el.textContent = msg; el.hidden = false;
-  clearTimeout(toast.timer); toast.timer = setTimeout(() => { el.hidden = true; }, 2400);
+  clearTimeout(toast.timer); toast.timer = setTimeout(() => { el.hidden = true; }, ms || 2400);
 }
 function copyText(txt){
   if (!txt) return;
@@ -1744,7 +1765,7 @@ function loadFallback(final){
   if (S.status === 'ready' && !S.fallback) return;
   if (!fbPromise){
     fbPromise = fetch('data/latest.json', { cache:'no-store' })
-      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); S.copie = r.headers.get('X-Matinale-Copie') === '1'; return r.json(); })
       .then(d => {
         const raw = d && d.edition;
         const ed = normalize(raw, raw && raw.date);
@@ -1758,6 +1779,7 @@ function loadFallback(final){
     if (x.refs && !S.franco) S.franco = x.refs;
     if (x.archive.length && !S.archive.length) S.archive = x.archive;
     S.status = 'ready'; renderAll();
+    if (S.copie) toast("Pas de réseau : voici la dernière édition gardée dans le téléphone.", 4500);
   }).catch(() => {
     fbPromise = null;
     if (final && S.status !== 'ready'){ S.status = 'nodb'; renderAll(); }
@@ -1787,7 +1809,8 @@ function checkUpdate(){
 }
 function watchUpdates(){
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && Date.now() - lastCheck > 15 * 60e3) checkUpdate(); });
-  window.addEventListener('online', () => { if (S.status !== 'ready') checkUpdate(); });
+  window.addEventListener('online', () => checkUpdate());
+  try { navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'maj') checkUpdate(); }); } catch (e) {}
 }
 function boot(){
   bindEvents();

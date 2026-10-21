@@ -11,6 +11,8 @@ RELEASES="https://github.com/k2-fsa/sherpa-onnx/releases/download"
 echo "::group::Édition du jour"
 python3 scripts/build.py --site site ${MATINALE_FORCE:+--force} > >(tee site/data/build-log.txt) 2>&1 || echo "::warning::L'édition n'a pas pu être mise à jour : la précédente reste en ligne."
 echo "::endgroup::"
+# La clé Gemini ne sert qu'à l'édition : les outils audio téléchargés ensuite ne la voient pas.
+unset GEMINI_API_KEY
 
 echo "::group::Enregistrement audio (voix française gratuite, hors ligne)"
 audio_ok=0

@@ -158,8 +158,10 @@ s'il le souhaite, le secret `GEMINI_API_KEY`. Sinon, guide-le étape par étape 
 Ne demande jamais la clé Gemini dans la conversation.
 
 **Organisation**
-- `site/` : le site statique publié sur GitHub Pages. `index.html` (application complète, un seul fichier), `sw.js` (hors ligne),
-  `manifest.webmanifest` et `icons/` (installation comme application), `data/latest.json` (édition du jour + annuaire + archive),
+- `site/` : le site statique publié sur GitHub Pages. `index.html` (application complète, un seul fichier), `sw.js` (hors ligne :
+  dès la première ouverture, garde la page, les polices, la dernière édition et les 7 précédentes ; réseau d'abord mais 2,5 à 3 s
+  au plus, sinon la copie du téléphone ; l'audio n'est pas gardé, la voix du téléphone prend le relais), `fonts/` (Syne, Spectral,
+  DM Mono rangées avec l'appli, licence SIL OFL : aucune ressource externe au démarrage), `manifest.webmanifest` et `icons/` (installation comme application), `data/latest.json` (édition du jour + annuaire + archive),
   `data/editions/AAAA-MM-JJ.json` (anciennes éditions), `data/archive.json`, `audio/` (préparé chaque matin, non versionné).
 - `scripts/build.py` : prépare l'édition (bibliothèque standard Python uniquement). Flux RSS/Atom de `scripts/sources.json`
   (plan B : découverte automatique du flux sur la page d'accueil), tri, doublons, catégories, vidéos YouTube des chaînes de
