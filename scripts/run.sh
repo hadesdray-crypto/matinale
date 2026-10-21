@@ -9,7 +9,7 @@ VOICE="vits-piper-fr_FR-siwis-medium"
 RELEASES="https://github.com/k2-fsa/sherpa-onnx/releases/download"
 
 echo "::group::Édition du jour"
-python3 scripts/build.py --site site ${MATINALE_FORCE:+--force} || echo "::warning::L'édition n'a pas pu être mise à jour : la précédente reste en ligne."
+python3 scripts/build.py --site site ${MATINALE_FORCE:+--force} > >(tee site/data/build-log.txt) 2>&1 || echo "::warning::L'édition n'a pas pu être mise à jour : la précédente reste en ligne."
 echo "::endgroup::"
 
 echo "::group::Enregistrement audio (voix française gratuite, hors ligne)"
