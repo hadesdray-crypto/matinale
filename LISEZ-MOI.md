@@ -174,6 +174,8 @@ Ne demande jamais la clé Gemini dans la conversation.
 - `scripts/run.sh` : enchaîne édition → audio → sauvegarde (commit des données, ce qui garde aussi le workflow planifié actif).
 - `.github/workflows/matinale.yml` : chaque jour à 3 h 17 UTC, à l'envoi d'un `.zip` à la racine (installé puis supprimé ; les données
   existantes sont conservées), ou à la main. Publie `site/` avec `actions/upload-pages-artifact` + `actions/deploy-pages`.
+- `.github/workflows/mise-en-ligne.yml` : quand le code du site change (tout `site/` sauf `site/data/`), republie le site sans
+  refaire l'édition du jour, en reprenant l'audio du jour déjà en ligne.
 
 **Format d'une édition** (`data/latest.json` → `edition`) : `date`, `number`, `title`, `intro`, `period`, `top`, `items[]`,
 `categories{cat: {summary}}`, `podcast{intro, outro, flashIntro, flashOutro, franco}`, `francophonie{intro, highlights[], videos[]}`,

@@ -1,0 +1,55 @@
+# Matinale des Sciences : met en ligne une nouvelle version de l'appli (page, mode hors ligne, polices, icônes)
+# sans refaire l'édition du jour. Se lance tout seul quand ces fichiers changent sur GitHub, ou à la main :
+# onglet Actions > Mise en ligne de l'appli > Run workflow. L'édition et l'audio du jour déjà en ligne sont gardés.
+name: Mise en ligne de l'appli
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "!site/data/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: matinale
+  cancel-in-progress: false
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Reprendre l'audio du jour déjà en ligne
+        run: |
+          base="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          mkdir -p site/audio
+          if curl -fsSL --retry 3 -o site/audio/audio.json "$base/audio/audio.json" \
+             && curl -fsSL --retry 3 -o site/audio/flash.mp3 "$base/audio/flash.mp3" \
+             && curl -fsSL --retry 3 -o site/audio/full.mp3 "$base/audio/full.mp3"; then
+            echo "Audio du jour repris."
+          else
+            rm -f site/audio/audio.json site/audio/*.mp3
+            echo "::notice::Pas d'audio en ligne à reprendre : la voix du téléphone lira l'édition jusqu'au prochain matin."
+          fi
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  publication:
+    needs: site
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
