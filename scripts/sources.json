@@ -232,6 +232,60 @@
    "kind": "etude",
    "priority": 1,
    "verifie": "2026-10-21"
+  },
+  {
+   "name": "Pour la Science",
+   "feed": "https://www.pourlascience.fr/rss.xml",
+   "site": "https://www.pourlascience.fr",
+   "lang": "fr",
+   "kind": "presse",
+   "priority": 2,
+   "verifie": "2026-10-21"
+  },
+  {
+   "name": "Science & Vie",
+   "feed": "https://www.science-et-vie.com/feed",
+   "site": "https://www.science-et-vie.com",
+   "lang": "fr",
+   "kind": "presse",
+   "priority": 2,
+   "verifie": "2026-10-21"
+  },
+  {
+   "name": "Science (actualités)",
+   "feed": "https://www.science.org/rss/news_current.xml",
+   "site": "https://www.science.org",
+   "lang": "en",
+   "kind": "presse",
+   "priority": 2,
+   "verifie": "2026-10-21"
+  },
+  {
+   "name": "PNAS",
+   "feed": "https://www.pnas.org/action/showFeed?type=etoc&feed=rss&jc=pnas",
+   "site": "https://www.pnas.org",
+   "lang": "en",
+   "kind": "etude",
+   "priority": 2,
+   "verifie": "2026-10-21"
+  },
+  {
+   "name": "The Lancet",
+   "feed": "https://www.thelancet.com/rssfeed/lancet_current.xml",
+   "site": "https://www.thelancet.com",
+   "lang": "en",
+   "kind": "etude",
+   "priority": 2,
+   "verifie": "2026-10-21"
+  },
+  {
+   "name": "NEJM",
+   "feed": "https://www.nejm.org/action/showFeed?jc=nejm&type=etoc&feed=rss",
+   "site": "https://www.nejm.org",
+   "lang": "en",
+   "kind": "etude",
+   "priority": 2,
+   "verifie": "2026-10-21"
   }
  ]
 }
