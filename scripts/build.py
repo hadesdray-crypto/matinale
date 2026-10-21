@@ -2,7 +2,7 @@
 """Matinale des Sciences, version gratuite : prépare l'édition du jour, sans abonnement.
 
 Lancement :  python3 scripts/build.py --site site
-Options   :  --hours 36 (fenêtre de publication)  --max-items 14  --no-ai  --force
+Options   :  --hours 36 (fenêtre de publication)  --max-items 20  --no-ai  --force
 
 Ce que fait le script, chaque matin (lancé par GitHub Actions) :
  1. Il lit les flux RSS/Atom des sources de sources.json : organismes de recherche, agences spatiales,
@@ -498,7 +498,7 @@ def collect(sources, now, hours):
     return kept
 
 
-def pick(cands, n, per_cat=3, per_source=3):
+def pick(cands, n, per_cat=4, per_source=3):
     out, by_cat, by_src = [], {}, {}
     for c in cands:
         if len(out) >= n:
@@ -861,7 +861,7 @@ def main():
     ap.add_argument('--sources', default=os.path.join(HERE, 'sources.json'))
     ap.add_argument('--refs', default=os.path.join(HERE, 'francophonie.json'))
     ap.add_argument('--hours', type=float, default=36)
-    ap.add_argument('--max-items', type=int, default=14)
+    ap.add_argument('--max-items', type=int, default=20)
     ap.add_argument('--no-ai', action='store_true', help="n'utilise pas Gemini, même si une clé est présente")
     ap.add_argument('--force', action='store_true', help="remplace même une édition du jour rédigée à la main")
     ap.add_argument('--now', help='date et heure ISO, pour les essais')
