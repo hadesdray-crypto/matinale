@@ -20,6 +20,7 @@ Ce que fait le script, chaque matin (lancé par GitHub Actions) :
 Si rien de neuf n'est trouvé, l'édition précédente reste en ligne : la page n'est jamais cassée.
 Aucune dépendance : uniquement la bibliothèque standard de Python 3.9+.
 """
+import time
 import argparse
 import concurrent.futures as cf
 import datetime as dt
@@ -746,7 +747,13 @@ def s_(v, n):
 
 
 def ai_edition(cands, vids, n, key, used_ids):
-    pool = cands[:60]
+    pool, per_src = [], {}
+    for c in cands:  # au plus 5 articles par source, pour garder une édition variée
+        if per_src.get(c['source'], 0) < 5:
+            pool.append(c)
+            per_src[c['source']] = per_src.get(c['source'], 0) + 1
+        if len(pool) >= 60:
+            break
     arts = [{'ref': f'a{i}', 'source': c['source'], 'langue': c['lang'], 'date': c['date'].astimezone(PARIS).date().isoformat(),
              'categorie_probable': c['cat'], 'titre': c['title'], 'texte': shorten(one_line(c['summary']), 900)} for i, c in enumerate(pool)]
     vlist = [{'ref': f'v{i}', 'chaine': v['by'], 'titre': v['title'], 'description': shorten(v['_desc'], 300)} for i, v in enumerate(vids)]
@@ -909,6 +916,11 @@ def main():
     made = None
     if key and cands:
         made = ai_edition(cands, vids, a.max_items, key, used_ids)
+        if not made:
+            log('Gemini n\'a pas répondu : nouvel essai dans 40 secondes.')
+            time.sleep(40)
+            used_ids.clear()
+            made = ai_edition(cands, vids, a.max_items, key, used_ids)
     if not made:
         used_ids.clear()
         fr_cands = [c for c in cands if c['lang'] == 'fr']
