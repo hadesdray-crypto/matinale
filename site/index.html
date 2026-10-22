@@ -1104,6 +1104,14 @@ function renderListen(){
 }
 
 /* ---------- Podcast : construction des émissions ---------- */
+function itemFullAudio(it){
+  const ev = it.evidence || {}, parts = [it.title + '.', it.dek].concat(arr(it.body));
+  if (it.why) parts.push("Pourquoi c'est important : " + it.why);
+  parts.push('Niveau de preuve : ' + LEVELS[lvl(it)].name + '.' + (ev.note ? ' ' + ev.note : ''));
+  if (arr(it.sure).length) parts.push('Ce qui est établi : ' + arr(it.sure).join(' '));
+  if (arr(it.unsure).length) parts.push('Ce qui reste à prouver : ' + arr(it.unsure).join(' '));
+  return parts.filter(Boolean).join(' ');
+}
 function itemAudio(it){ return it.audio || [it.title + '.', it.dek].concat(it.body, ['Niveau de preuve : ' + LEVELS[lvl(it)].name + '.']).join(' '); }
 function conceptAudio(c){ return c.audio || ['Le concept du jour : ' + c.title + '.'].concat(arr(c.text)).join(' '); }
 function buildChapters(mode, ed, cat){
@@ -1350,7 +1358,7 @@ function startMode(mode, opt){
   const ed = S.edition; let chapters = [], label = '', edDate = ed && ed.date;
   if (mode === 'item'){
     const it = itemByKey(opt.key); if (!it) return;
-    chapters = [{ key: it.key, title: it.title, text: itemAudio(it) }]; label = 'Un sujet · ' + CAT[it.cat].short; edDate = opt.key.split(':')[0];
+    chapters = [{ key: it.key, title: it.title, text: itemFullAudio(it) }]; label = 'Un sujet · ' + CAT[it.cat].short; edDate = opt.key.split(':')[0];
   } else if (mode === 'cat'){ chapters = buildChapters('cat', ed, opt.cat); label = (CAT[opt.cat] || {}).label || 'Catégorie'; }
   else if (mode === 'concept'){ chapters = buildChapters('concept', ed); label = 'Le concept du jour'; }
   else if (mode === 'franco'){ chapters = buildChapters('franco', ed); label = 'Francophonie'; }
@@ -1391,7 +1399,12 @@ function fileSegment(mode, opt){
   if (!A.full) return null;
   const fc = arr(A.full.chapters);
   if (mode === 'full') return pick(A.full, fc);
-  if (mode === 'item'){ const id = String(opt.key || '').split(':').slice(1).join(':'); return pick(A.full, fc.filter(c => c.key === id)); }
+  if (mode === 'item'){
+    const id = String(opt.key || '').split(':').slice(1).join(':');
+    const one = A.items && A.items[id];  /* enregistrement complet de la fiche, s'il existe */
+    const seg = one ? pick(one, one.chapters) : null;
+    return seg || pick(A.full, fc.filter(c => c.key === id));
+  }
   if (mode === 'cat'){ const ids = new Set(ed.items.filter(i => i.cat === opt.cat).map(i => i.id)); return pick(A.full, fc.filter(c => c.key && ids.has(c.key))); }
   if (mode === 'concept') return pick(A.full, fc.filter(c => c.title === 'Le concept du jour'));
   if (mode === 'franco' || mode === 'hl') return pick(A.full, fc.filter(c => c.title === 'Francophonie'));
