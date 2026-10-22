@@ -2,8 +2,8 @@ Lecture de 31 sources (avec Gemini)…
   · CNES : https://cnes.fr/rss.xml ne répond pas (HTTPError)
   · INRAE : https://www.inrae.fr/rss.xml ne répond pas (HTTPError)
 Sources lues : 29 ; muettes : 2 ['CNES', 'INRAE']
-Articles retenus après tri : 364
-Vidéos francophones récentes : 3
+Articles retenus après tri : 353
+Vidéos francophones récentes : 12
   · Gemini gemini-flash-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -24,4 +24,4 @@ Vidéos francophones récentes : 3
   "error": {
     "code": 404,
     "message": "This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use models/gemini-3.8-flash for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs
-Édition n° 4 du 2026-10-22 : 19 fiches, mode Gemini (gemini-flash-lite-latest), 3 vidéos francophones.
+Édition n° 4 du 2026-10-22 : 20 fiches, mode Gemini (gemini-flash-lite-latest), 11 vidéos francophones.
