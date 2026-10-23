@@ -675,9 +675,11 @@ def numbers_ok(text, allowed):
     return number_set(text) <= allowed
 
 
-def gemini_call(prompt, key):
+def gemini_call(prompt, key, images=None):
+    """images : liste facultative de (type MIME, données en base64), jointes à la question."""
     models = ([os.environ['GEMINI_MODEL']] if os.environ.get('GEMINI_MODEL') else []) + GEMINI_MODELS
-    body = json.dumps({'contents': [{'role': 'user', 'parts': [{'text': prompt}]}],
+    parts = [{'text': prompt}] + [{'inline_data': {'mime_type': m, 'data': d}} for m, d in (images or [])]
+    body = json.dumps({'contents': [{'role': 'user', 'parts': parts}],
                        'generationConfig': {'temperature': 0.2, 'responseMimeType': 'application/json', 'maxOutputTokens': 32768}}).encode()
     for m in dict.fromkeys(models):
         url = f'{GEMINI_ENDPOINT}/v1beta/models/{m}:generateContent'

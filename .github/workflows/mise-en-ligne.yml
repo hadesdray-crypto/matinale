@@ -40,6 +40,36 @@ jobs:
             echo "::notice::Pas d'audio en ligne à reprendre : la voix du téléphone lira l'édition jusqu'au prochain matin."
           fi
 
+      - name: Reprendre les audios par fiche et les images du jour déjà en ligne
+        run: |
+          base="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          python3 - "$base" <<'PY' || echo "::notice::Audios par fiche ou images non repris : ils reviendront avec la prochaine édition."
+          import json, os, sys, urllib.parse, urllib.request
+          base = sys.argv[1].rstrip('/')
+          def get(rel):
+              dest = os.path.join('site', rel)
+              os.makedirs(os.path.dirname(dest), exist_ok=True)
+              try:
+                  with urllib.request.urlopen(base + '/' + urllib.parse.quote(rel), timeout=60) as r, open(dest, 'wb') as f:
+                      f.write(r.read())
+                  return True
+              except Exception:
+                  return False
+          wanted = []
+          try:
+              audio = json.load(open('site/audio/audio.json', encoding='utf-8'))
+              wanted += [i.get('src') for i in (audio.get('items') or {}).values() if isinstance(i, dict)]
+          except Exception:
+              pass
+          try:
+              ed = json.load(open('site/data/latest.json', encoding='utf-8')).get('edition') or {}
+              wanted += [(it.get('image') or {}).get('src') for it in ed.get('items') or []]
+          except Exception:
+              pass
+          ok = sum(1 for rel in wanted if isinstance(rel, str) and rel.startswith(('audio/items/', 'img/')) and '..' not in rel and get(rel))
+          print(f'{ok} fichiers repris sur {len([w for w in wanted if w])}.')
+          PY
+
       - uses: actions/upload-pages-artifact@v4
         with:
           path: site

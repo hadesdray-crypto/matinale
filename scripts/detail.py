@@ -12,6 +12,7 @@ Pour chaque fiche retenue, ce module :
 Tout est facultatif : si une étape échoue pour une fiche, la fiche garde simplement son résumé.
 Bibliothèque standard uniquement (Pillow est utilisé pour réduire les images s'il est installé).
 """
+import base64
 import concurrent.futures as cf
 import io
 import json
@@ -353,7 +354,29 @@ def openverse_search(query, http=None):
     return out
 
 
-def illustrations(items, key, gemini_call, log, site_dir, today, http=None, pause=1.0):
+VISION_PROMPT = """Tu vérifies une image d'illustration pour une fiche scientifique intitulée « {titre} ».
+Réponds uniquement avec ce JSON : {{"ok": true ou false, "raison": "une courte phrase"}}.
+ok = true seulement si TOUTES ces conditions sont réunies :
+- l'image montre le sujet de la fiche, ou un sujet clairement du même domaine (objet, paysage, instrument, organisme, lieu, phénomène) ;
+- aucun visage de personne reconnaissable en gros plan ;
+- rien de choquant, pas de médical explicite ;
+- ni logo, ni publicité, ni caricature, ni texte qui suggérerait autre chose ;
+- l'image ne laisse pas croire quelque chose de faux sur le sujet.
+En cas de doute, réponds false."""
+
+
+def vision_ok(path, title, key, gemini_call):
+    """Gemini regarde l'image candidate. Sans réponse claire, l'image est refusée."""
+    try:
+        with open(path, 'rb') as fh:
+            data = base64.b64encode(fh.read()).decode()
+        res, _m = gemini_call(VISION_PROMPT.format(titre=title), key, images=[('image/jpeg', data)])
+    except Exception:  # noqa: BLE001
+        return False
+    return isinstance(res, dict) and res.get('ok') is True
+
+
+def illustrations(items, key, gemini_call, log, site_dir, today, http=None, pause=1.0, vision=True):
     """Ajoute 'image' (kind = illustration) aux fiches qui n'en ont pas. Renvoie le nombre d'images gardées."""
     http = http or _http
     todo = [it for it in items if not it.get('image')]
@@ -372,7 +395,7 @@ def illustrations(items, key, gemini_call, log, site_dir, today, http=None, paus
                 if qs:
                     queries[id(chunk[int(idx[1:]) - 1])] = qs
     img_dir = os.path.join(site_dir, 'img', today)
-    used, n_ok = set(), 0
+    used, n_ok, refused = set(), 0, 0
     wfetch = lambda url, **kw: http(url, accept='image/jpeg,image/png,*/*;q=0.5', limit=MAX_IMG_BYTES)
     for it in todo:
         found = None
@@ -389,9 +412,19 @@ def illustrations(items, key, gemini_call, log, site_dir, today, http=None, paus
                     break
             for c in cands[:3]:
                 got = fetch_image(c['thumb'], wfetch, img_dir, re.sub(r'[^A-Za-z0-9_-]', '-', it['id'])[:60])
-                if got:
-                    found = (c, got)
-                    break
+                if not got:
+                    continue
+                if vision:
+                    time.sleep(pause)
+                    if not vision_ok(got[0], it['title'], key, gemini_call):
+                        refused += 1
+                        try:
+                            os.remove(got[0])
+                        except OSError:
+                            pass
+                        continue
+                found = (c, got)
+                break
             if found:
                 break
         if found:
@@ -401,5 +434,5 @@ def illustrations(items, key, gemini_call, log, site_dir, today, http=None, paus
             it['image'] = {'src': os.path.relpath(path, site_dir).replace(os.sep, '/'), 'w': w, 'h': h, 'alt': it['title'], 'kind': 'illustration',
                            'credit': f"{who}, {c['license']}, {c.get('site') or 'Wikimedia Commons'}", 'url': c['page']}
             n_ok += 1
-    log(f'Illustrations libres de droits : {n_ok} sur {len(todo)} fiches.')
+    log(f'Illustrations libres de droits : {n_ok} sur {len(todo)} fiches ({refused} image(s) écartée(s) par le contrôle de Gemini).')
     return n_ok
