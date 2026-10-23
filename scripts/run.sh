@@ -3,10 +3,6 @@
 # Chaque étape a son plan B : si l'une échoue, la page garde ce qui marche et la suite continue.
 set -u
 cd "$(dirname "$0")/.."
-TOOLS="${MATINALE_TOOLS:-${RUNNER_TEMP:-/tmp}/matinale-outils}"
-SHERPA_VERSION="v1.12.14"
-VOICE="vits-piper-fr_FR-siwis-medium"
-RELEASES="https://github.com/k2-fsa/sherpa-onnx/releases/download"
 
 echo "::group::Édition du jour"
 python3 -c "import PIL" 2>/dev/null || pip install -q --break-system-packages pillow >/dev/null 2>&1 || true   # réduit les images (facultatif)
@@ -17,25 +13,12 @@ unset GEMINI_API_KEY
 
 echo "::group::Enregistrement audio (voix française gratuite, hors ligne)"
 audio_ok=0
-if ! command -v ffmpeg >/dev/null 2>&1; then
-  (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg) >/dev/null 2>&1 || true
-fi
-mkdir -p "$TOOLS/sherpa/bin"
-TTS="$TOOLS/sherpa/bin/sherpa-onnx-offline-tts"
-if [ ! -x "$TTS" ]; then
-  curl -fsSL --retry 3 -o "$TOOLS/sherpa.tar.bz2" "$RELEASES/$SHERPA_VERSION/sherpa-onnx-$SHERPA_VERSION-linux-x64-static.tar.bz2" \
-    && tar xjf "$TOOLS/sherpa.tar.bz2" -C "$TOOLS/sherpa" --strip-components=1 "sherpa-onnx-$SHERPA_VERSION-linux-x64-static/bin/sherpa-onnx-offline-tts" \
-    || echo "Téléchargement du moteur de voix impossible."
-  rm -f "$TOOLS/sherpa.tar.bz2"
-fi
-if [ ! -f "$TOOLS/$VOICE/tokens.txt" ]; then
-  curl -fsSL --retry 3 -o "$TOOLS/voice.tar.bz2" "$RELEASES/tts-models/$VOICE.tar.bz2" \
-    && tar xjf "$TOOLS/voice.tar.bz2" -C "$TOOLS" \
-    || echo "Téléchargement de la voix impossible."
-  rm -f "$TOOLS/voice.tar.bz2"
-fi
-if [ -x "$TTS" ] && [ -f "$TOOLS/$VOICE/tokens.txt" ] && command -v ffmpeg >/dev/null 2>&1; then
-  python3 scripts/make_audio.py --edition site/data/latest.json --tts "$TTS" --voice "$TOOLS/$VOICE" --out site/audio && audio_ok=1
+. scripts/voice.sh
+if [ "$VOICE_OK" = 1 ]; then
+  python3 scripts/make_audio.py --edition site/data/latest.json --tts "$TTS" --voice "$VOICE_DIR" --out site/audio && audio_ok=1
+  # Audio des notions « Comprendre » : fabriqué seulement pour une notion nouvelle ou modifiée (sinon rien à faire).
+  python3 scripts/notions_audio.py --bases site/data/bases.json --tts "$TTS" --voice "$VOICE_DIR" --out site/audio/notions \
+    || echo "::warning::Audio des notions non mis à jour : la voix du téléphone les lira."
 fi
 if [ "$audio_ok" != 1 ]; then
   rm -f site/audio/audio.json

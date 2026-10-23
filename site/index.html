@@ -1511,6 +1511,11 @@ function onAudioState(d){
 }
 function fileSegment(mode, opt){
   opt = opt || {};
+  if (mode === 'notion'){   /* notion « Comprendre » : son enregistrement, s'il existe */
+    const r = S.nAudio && S.nAudio.notions && S.nAudio.notions[opt.id], n = notionById(opt.id);
+    if (!r || !r.src || /^[a-z]+:/i.test(r.src) || !(r.duration > 0) || !n) return null;
+    return { src: r.src, start: 0, end: r.duration, chapters: [{ title: n.title, text: r.text || notionAudio(n), start: 0, end: r.duration }] };
+  }
   const A = S.audio, ed = S.edition;
   if (mode === 'item'){   /* une fiche d'un jour précédent : sa liste est gardée dans le téléphone */
     const day = String(opt.key || '').split(':')[0], id = String(opt.key || '').split(':').slice(1).join(':');
@@ -1827,12 +1832,22 @@ function loadBases(){
   S.basesP = fetch('data/bases.json').then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status))).then(d => {
     if (!d || !Array.isArray(d.notions)) throw new Error('format');
     d.byId = Object.fromEntries(d.notions.filter(n => n && n.id && n.title).map(n => [n.id, n]));
-    S.bases = d; return d;
+    S.bases = d;
+    fetch('audio/notions/index.json').then(r => r.ok ? r.json() : null).then(j => { if (j && j.notions) S.nAudio = j; }).catch(() => {});   /* enregistrements des notions */
+    return d;
   }).catch(e => { S.bases = 'error'; S.basesP = null; throw e; });
   return S.basesP;
 }
 function notionById(id){ return (S.bases && S.bases.byId && S.bases.byId[id]) || null; }
-function notionAudio(n){ return [n.title + '.', n.tagline + '.'].concat(arr(n.kid), n.dyk ? ['Le savais-tu ? ' + n.dyk] : [], arr(n.more)).join(' '); }
+/* Même texte que scripts/notions_audio.py (l'enregistrement), pour que la voix du téléphone dise la même chose hors ligne. */
+function notionAudio(n){
+  const rec = S.nAudio && S.nAudio.notions && S.nAudio.notions[n.id]; if (rec && rec.text) return rec.text;
+  const e = n.exp || {}, parts = [n.title + '.', (n.tagline || '') + '.'].concat(arr(n.kid), n.dyk ? ['Le savais-tu ? ' + n.dyk] : [],
+    arr(n.more).length ? ['Pour aller plus loin.'].concat(arr(n.more)) : [],
+    arr(e.steps).length ? ['À essayer chez toi : ' + (e.title || '') + '.'].concat(arr(e.steps), e.safety ? [e.safety] : []) : [],
+    ["Les formules du niveau ingénieur sont à lire dans l'application."]);
+  return parts.filter(x => x && x !== '.').join(' ');
+}
 function renderComprendre(){
   const el = $('#view-comprendre'); if (!el) return;
   if (S.bases === 'error'){ el.innerHTML = box('Comprendre', "La section n'a pas pu se charger. Vérifie ta connexion, puis réessaie.", '<button class="btn sm primary" data-action="bases-retry">' + icon('refresh', 15) + ' Réessayer</button>'); return; }

@@ -9,10 +9,12 @@ on:
     paths:
       - "site/**"
       - "!site/data/**"
+      - "site/data/bases.json"
+      - "scripts/notions_audio.py"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -26,6 +28,24 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
+
+      - name: Garder les outils audio d'un jour sur l'autre
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/matinale-outils
+          key: matinale-voix-sherpa-v1.12.14-siwis
+
+      - name: Audio des notions « Comprendre » (seulement pour une notion nouvelle ou modifiée)
+        run: |
+          . scripts/voice.sh
+          if [ "$VOICE_OK" != 1 ]; then echo "::notice::Voix indisponible : les notions seront lues par la voix du téléphone."; exit 0; fi
+          python3 scripts/notions_audio.py --bases site/data/bases.json --tts "$TTS" --voice "$VOICE_DIR" --out site/audio/notions || exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site/audio/notions
+          if ! git diff --cached --quiet; then
+            git commit -q -m "Audio des notions" && git pull -q --rebase origin main && git push -q || echo "::warning::Audio des notions publié mais pas sauvegardé : il sera refait au prochain passage."
+          fi
 
       - name: Reprendre l'audio du jour déjà en ligne
         run: |
