@@ -41,24 +41,14 @@
   },
   {
    "name": "CNES",
-   "feed": "https://cnes.fr/rss.xml",
+   "feed": "https://cnes.fr/rss/actualites",
    "site": "https://cnes.fr",
    "lang": "fr",
    "kind": "officiel",
    "priority": 3,
    "cat": "espace",
    "fixed": true,
-   "verifie": false
-  },
-  {
-   "name": "INRAE",
-   "feed": "https://www.inrae.fr/rss.xml",
-   "site": "https://www.inrae.fr",
-   "lang": "fr",
-   "kind": "officiel",
-   "priority": 3,
-   "cat": "vivant",
-   "verifie": false
+   "verifie": "2026-10-23"
   },
   {
    "name": "Le Monde (Sciences)",
