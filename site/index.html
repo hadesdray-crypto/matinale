@@ -478,7 +478,26 @@ html[data-tsize="1"]{--ts:1.12} html[data-tsize="2"]{--ts:1.26} html[data-tsize=
 .pl-bar{height:6px;overflow:hidden;border-radius:99px;background:var(--band-2)}
 .pl-bar i{display:block;width:0;height:100%;border-radius:99px;background:var(--band-ink);transition:width .3s ease}
 .pl-time{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:12px;color:var(--band-ink-2)}
-.pl-ctrls{display:flex;align-items:center;justify-content:center;gap:18px;padding-block:4px}
+.pl-ctrls{display:flex;align-items:center;justify-content:center;gap:10px;padding-block:4px}
+@media (min-width:420px){.pl-ctrls{gap:16px}}
+/* Réglage de la vitesse (lecteur, mini-lecteur) */
+.speed{display:grid;gap:8px}
+.speed-row{display:flex;align-items:center;gap:10px}
+.speed-l{font-family:var(--display);font-weight:600;font-size:13px;color:var(--band-ink-2)}
+.speed-step{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--band-ink-2);background:transparent;color:var(--band-ink);font-family:var(--display);font-weight:700;font-size:24px;line-height:1;cursor:pointer}
+.speed-step:disabled{opacity:.35;cursor:not-allowed}
+.speed-v{min-width:4.2em;text-align:center;font-family:var(--mono);font-weight:700;font-size:19px;font-variant-numeric:tabular-nums}
+.speed-row input[type=range]{flex:1;min-width:0;accent-color:var(--band-ink);height:28px}
+.speed .speeds{gap:6px}
+.speed .chip{background:transparent;border-color:var(--band-ink-2);color:var(--band-ink)}
+.speed .chip[aria-pressed="true"]{background:var(--band-ink);border-color:var(--band-ink);color:var(--band)}
+.mini-rate{flex:none;min-width:48px;height:36px;padding:0 8px;border-radius:999px;border:1px solid var(--band-ink-2);background:transparent;color:var(--band-ink);font-family:var(--mono);font-weight:700;font-size:13px;cursor:pointer}
+.mini-pop{margin:0 auto 8px;max-width:640px;padding:14px;border-radius:16px;background:var(--band);color:var(--band-ink);box-shadow:var(--shadow);pointer-events:auto}
+.mini-pop .speed-l{display:flex;justify-content:space-between;align-items:center}
+@media (max-width:399px){#mini-next{display:none}}
+html.locked .mini{z-index:55;bottom:max(10px,env(safe-area-inset-bottom,0px))}
+html.locked body.has-mini .sheet{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
+@media (min-width:1000px){html.locked .mini{bottom:max(18px,env(safe-area-inset-bottom,0px))}}
 .player .iconbtn{background:transparent;border-color:var(--band-ink-2);color:var(--band-ink)}
 .playbtn{display:grid;place-items:center;width:76px;height:76px;border:0;border-radius:50%;background:var(--band-ink);color:var(--band);cursor:pointer}
 .playbtn:disabled{opacity:.5;cursor:not-allowed}
@@ -603,9 +622,12 @@ html[data-tsize="1"]{--ts:1.12} html[data-tsize="2"]{--ts:1.26} html[data-tsize=
 <nav class="tabbar" id="tabbar" aria-label="Sections"></nav>
 
 <div class="mini" id="mini" hidden>
+  <div class="mini-pop" id="mini-pop" hidden></div>
   <div class="mini-box">
     <button class="mini-play" id="mini-toggle" data-action="toggle" aria-label="Lecture"></button>
     <button class="mini-info" data-action="tab" data-tab="ecouter" aria-label="Ouvrir le lecteur"><small id="mini-label"></small><b id="mini-title"></b></button>
+    <button class="iconbtn" id="mini-back" data-action="skip" data-d="-1" aria-label="Reculer de 10 secondes"></button>
+    <button class="mini-rate" id="mini-rate" data-action="rate-pop" aria-expanded="false" aria-controls="mini-pop" aria-label="Vitesse de lecture">1,0×</button>
     <button class="iconbtn" id="mini-next" data-action="next" aria-label="Chapitre suivant"></button>
     <button class="iconbtn" id="mini-stop" data-action="stop" aria-label="Arrêter l'écoute"></button>
     <i class="mini-prog" id="mini-prog" aria-hidden="true"></i>
@@ -649,7 +671,12 @@ const NAV_TABS = TABS.filter(x => x !== 'favoris');
 const TAB_LABEL = { aujourdhui:"Aujourd'hui", videos:'Vidéos', franco:'Francophonie', ecouter:'Écouter', categories:'Catégories', comprendre:'Comprendre', favoris:'Favoris' };
 const TAB_ICON = { aujourdhui:'today', videos:'video', franco:'bubble', ecouter:'headphones', categories:'grid', comprendre:'atom', favoris:'star' };
 const TAB_SHORT = { franco:'Franco' };   /* libellés courts de la barre du bas (téléphone) */
-const RATES = [0.85, 1, 1.15, 1.3, 1.5];
+/* Vitesse de lecture : de 0,5× à 2×, réglable au dixième près ; quelques raccourcis. */
+const RATE_MIN = 0.5, RATE_MAX = 2, RATE_STEP = 0.1, RATES = [0.75, 1, 1.25, 1.5, 2];
+const SKIP_SEC = 10;   /* reculer / avancer de 10 secondes */
+const okRate = r => typeof r === 'number' && isFinite(r) && r >= RATE_MIN && r <= RATE_MAX;
+const roundRate = r => Math.round(Math.min(RATE_MAX, Math.max(RATE_MIN, Number(r) || 1)) * 100) / 100;
+const rateTxt = r => { r = roundRate(r); return (Math.round(r * 10) === r * 10 ? r.toFixed(1) : String(r)).replace('.', ',') + '×'; };
 const APP_URL = (typeof location !== 'undefined' && /^https?:/.test(location.protocol)) ? location.origin + location.pathname : ''; /* adresse de la Matinale */
 const UA = (typeof navigator !== 'undefined' && navigator.userAgent) || '';
 const IS_IOS = /iPhone|iPad|iPod/i.test(UA) || (/Macintosh/.test(UA) && ((typeof navigator !== 'undefined' && navigator.maxTouchPoints) || 0) > 1);
@@ -680,6 +707,8 @@ const P = {
   play:'<path d="M8 5.2v13.6L19 12z" fill="currentColor" stroke="none"/>',
   pause:'<path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z" fill="currentColor" stroke="none"/>',
   next:'<path d="M6 6.2v11.6L14.6 12z" fill="currentColor" stroke="none"/><path d="M18 6v12"/>',
+  back10:'<path d="M4 12a8 8 0 1 0 2.4-5.7L4 8.6"/><path d="M4 4.2v4.4h4.4"/><text x="12.6" y="15.6" text-anchor="middle" font-size="7.6" font-weight="700" font-family="system-ui,sans-serif" fill="currentColor" stroke="none">10</text>',
+  fwd10:'<path d="M20 12a8 8 0 1 1-2.4-5.7L20 8.6"/><path d="M20 4.2v4.4h-4.4"/><text x="11.4" y="15.6" text-anchor="middle" font-size="7.6" font-weight="700" font-family="system-ui,sans-serif" fill="currentColor" stroke="none">10</text>',
   prev:'<path d="M18 6.2v11.6L9.4 12z" fill="currentColor" stroke="none"/><path d="M6 6v12"/>',
   headphones:'<path d="M4 15.5V12a8 8 0 0 1 16 0v3.5"/><rect x="3" y="14" width="4.5" height="6.5" rx="1.6"/><rect x="16.5" y="14" width="4.5" height="6.5" rx="1.6"/>',
   video:'<rect x="3" y="6" width="13" height="12" rx="2.2"/><path d="M16 10.2l5-3v9.6l-5-3z"/>',
@@ -751,7 +780,7 @@ const S = {
   const lp = LS.get('mds.prefs', null);
   if (lp && typeof lp === 'object'){
     if (Array.isArray(lp.favorites)) S.favs = lp.favorites.filter(f => f && f.k);
-    if (RATES.includes(lp.rate)) S.prefs.rate = lp.rate;
+    if (okRate(lp.rate)) S.prefs.rate = roundRate(lp.rate);
     if (lp.voiceURI) S.prefs.voiceURI = lp.voiceURI;
   }
   S.read = new Set(arr(LS.get('mds.read', [])));
@@ -1169,8 +1198,8 @@ function renderListen(){
   el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Écouter</h2><span class="sec-sub">' + esc(cap(longDate(ed.date))) + '</span></div>' +
     listenNoteHTML() + '<div id="off-slot">' + offlineCardHTML() + '</div>' +
     '<div class="listen-grid"><div class="player"><p class="pl-label" id="pl-label"></p><h3 class="pl-title" id="pl-title"></h3><div class="pl-bar" aria-hidden="true"><i id="pl-fill"></i></div><div class="pl-time"><span id="pl-pos"></span><span id="pl-left"></span></div>' +
-    '<div class="pl-ctrls"><button class="iconbtn lg" data-action="prev" aria-label="Chapitre précédent">' + icon('prev', 22) + '</button><button class="playbtn" id="pl-toggle" data-action="toggle" aria-label="Lecture">' + icon('play', 30) + '</button><button class="iconbtn lg" data-action="next" aria-label="Chapitre suivant">' + icon('next', 22) + '</button></div>' +
-    '<div class="pl-set"><div class="speeds" role="group" aria-label="Vitesse de lecture">' + RATES.map(r => '<button class="chip sm" data-action="rate" data-rate="' + r + '" aria-pressed="' + (r === S.prefs.rate) + '">' + String(r).replace('.', ',') + '×</button>').join('') + '</div><label class="voice"><span>Voix</span><select id="voice-select"></select></label></div>' +
+    '<div class="pl-ctrls"><button class="iconbtn" data-action="prev" aria-label="Chapitre précédent">' + icon('prev', 20) + '</button><button class="iconbtn lg" data-action="skip" data-d="-1" aria-label="Reculer de 10 secondes">' + icon('back10', 26) + '</button><button class="playbtn" id="pl-toggle" data-action="toggle" aria-label="Lecture">' + icon('play', 30) + '</button><button class="iconbtn lg" data-action="skip" data-d="1" aria-label="Avancer de 10 secondes">' + icon('fwd10', 26) + '</button><button class="iconbtn" data-action="next" aria-label="Chapitre suivant">' + icon('next', 20) + '</button></div>' +
+    speedHTML('pl') + '<div class="pl-set"><label class="voice"><span>Voix</span><select id="voice-select"></select></label></div>' +
     '<p class="pl-note">Lecture par la voix de synthèse de ton appareil. Pour une écoute continue, garde l\'écran allumé.</p></div>' +
     '<div class="modes"><h3 class="sub-h">Choisir une émission</h3>' +
     '<button class="mode" data-action="load" data-mode="flash"><span class="mode-ic">' + icon('play', 18) + '</span><span><b>Le flash</b><small>' + ed.items.length + ' titres · ≈ ' + fl + ' min</small></span></button>' +
@@ -1389,6 +1418,45 @@ const Player = {
     if (this.playing){ const tk = this.token; setTimeout(() => { if (this.playing && tk === this.token) this.speak(); }, 90); }
     updatePlayerUI();
   },
+  /* Reculer (dir = -1) ou avancer (dir = 1) d'environ 10 secondes. */
+  skip(dir){
+    if (!this.chapters.length) return;
+    dir = dir < 0 ? -1 : 1;
+    if (this.engine === 'file' && this.seg){
+      const s = this.seg, au = this.audioEl();
+      let abs = s.src; try { abs = new URL(s.src, location.href).href; } catch (e) {}
+      if (au.src !== abs) au.src = s.src;
+      const cur = this.done ? s.end : Math.max(au.currentTime || 0, (this.chapters[this.ci] || {}).start || s.start);
+      const tgt = Math.max(s.start, Math.min(s.end - 0.5, cur + dir * SKIP_SEC));
+      try { au.currentTime = tgt; } catch (e) {}
+      this.done = false;
+      const chs = this.chapters; for (let i = 0; i < chs.length; i++){ if (tgt >= chs[i].start - 0.05 && tgt < chs[i].end){ this.ci = i; break; } }
+      this.onTime(); updatePlayerUI(); return;
+    }
+    /* Voix du téléphone : on saute des phrases entières, autant qu'il en faut pour faire à peu près 10 secondes. */
+    this.token++;
+    try { if (this.synth && (this.synth.speaking || this.synth.pending)) this.synth.cancel(); } catch (e) {}
+    const need = CPS * (S.prefs.rate || 1) * SKIP_SEC;
+    const len = (c, i) => ((this.lens[c] || [])[i] || 0);
+    if (this.done){ this.done = false; this.ci = this.chapters.length - 1; this.si = Math.max(0, (this.sents[this.ci] || []).length); }
+    let acc = 0;
+    if (dir < 0){
+      do {
+        if (this.si > 0) this.si--; else if (this.ci > 0){ this.ci--; this.si = Math.max(0, (this.sents[this.ci] || []).length - 1); } else break;
+        acc += len(this.ci, this.si);
+      } while (acc < need * 0.7);
+    } else {
+      while (acc < need * 0.7){
+        acc += len(this.ci, this.si);
+        if (this.si < (this.sents[this.ci] || []).length - 1) this.si++;
+        else if (this.ci < this.chapters.length - 1){ this.ci++; this.si = 0; }
+        else break;
+      }
+    }
+    this.si = Math.min(this.si, Math.max(0, (this.sents[this.ci] || []).length - 1));
+    if (this.playing){ const tk = this.token; setTimeout(() => { if (this.playing && tk === this.token) this.speak(); }, 90); }
+    updatePlayerUI();
+  },
   next(){ if (this.ci < this.chapters.length - 1) this.jump(this.ci + 1); },
   prev(){ if (this.si > 1 || this.ci === 0) this.jump(this.ci); else this.jump(this.ci - 1); },
   restartSentence(){
@@ -1589,14 +1657,15 @@ function updatePlayerUI(){
   const note = $('.pl-note'); if (note) note.textContent = Player.engine === 'file' ? "Enregistrement audio de l'édition, préparé chaque matin." : "Lecture par la voix de synthèse de ton appareil. Pour une écoute continue, garde l'écran allumé.";
   const vw = $('.player .voice'); if (vw) vw.hidden = Player.engine === 'file' || !Player.synth;
   $$('#chapters .chap').forEach((b, i) => b.classList.toggle('on', i === Player.ci));
-  $$('[data-action="rate"]').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.rate) === S.prefs.rate)));
-  highlight(); updateMini();
+  updateSpeedUI(); highlight(); updateMini(); updateMedia();
 }
 function updateMini(){
   const m = $('#mini'); if (!m) return;
-  const show = !!(Player.started && Player.chapters.length && S.tab !== 'ecouter');
+  const show = !!(Player.started && Player.chapters.length && (S.tab !== 'ecouter' || S.sheetOpen));
   m.hidden = !show; document.body.classList.toggle('has-mini', show);
-  if (!show) return;
+  if (!show){ if (ratePopOpen()) ratePop(false); return; }
+  const many = Player.chapters.length > 1, nx = $('#mini-next'); if (nx) nx.hidden = !many;
+  const mr = $('#mini-rate'); if (mr) mr.textContent = rateShort(S.prefs.rate);
   $('#mini-label').textContent = Player.label || '';
   const ch = Player.chapters[Player.ci]; $('#mini-title').textContent = ch ? fr(ch.title) : '';
   const b = $('#mini-toggle'); b.innerHTML = icon(Player.playing ? 'pause' : 'play', 22); b.setAttribute('aria-label', Player.playing ? 'Pause' : 'Lecture');
@@ -1614,7 +1683,7 @@ function askHTML(){
 }
 function openDetail(key, focus){
   const it = itemByKey(key); if (!it) return;
-  S.detailKey = key; markRead(key);
+  markRead(key);
   const n = lvl(it), L = LEVELS[n], ev = it.evidence || {};
   const study = isHttp(it.studyUrl) ? it.studyUrl : (it.doi ? 'https://doi.org/' + it.doi : null);
   const html = '<div class="sheet-head"><div class="in pad">' + catTag(CAT[it.cat]) + '<span class="sheet-date">' + esc(dateLabel(it)) + '</span>' + favBtn(it) + '<button class="iconbtn" data-action="close" aria-label="Fermer la fiche">' + icon('close') + '</button></div></div>' +
@@ -1639,23 +1708,36 @@ function openDetail(key, focus){
     '<button class="btn" data-action="share" data-key="' + esc(key) + '">' + icon('share', 18) + ' Partager</button>' +
     (study ? '<a class="btn" href="' + esc(study) + '" target="_blank" rel="noopener noreferrer">' + icon('doc', 18) + ' Étude originale</a><button class="btn ghost" data-action="copy" data-text="' + esc(study) + '">' + icon('copy', 18) + ' Copier le lien</button>' : '') + '</div>' +
     askHTML() + '</article>';
-  showSheet(html, it.title);
+  showSheet(html, it.title); S.detailKey = key;
   if (it.notions.length) loadBases().then(fillNotionSlot);
   if (focus === 'videos') requestAnimationFrame(() => { const v = $('#d-videos'); if (v) v.scrollIntoView({ block:'start' }); });
 }
+/* Fiches ouvertes les unes depuis les autres (fiche, puis notion, puis notion liée) : Retour revient à la précédente. */
+S.sheetStack = [];
 function showSheet(html, label){
   const bd = $('#sheet'), pn = $('#sheet-panel');
-  if (!S.sheetOpen) S.lastFocus = document.activeElement;
+  if (!S.sheetOpen) { S.lastFocus = document.activeElement; S.sheetStack = []; }
+  else { if (S.askCtl){ try { S.askCtl.abort(); } catch (e) {} S.askCtl = null; } S.sheetStack.push({ html: pn.innerHTML, label: pn.getAttribute('aria-label'), top: pn.scrollTop, key: S.detailKey }); if (S.sheetStack.length > 12) S.sheetStack.shift(); }
   pn.innerHTML = html; pn.setAttribute('aria-label', label || 'Fiche');
-  bd.hidden = false; document.documentElement.classList.add('locked'); pn.scrollTop = 0; S.sheetOpen = true;
+  bd.hidden = false; document.documentElement.classList.add('locked'); pn.scrollTop = 0; S.sheetOpen = true; S.detailKey = null;
   const cb = pn.querySelector('[data-action="close"]'); if (cb) { try { cb.focus({ preventScroll:true }); } catch (e) { cb.focus(); } }
+  updateMini();
+}
+function sheetBack(){
+  const prev = S.sheetStack.pop(); if (!prev){ closeSheet(); return; }
+  if (S.askCtl){ try { S.askCtl.abort(); } catch (e) {} S.askCtl = null; }
+  const pn = $('#sheet-panel');
+  pn.innerHTML = prev.html; pn.setAttribute('aria-label', prev.label || 'Fiche'); S.detailKey = prev.key || null;
+  pn.scrollTop = prev.top || 0;
+  const cb = pn.querySelector('[data-action="close"]'); if (cb) { try { cb.focus({ preventScroll:true }); } catch (e) {} }
 }
 function closeSheet(){
   const bd = $('#sheet'); if (bd.hidden) return;
   if (S.askCtl){ try { S.askCtl.abort(); } catch (e) {} S.askCtl = null; }
   bd.hidden = true; $('#sheet-panel').innerHTML = ''; document.documentElement.classList.remove('locked');
-  S.sheetOpen = false; S.detailKey = null;
+  S.sheetOpen = false; S.detailKey = null; S.sheetStack = [];
   try { if (S.lastFocus && document.contains(S.lastFocus)) S.lastFocus.focus({ preventScroll:true }); } catch (e) {}
+  updateMini();
 }
 function trapFocus(e){
   const pn = $('#sheet-panel');
@@ -1788,7 +1870,7 @@ async function loadPrefs(){
         const m = new Map(); d.favorites.concat(S.favs).forEach(f => { if (f && f.k && !m.has(f.k)) m.set(f.k, f); });
         const merged = Array.from(m.values()); const grew = merged.length !== d.favorites.length; S.favs = merged; if (grew) savePrefs();
       }
-      if (RATES.includes(d.rate)) S.prefs.rate = d.rate;
+      if (okRate(d.rate)) S.prefs.rate = roundRate(d.rate);
       if (d.voiceURI) S.prefs.voiceURI = d.voiceURI;
       LS.set('mds.prefs', { favorites:S.favs, rate:S.prefs.rate, voiceURI:S.prefs.voiceURI });
     } else if (S.favs.length) savePrefs();
@@ -1818,13 +1900,105 @@ function setTab(tab, opt){
   S.tab = tab;
   TABS.forEach(x => { const v = $('#view-' + x); if (v) v.hidden = x !== tab; });
   $$('.top-nav [data-tab], .tabbar [data-tab], #hdr-fav').forEach(b => b.setAttribute('aria-current', b.dataset.tab === tab ? 'page' : 'false'));
-  try { history.replaceState(null, '', '#' + tab); } catch (e) {}
+  try { history.replaceState(history.state, '', '#' + tab); } catch (e) {}
   renderView(tab); updateMini();
   if (opt.scroll !== false) window.scrollTo(0, 0);
 }
 function toast(msg, ms){
   const el = $('#toast'); el.textContent = msg; el.hidden = false;
   clearTimeout(toast.timer); toast.timer = setTimeout(() => { el.hidden = true; }, ms || 2400);
+}
+/* ---------- Bouton Retour du téléphone ----------
+   L'historique du navigateur garde deux pages : « base » et « dessus ». Retour ramène sur « base » : l'appli ferme alors
+   ce qui est ouvert (réglage de vitesse, fiche, onglet) puis remet « dessus ». À l'accueil, rien n'est remis :
+   un message prévient, et un second appui sur Retour quitte l'appli comme les autres applications Android. */
+const NAV = { timer:0, exiting:false };
+const navUrl = () => location.pathname + location.search + '#' + S.tab;
+function navArm(){
+  clearTimeout(NAV.timer); NAV.exiting = false;
+  try {
+    if (history.state && history.state.mds === 'top') return;
+    history.replaceState({ mds:'root' }, '', navUrl()); history.pushState({ mds:'top' }, '', navUrl());
+  } catch (e) {}
+}
+function navBack(){   /* une étape en arrière dans l'appli ; false s'il n'y a plus rien à fermer */
+  if (ratePopOpen()){ ratePop(false); return true; }
+  if (S.sheetOpen){ sheetBack(); return true; }
+  if (S.tab !== 'aujourdhui'){ setTab('aujourdhui'); return true; }
+  return false;
+}
+function onPopState(e){
+  const st = e.state;
+  if (st && st.mds === 'top'){ navBack(); try { history.replaceState(st, '', navUrl()); } catch (er) {} return; }
+  if (navBack()){ navArm(); return; }
+  NAV.exiting = true;
+  try { history.replaceState({ mds:'root' }, '', navUrl()); } catch (er) {}
+  toast('Appuie encore une fois sur Retour pour quitter la Matinale.', 2800);
+  clearTimeout(NAV.timer); NAV.timer = setTimeout(navArm, 2800);
+}
+function navInit(){
+  window.addEventListener('popstate', onPopState);
+  document.addEventListener('pointerdown', () => { if (NAV.exiting) navArm(); }, true);
+  navArm();
+}
+
+/* ---------- Vitesse de lecture ---------- */
+const rateShort = r => String(roundRate(r)).replace('.', ',') + '×';
+function speedHTML(id){
+  const r = S.prefs.rate;
+  return '<div class="speed" data-speed="' + id + '"><div class="speed-row"><span class="speed-l" style="margin-right:auto">Vitesse de lecture</span><output class="speed-v" aria-live="polite">' + rateTxt(r) + '</output></div>' +
+    '<div class="speed-row"><button class="speed-step" data-action="rate-step" data-d="-1" aria-label="Moins vite"' + (r <= RATE_MIN ? ' disabled' : '') + '>−</button>' +
+    '<input type="range" min="' + RATE_MIN + '" max="' + RATE_MAX + '" step="' + RATE_STEP + '" value="' + r + '" data-rate-range aria-label="Vitesse de lecture" aria-valuetext="' + esc(rateTxt(r)) + '">' +
+    '<button class="speed-step" data-action="rate-step" data-d="1" aria-label="Plus vite"' + (r >= RATE_MAX ? ' disabled' : '') + '>+</button></div>' +
+    '<div class="speeds" role="group" aria-label="Vitesses rapides">' + RATES.map(x => '<button class="chip sm" data-action="rate" data-rate="' + x + '" aria-pressed="' + (x === r) + '">' + rateShort(x) + '</button>').join('') + '</div></div>';
+}
+function updateSpeedUI(){
+  const r = S.prefs.rate;
+  $$('.speed').forEach(box => {
+    const o = $('.speed-v', box); if (o) o.textContent = rateTxt(r);
+    const rg = $('[data-rate-range]', box); if (rg && document.activeElement !== rg){ rg.value = String(r); } if (rg) rg.setAttribute('aria-valuetext', rateTxt(r));
+    $$('.speed-step', box).forEach(b => { b.disabled = Number(b.dataset.d) < 0 ? r <= RATE_MIN : r >= RATE_MAX; });
+    $$('[data-action="rate"]', box).forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.rate) === r)));
+  });
+  const mr = $('#mini-rate'); if (mr){ mr.textContent = rateShort(r); mr.setAttribute('aria-label', 'Vitesse de lecture : ' + rateTxt(r) + '. Changer la vitesse'); }
+}
+function setRate(r, live){
+  r = roundRate(r);
+  if (live){ S.prefs.rate = r; S.rateDirty = true; try { if (Player.engine === 'file' && Player.au) Player.au.playbackRate = r; } catch (e) {} updateSpeedUI(); return; }   /* pendant qu'on fait glisser */
+  if (r === S.prefs.rate && !S.rateDirty){ updateSpeedUI(); return; }
+  S.prefs.rate = r; S.rateDirty = false;
+  savePrefs(); renderChapters(); Player.restartSentence(); updatePlayerUI();
+}
+const ratePopOpen = () => { const p = $('#mini-pop'); return !!(p && !p.hidden); };
+function ratePop(open){
+  const p = $('#mini-pop'), b = $('#mini-rate'); if (!p) return;
+  if (open == null) open = p.hidden;
+  if (open){ p.innerHTML = speedHTML('mini'); p.hidden = false; } else { p.hidden = true; p.innerHTML = ''; }
+  if (b) b.setAttribute('aria-expanded', String(!!open));
+}
+
+/* ---------- Commandes sur l'écran verrouillé et dans la notification (Android, iPhone, ordinateur) ---------- */
+function mediaInit(){
+  const ms = navigator.mediaSession; if (!ms) return;
+  const on = (a, f) => { try { ms.setActionHandler(a, f); } catch (e) {} };
+  on('play', () => { if (!Player.playing) Player.play(); });
+  on('pause', () => { if (Player.playing) Player.pause(); });
+  on('stop', () => { Player.stop(); Player.started = false; updatePlayerUI(); });
+  on('seekbackward', () => Player.skip(-1));
+  on('seekforward', () => Player.skip(1));
+  on('previoustrack', () => Player.prev());
+  on('nexttrack', () => Player.next());
+}
+function updateMedia(){
+  const ms = navigator.mediaSession; if (!ms) return;
+  try {
+    ms.playbackState = Player.playing ? 'playing' : (Player.started ? 'paused' : 'none');
+    const ch = Player.chapters[Player.ci], title = ch ? fr(ch.title) : (Player.label || 'La Matinale des Sciences');
+    if (window.MediaMetadata && updateMedia.last !== title + '|' + Player.label){
+      updateMedia.last = title + '|' + Player.label;
+      ms.metadata = new MediaMetadata({ title, artist:'La Matinale des Sciences', album: Player.label || '', artwork:[{ src:'icons/icon-192.png', sizes:'192x192', type:'image/png' }, { src:'icons/icon-512.png', sizes:'512x512', type:'image/png' }] });
+    }
+  } catch (e) {}
 }
 /* ---------- Comprendre : les bases de la physique et de la chimie ---------- */
 function loadBases(){
@@ -1982,7 +2156,10 @@ function onClick(e){
     case 'prev': Player.prev(); break;
     case 'stop': Player.stop(); Player.started = false; updatePlayerUI(); break;
     case 'chapter': Player.jump(Number(a.dataset.ci)); break;
-    case 'rate': S.prefs.rate = Number(a.dataset.rate) || 1; savePrefs(); renderChapters(); Player.restartSentence(); updatePlayerUI(); break;
+    case 'rate': setRate(Number(a.dataset.rate) || 1); break;
+    case 'rate-step': setRate(Math.round((S.prefs.rate + Number(a.dataset.d) * RATE_STEP) * 10) / 10); break;
+    case 'rate-pop': ratePop(); break;
+    case 'skip': Player.skip(Number(a.dataset.d)); break;
     case 'filter-cat': S.filterCat = a.dataset.cat || 'all'; renderFeed(); break;
     case 'filter-lvl': { const n = Number(a.dataset.lvl); S.filterLvl = S.filterLvl === n ? 0 : n; renderFeed(); break; }
     case 'clear-filters': { S.filterCat = 'all'; S.filterLvl = 0; S.query = ''; const q = $('#q'); if (q) q.value = ''; renderFeed(); break; }
@@ -2009,9 +2186,13 @@ function onClick(e){
 function bindEvents(){
   $('#tabbar').innerHTML = NAV_TABS.map(x => '<button data-action="tab" data-tab="' + x + '" aria-current="false">' + icon(TAB_ICON[x], 22) + '<span>' + esc(TAB_SHORT[x] || TAB_LABEL[x]) + '</span></button>').join('');
   $('#hdr-fav').innerHTML = icon('star', 19);
-  $('#mini-next').innerHTML = icon('next', 20); $('#mini-stop').innerHTML = icon('close', 20);
+  $('#mini-next').innerHTML = icon('next', 20); $('#mini-stop').innerHTML = icon('close', 20); $('#mini-back').innerHTML = icon('back10', 22);
   document.addEventListener('input', e => { if (e.target && e.target.id === 'fq'){ S.frQuery = e.target.value; renderDir(); } if (e.target && e.target.id === 'nq'){ S.nq = e.target.value; renderNotionList(); } });
   document.addEventListener('click', onClick);
+  /* Réglage de la vitesse : la valeur suit le doigt, elle s'applique au lâcher. Toucher ailleurs referme le réglage du mini-lecteur. */
+  document.addEventListener('input', e => { if (e.target && e.target.matches && e.target.matches('[data-rate-range]')) setRate(Number(e.target.value), true); });
+  document.addEventListener('change', e => { if (e.target && e.target.matches && e.target.matches('[data-rate-range]')) setRate(Number(e.target.value)); });
+  document.addEventListener('click', e => { if (ratePopOpen() && !e.target.closest('#mini-pop, #mini-rate')) ratePop(false); }, true);
   document.addEventListener('submit', e => { if (e.target && e.target.id === 'ask-form'){ e.preventDefault(); const inp = $('#ask-input'); const v = inp ? inp.value.trim() : ''; if (v) ask(v); } });
   document.addEventListener('input', e => { if (e.target && e.target.id === 'q'){ S.query = e.target.value; renderFeed(); } });
   document.addEventListener('change', e => { if (e.target && e.target.id === 'voice-select'){ S.prefs.voiceURI = e.target.value || null; savePrefs(); Player.restartSentence(); } });
@@ -2108,6 +2289,7 @@ function boot(){
   if (h.startsWith('f=')){ try { S.pendingKey = decodeURIComponent(h.slice(2)); } catch (e) {} }   /* lien partagé vers une fiche */
   let nid = null; if (h.startsWith('n=')){ try { nid = decodeURIComponent(h.slice(2)); } catch (e) {} }   /* lien partagé vers une notion */
   setTab(nid ? 'comprendre' : (TABS.includes(h) ? h : 'aujourdhui'), { scroll:false });
+  navInit(); mediaInit();
   if (nid) loadBases().then(() => openNotion(nid));
   else setTimeout(() => { loadBases().catch(() => {}); }, 6000);   /* gardée dans le téléphone pour le hors-ligne */
   setTimeout(() => { if (S.status === 'loading') loadFallback(false); }, 4000);
