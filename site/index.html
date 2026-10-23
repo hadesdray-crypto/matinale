@@ -1834,6 +1834,7 @@ function loadBases(){
     d.byId = Object.fromEntries(d.notions.filter(n => n && n.id && n.title).map(n => [n.id, n]));
     S.bases = d;
     fetch('audio/notions/index.json').then(r => r.ok ? r.json() : null).then(j => { if (j && j.notions) S.nAudio = j; }).catch(() => {});   /* enregistrements des notions */
+    fetch('data/bases-ok.json').then(r => r.ok ? r.json() : null).then(j => { if (j && Array.isArray(j.dead)) S.basesDead = new Set(j.dead); }).catch(() => {});   /* liens vérifiés chaque matin */
     return d;
   }).catch(e => { S.bases = 'error'; S.basesP = null; throw e; });
   return S.basesP;
@@ -1895,10 +1896,24 @@ function openNotion(id){
       (arr(n.formulas).length ? '<ul class="formulas">' + n.formulas.map(f => '<li><code>' + esc(f.f) + '</code><span>' + t(f.l || '') + '</span></li>').join('') + '</ul>' : '') + '</details>' +
     (arr(n.numbers).length ? '<div class="nums">' + n.numbers.map(x => '<div class="num"><b>' + t(x.v) + '</b><span>' + t(x.l || '') + '</span></div>').join('') + '</div>' : '') +
     (n.exp && arr(n.exp.steps).length ? '<section class="d-sec lvl exp"><h3 class="d-h">' + icon('quest', 18) + ' À essayer chez soi : ' + t(n.exp.title || '') + '</h3><ol>' + n.exp.steps.map(x => '<li>' + t(x) + '</li>').join('') + '</ol>' + (n.exp.safety ? '<div class="caution">' + icon('alert', 18) + '<p>' + t(n.exp.safety) + '</p></div>' : '') + '</section>' : '') +
+    notionLinksHTML(n) +
     (news.length ? '<section class="d-sec"><h3 class="d-h">' + icon('doc', 18) + ' Dans l\'actualité</h3><ul class="rows">' + news.map(rowHTML).join('') + '</ul></section>' : '') +
     (arr(n.related).length ? '<section class="d-sec"><h3 class="d-h">Notions liées</h3><div class="n-related">' + n.related.map(r => notionById(r)).filter(Boolean).map(r => '<button class="chip" data-action="notion" data-id="' + esc(r.id) + '">' + icon('atom', 14) + ' ' + t(r.title) + '</button>').join('') + '</div></section>' : '') +
     '<div class="d-actions"><button class="btn" data-action="share-notion" data-id="' + esc(id) + '">' + icon('share', 18) + ' Partager</button></div></article>';
   showSheet(html, n.title);
+}
+/* Vidéos de vulgarisation et encyclopédies (liens vérifiés chaque matin : un lien mort est masqué). */
+function notionLinksHTML(n){
+  const dead = S.basesDead || new Set();
+  const vids = arr(n.videos).filter(v => v && isHttp(v.url) && !dead.has(v.url));
+  const links = arr(n.links).filter(l => l && isHttp(l.url) && !dead.has(l.url));
+  const q = n.search || n.title;
+  const host = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return ''; } };
+  return '<section class="d-sec"><h3 class="d-h">' + icon('video', 18) + ' Pour aller voir</h3>' +
+    (vids.length ? '<div class="vgrid">' + vids.map(v => vtileHTML({ url: v.url, title: v.title, by: v.by, lang: 'fr', kind: 'tierce',
+      note: v.audience === 'enfants' ? 'Pour les plus jeunes' : 'Pour aller plus loin' })).join('') + '</div>' : '') +
+    (links.length ? '<ul class="srcs" style="margin-top:12px">' + links.map(l => '<li><a href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer"><span class="src-kind k-presse">Encyclopédie</span><span class="src-label">' + t(l.label) + '</span><span class="src-host">' + esc(host(l.url)) + ' ' + icon('ext', 12) + '</span></a></li>').join('') + '</ul>' : '') +
+    '<div class="vsearch"><span>Chercher d\'autres vidéos :</span><a class="btn sm" href="' + esc(ytSearch(q + ' vulgarisation')) + '" target="_blank" rel="noopener noreferrer">YouTube ' + icon('ext', 14) + '</a></div></section>';
 }
 function fillNotionSlot(){
   const el = $('#n-slot'); if (!el) return;

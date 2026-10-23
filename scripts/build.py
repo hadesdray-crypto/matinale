@@ -876,6 +876,36 @@ def ai_edition(cands, vids, n, key, used_ids):
 
 # ---------------------------------------------------------------- Fichiers
 
+def check_bases_links(bases, data_dir, today):
+    """Vérifie chaque matin les vidéos et liens de la section « Comprendre » ; les liens morts sont écrits dans
+    site/data/bases-ok.json et la page les masque. Une vidéo YouTube est vérifiée par son « oEmbed » (404 = supprimée)."""
+    urls = set()
+    for n in bases.get('notions') or []:
+        for key in ('videos', 'links'):
+            for x in n.get(key) or []:
+                if isinstance(x, dict) and isinstance(x.get('url'), str) and x['url'].startswith('https://'):
+                    urls.add(x['url'])
+    urls = sorted(urls)
+    if not urls:
+        return
+
+    def status(u):
+        if re.search(r'(youtube\.com/watch|youtu\.be/)', u):
+            try:
+                fetch('https://www.youtube.com/oembed?format=json&url=' + urllib.parse.quote(u, safe=''), timeout=20, accept='application/json', limit=20000)
+                return 'ok'
+            except urllib.error.HTTPError as e:
+                return 'mort' if e.code in (400, 404) else 'incertain'   # 401/403 : la vidéo existe mais ne s'intègre pas
+            except Exception:  # noqa: BLE001
+                return 'incertain'
+        return link_status(u)
+    with cf.ThreadPoolExecutor(max_workers=8) as ex:
+        res = list(ex.map(status, urls))
+    dead = [u for u, r in zip(urls, res) if r == 'mort']
+    write_json(os.path.join(data_dir, 'bases-ok.json'), {'checked': today, 'total': len(urls), 'dead': dead})
+    log(f'Liens de « Comprendre » : {len(urls) - len(dead)} valides sur {len(urls)}' + (f' (masqués : {dead})' if dead else '') + '.')
+
+
 def load_json(path, default=None):
     try:
         with open(path, encoding='utf-8') as f:
@@ -932,6 +962,11 @@ def main():
 
     bases = load_json(os.path.join(data_dir, 'bases.json'), {}) or {}
     NOTIONS.update({n['id']: n['title'] for n in bases.get('notions') or [] if isinstance(n, dict) and n.get('id') and n.get('title')})
+    if not a.no_link_check:
+        try:
+            check_bases_links(bases, data_dir, today)
+        except Exception as e:  # noqa: BLE001 - contrôle utile mais pas indispensable
+            log(f'Contrôle des liens de « Comprendre » impossible ({type(e).__name__}).')
     cfg = load_json(a.sources, {}) or {}
     key = '' if a.no_ai else (os.environ.get('GEMINI_API_KEY') or '').strip()
     sources = [s for s in cfg.get('feeds', []) if s.get('feed') and (key or s.get('lang', 'fr') == 'fr')]
