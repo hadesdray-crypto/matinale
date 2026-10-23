@@ -52,7 +52,8 @@ def item_full_audio(it):
     """Texte complet d'une fiche, pour l'écoute d'un seul sujet (même texte que la page)."""
     body = it.get('body') if isinstance(it.get('body'), list) else ([it['body']] if it.get('body') else [])
     ev = it.get('evidence') or {}
-    parts = [it['title'] + '.', it.get('dek', '')] + arr(body)
+    detail = arr(it.get('detail'))   # fiche détaillée : lue à la place du résumé, pour ne pas dire deux fois la même chose
+    parts = [it['title'] + '.', it.get('dek', '')] + (detail or arr(body))
     if it.get('why'):
         parts.append('Pourquoi c\'est important : ' + it['why'])
     parts.append('Niveau de preuve : ' + LEVELS[lvl(it)] + '.' + (' ' + ev['note'] if ev.get('note') else ''))
@@ -151,6 +152,7 @@ def build_items(ed, tts, voice, out_dir, tmp):
     """Un enregistrement par fiche (texte complet), dans out_dir/items/. Une fiche qui échoue est simplement ignorée."""
     items_dir = os.path.join(out_dir, 'items')
     os.makedirs(items_dir, exist_ok=True)
+    day = re.sub(r'[^0-9-]', '', str(ed.get('date') or ''))[:10] or 'jour'
     res = {}
     for n, it in enumerate(arr(ed.get('items'))):
         if not isinstance(it, dict) or not it.get('id') or not it.get('title'):
@@ -162,10 +164,11 @@ def build_items(ed, tts, voice, out_dir, tmp):
             synth(tts, voice, speechify(text), wav)
             with wave.open(wav, 'rb') as w:
                 dur = w.getnframes() / w.getframerate()
-            mp3 = os.path.join(items_dir, iid + '.mp3')
-            subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', wav, '-ac', '1', '-ar', '22050', '-codec:a', 'libmp3lame', '-b:a', '32k',
+            os.makedirs(os.path.join(items_dir, day), exist_ok=True)
+            mp3 = os.path.join(items_dir, day, iid + '.mp3')
+            subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', wav, '-ac', '1', '-ar', '22050', '-codec:a', 'libmp3lame', '-b:a', '24k',
                             '-metadata', 'title=' + it['title'], '-metadata', 'artist=Matinale des Sciences', mp3], check=True)
-            res[str(it['id'])] = {'src': f'audio/items/{iid}.mp3', 'duration': round(dur, 2), 'bytes': os.path.getsize(mp3),
+            res[str(it['id'])] = {'src': f'audio/items/{day}/{iid}.mp3', 'duration': round(dur, 2), 'bytes': os.path.getsize(mp3),
                                   'chapters': [{'key': it['id'], 'title': it['title'], 'text': text, 'start': 0, 'end': round(dur, 2)}]}
         except Exception as e:  # noqa: BLE001
             print('fiche ignorée', it.get('id'), type(e).__name__, str(e)[:120], file=sys.stderr)

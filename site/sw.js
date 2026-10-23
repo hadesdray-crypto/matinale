@@ -3,10 +3,14 @@
    - Ensuite, le réseau est essayé d'abord pour avoir l'édition du jour, mais jamais plus de quelques secondes :
      sans réseau, ou s'il capte mal, l'appli s'ouvre aussitôt avec la copie gardée dans le téléphone.
    - Les 7 éditions précédentes et toutes celles déjà ouvertes restent lisibles hors ligne (60 au plus).
-   - L'audio (mp3) n'est gardé que si l'utilisateur le demande (bouton « Garder l'audio du jour ») : seuls les
-     enregistrements du jour restent dans le téléphone, remplacés chaque matin. Sinon, sans réseau, la voix du téléphone lit l'édition. */
+   - L'audio (mp3) n'est gardé que si l'utilisateur le demande (bouton « Garder l'audio ») : les 7 derniers jours restent
+     dans le téléphone, les plus anciens sont supprimés. Sinon, sans réseau, la voix du téléphone lit l'édition.
+   - Les images libres de droits des fiches sont gardées 8 jours. */
 const APPLI = 'matinale-appli-2';      // à changer quand la liste des fichiers de l'appli change
-const AUDIO = 'matinale-audio';        // audio du jour gardé à la demande : remplacé chaque matin
+const AUDIO = 'matinale-audio';        // audio gardé à la demande : les 7 derniers jours seulement
+const IMAGES = 'matinale-images';      // images libres de droits des fiches : les 8 derniers jours
+const JOURS_AUDIO = 7;
+const JOURS_IMAGES = 8;
 const DONNEES = 'matinale-donnees';    // éditions gardées : ce cache survit aux mises à jour de l'appli
 const POLICES = [
   'syne-latin-600-normal', 'syne-latin-700-normal', 'syne-latin-800-normal',
@@ -47,7 +51,7 @@ self.addEventListener('activate', e => {
   e.waitUntil((async () => {
     const donnees = await caches.open(DONNEES);
     for (const nom of await caches.keys()) {
-      if (nom === APPLI || nom === DONNEES || nom === AUDIO || !nom.startsWith('matinale-')) continue;
+      if (nom === APPLI || nom === DONNEES || nom === AUDIO || nom === IMAGES || !nom.startsWith('matinale-')) continue;
       // Reprend les éditions gardées par une version précédente de l'appli, puis jette l'ancienne version.
       const ancien = await caches.open(nom);
       for (const req of await ancien.keys()) {
@@ -65,7 +69,9 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || !req.url.startsWith(self.registration.scope)) return;   // vidéos, liens externes : le navigateur s'en charge
   const chemin = new URL(req.url).pathname;
+  if (/\/img\/\d{4}-\d{2}-\d{2}\//.test(chemin)) return imageGarde(e);                     // images du jour : copie du téléphone d'abord
   if (chemin.endsWith('.mp3')) return audioGarde(e);                                    // audio : la copie gardée d'abord, sinon le réseau
+  if (/\/audio\/index\/\d{4}-\d{2}-\d{2}\.json$/.test(chemin)) return audioIndexJour(e);
   if (chemin.endsWith('/audio/audio.json')) return audioIndex(e);
   if (req.mode === 'navigate') {
     if (chemin === RACINE || chemin === RACINE + 'index.html') reseauSinonCopie(e, APPLI, ATTENTE_PAGE, ici('./'));
@@ -154,7 +160,9 @@ async function editionsDAvance(latest) {
 }
 
 
-/* ---------- Audio du jour gardé dans le téléphone (à la demande) ---------- */
+/* ---------- Audio gardé dans le téléphone (à la demande, 7 derniers jours) ---------- */
+const jourDe = url => { const m = /\/(\d{4}-\d{2}-\d{2})(?:\/|\.json$)/.exec(url); return m ? m[1] : ''; };
+
 self.addEventListener('message', e => {
   const d = e.data || {};
   if (d.type === 'audio-garder') e.waitUntil(garderAudio(Array.isArray(d.urls) ? d.urls : [], String(d.date || '')));
@@ -164,17 +172,19 @@ self.addEventListener('message', e => {
 
 async function etatAudio(erreur) {
   const c = await caches.open(AUDIO);
-  let bytes = 0, date = '';
+  let bytes = 0;
   const srcs = [];
-  const meta = await c.match(ici('./audio/.date'));
-  if (meta) date = await meta.text();
   for (const r of await c.keys()) {
-    if (!/\.mp3$/.test(r.url)) continue;
-    const rep = await c.match(r);
-    if (rep) bytes += (await rep.blob()).size;
-    srcs.push(new URL(r.url).pathname.slice(RACINE.length));
+    if (/\.mp3$/.test(r.url)) {
+      const rep = await c.match(r);
+      if (rep) bytes += (await rep.blob()).size;
+      srcs.push(new URL(r.url).pathname.slice(RACINE.length));
+    }
   }
-  return { type: 'audio-etat', date, bytes, srcs, erreur: erreur || '' };
+  const indexes = [];
+  for (const r of await c.keys()) if (/\/audio\/index\/\d{4}-\d{2}-\d{2}\.json$/.test(r.url)) indexes.push(jourDe(r.url));
+  indexes.sort();
+  return { type: 'audio-etat', date: indexes.length ? indexes[indexes.length - 1] : '', dates: indexes, bytes, srcs, erreur: erreur || '' };
 }
 
 async function prevenirAudio(erreur) {
@@ -182,12 +192,11 @@ async function prevenirAudio(erreur) {
   for (const c of await self.clients.matchAll({ type: 'window' })) c.postMessage(msg);
 }
 
-/* Télécharge les enregistrements du jour, puis jette tous les autres (ceux de la veille). */
+/* Télécharge les enregistrements du jour, puis ne garde que les 7 derniers jours. */
 async function garderAudio(urls, date) {
   const c = await caches.open(AUDIO);
-  const voulues = new Set(urls.map(u => ici(u)));
   let complet = true;
-  for (const u of voulues) {
+  for (const u of new Set(urls.map(x => ici(x)))) {
     if (await c.match(u)) continue;
     try {
       const rep = await fetch(u, { cache: 'no-store' });
@@ -197,13 +206,20 @@ async function garderAudio(urls, date) {
   }
   try {
     const rep = await fetch(ici('./audio/audio.json'), { cache: 'no-store' });
-    if (rep.ok) await c.put(ici('./audio/audio.json'), rep);
+    if (rep.ok) {
+      const jour = (await rep.clone().json().catch(() => ({}))).date || date;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(jour)) await c.put(ici('./audio/index/' + jour + '.json'), rep);
+    } else complet = false;
   } catch (err) { complet = false; }
-  if (complet) {
-    for (const r of await c.keys()) if (/\.mp3$/.test(r.url) && !voulues.has(r.url)) await c.delete(r);
-    await c.put(ici('./audio/.date'), new Response(date));
-  }
+  if (complet) await elaguerAudio(c);
   await prevenirAudio(complet ? '' : 'incomplet');
+}
+
+async function elaguerAudio(c) {
+  const jours = new Set();
+  for (const r of await c.keys()) { const j = jourDe(r.url); if (j) jours.add(j); }
+  const gardes = new Set([...jours].sort().reverse().slice(0, JOURS_AUDIO));
+  for (const r of await c.keys()) { const j = jourDe(r.url); if (j && !gardes.has(j)) await c.delete(r); }
 }
 
 /* Un enregistrement gardé est servi par morceaux (Range), comme le réseau le ferait : la lecture et l'avance rapide marchent. */
@@ -227,8 +243,36 @@ function audioGarde(e) {
   })());
 }
 
-/* La liste des enregistrements : le réseau d'abord ; sans réseau, la copie gardée avec l'audio. */
+/* La liste du jour : le réseau d'abord ; sans réseau, la plus récente liste gardée. */
 function audioIndex(e) {
   const req = e.request;
-  e.respondWith(fetch(req).catch(async () => (await (await caches.open(AUDIO)).match(ici('./audio/audio.json'))) || Response.error()));
+  e.respondWith(fetch(req).catch(async () => {
+    const c = await caches.open(AUDIO);
+    const idx = (await c.keys()).map(r => r.url).filter(u => /\/audio\/index\/\d{4}-\d{2}-\d{2}\.json$/.test(u)).sort();
+    return idx.length ? c.match(idx[idx.length - 1]) : Response.error();
+  }));
+}
+/* La liste d'un jour précédent n'existe que dans le téléphone. */
+function audioIndexJour(e) {
+  e.respondWith((async () => (await (await caches.open(AUDIO)).match(e.request.url.split('?')[0])) || new Response('', { status: 404 }))());
+}
+
+/* ---------- Images des fiches (libres de droits) : la copie du téléphone d'abord, 8 derniers jours ---------- */
+function imageGarde(e) {
+  const req = e.request;
+  e.respondWith((async () => {
+    const c = await caches.open(IMAGES);
+    const hit = await c.match(req.url.split('?')[0]);
+    if (hit) return hit;
+    const rep = await fetch(req);
+    if (rep.ok && rep.type === 'basic') {
+      await c.put(req.url.split('?')[0], rep.clone());
+      e.waitUntil((async () => {
+        const jours = new Set((await c.keys()).map(r => jourDe(r.url)).filter(Boolean));
+        const gardes = new Set([...jours].sort().reverse().slice(0, JOURS_IMAGES));
+        for (const r of await c.keys()) { const j = jourDe(r.url); if (j && !gardes.has(j)) await c.delete(r); }
+      })());
+    }
+    return rep;
+  })());
 }

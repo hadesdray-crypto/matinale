@@ -704,7 +704,7 @@ PROMPT = """Tu es le rédacteur scientifique de « La Matinale des Sciences », 
 
 Voici des ARTICLES publiés ces dernières heures par des sources reconnues, et des VIDEOS récentes de chaînes francophones.
 Choisis les {n} articles les plus importants qui annoncent un résultat scientifique nouveau (découverte, étude, mesure, observation, mission spatiale) ou une invention technique nouvelle.
-Écarte l'opinion, la politique, l'économie, les produits commerciaux et les conseils pratiques. Au plus 3 articles par catégorie.
+Écarte l'opinion, la politique, l'économie, les produits commerciaux et les conseils pratiques. Au plus 3 articles par catégorie, sauf « inventions » (au plus 5).
 Si deux articles parlent du même résultat, garde celui de la source la plus officielle.
 
 Pour chaque article retenu, écris en français clair :
@@ -751,7 +751,12 @@ def s_(v, n):
 
 def ai_edition(cands, vids, n, key, used_ids):
     pool, per_src = [], {}
-    for c in cands:  # au plus 5 articles par source, pour garder une édition variée
+    n_inv = 0
+    for c in cands:  # au plus 5 articles par source (et 15 « inventions » en tout), pour garder une édition variée
+        if c['cat'] == 'inventions':
+            if n_inv >= 15:
+                continue
+            n_inv += 1
         if per_src.get(c['source'], 0) < 5:
             pool.append(c)
             per_src[c['source']] = per_src.get(c['source'], 0) + 1
