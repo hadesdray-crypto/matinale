@@ -51,9 +51,10 @@ def notion_text(n):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--bases', required=True)
-    ap.add_argument('--tts', required=True)
-    ap.add_argument('--voice', required=True)
+    ap.add_argument('--tts')
+    ap.add_argument('--voice', default='vits-piper-fr_FR-siwis-medium')
     ap.add_argument('--out', required=True)
+    ap.add_argument('--check', action='store_true', help="dit seulement s'il y a quelque chose à fabriquer (code 10), sans aucun outil")
     a = ap.parse_args()
     bases = json.load(open(a.bases, encoding='utf-8'))
     voice = os.path.basename(os.path.normpath(a.voice))
@@ -75,6 +76,13 @@ def main():
         else:
             todo.append((n['id'], name, text))
         index[n['id']] = rec
+
+    if a.check:
+        stale = [f for f in os.listdir(a.out) if f.endswith('.mp3') and f not in {os.path.basename(v['src']) for v in index.values()}]
+        print(f'Audio des notions : {len(todo)} à fabriquer, {len(stale)} fichier(s) inutile(s).')
+        return 10 if todo or stale else 0
+    if not a.tts:
+        ap.error('--tts est nécessaire pour fabriquer')
 
     def make(job):
         nid, name, text = job

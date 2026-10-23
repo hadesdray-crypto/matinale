@@ -7,19 +7,19 @@ VOICE="vits-piper-fr_FR-siwis-medium"
 RELEASES="https://github.com/k2-fsa/sherpa-onnx/releases/download"
 VOICE_OK=0
 if ! command -v ffmpeg >/dev/null 2>&1; then
-  (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg) >/dev/null 2>&1 || true
+  (export DEBIAN_FRONTEND=noninteractive; timeout 300 sudo -E apt-get update -qq && timeout 300 sudo -E apt-get install -y -qq --no-install-recommends ffmpeg) </dev/null >/dev/null 2>&1 || true
 fi
 mkdir -p "$TOOLS/sherpa/bin"
 TTS="$TOOLS/sherpa/bin/sherpa-onnx-offline-tts"
 VOICE_DIR="$TOOLS/$VOICE"
 if [ ! -x "$TTS" ]; then
-  curl -fsSL --retry 3 -o "$TOOLS/sherpa.tar.bz2" "$RELEASES/$SHERPA_VERSION/sherpa-onnx-$SHERPA_VERSION-linux-x64-static.tar.bz2" \
+  curl -fsSL --retry 3 --connect-timeout 20 --max-time 600 -o "$TOOLS/sherpa.tar.bz2" "$RELEASES/$SHERPA_VERSION/sherpa-onnx-$SHERPA_VERSION-linux-x64-static.tar.bz2" \
     && tar xjf "$TOOLS/sherpa.tar.bz2" -C "$TOOLS/sherpa" --strip-components=1 "sherpa-onnx-$SHERPA_VERSION-linux-x64-static/bin/sherpa-onnx-offline-tts" \
     || echo "Téléchargement du moteur de voix impossible."
   rm -f "$TOOLS/sherpa.tar.bz2"
 fi
 if [ ! -f "$VOICE_DIR/tokens.txt" ]; then
-  curl -fsSL --retry 3 -o "$TOOLS/voice.tar.bz2" "$RELEASES/tts-models/$VOICE.tar.bz2" \
+  curl -fsSL --retry 3 --connect-timeout 20 --max-time 600 -o "$TOOLS/voice.tar.bz2" "$RELEASES/tts-models/$VOICE.tar.bz2" \
     && tar xjf "$TOOLS/voice.tar.bz2" -C "$TOOLS" \
     || echo "Téléchargement de la voix impossible."
   rm -f "$TOOLS/voice.tar.bz2"

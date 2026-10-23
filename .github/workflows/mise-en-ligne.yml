@@ -25,7 +25,7 @@ concurrency:
 jobs:
   site:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
 
@@ -36,7 +36,10 @@ jobs:
           key: matinale-voix-sherpa-v1.12.14-siwis
 
       - name: Audio des notions « Comprendre » (seulement pour une notion nouvelle ou modifiée)
+        timeout-minutes: 8
+        continue-on-error: true
         run: |
+          if python3 scripts/notions_audio.py --bases site/data/bases.json --out site/audio/notions --check; then exit 0; fi
           . scripts/voice.sh
           if [ "$VOICE_OK" != 1 ]; then echo "::notice::Voix indisponible : les notions seront lues par la voix du téléphone."; exit 0; fi
           python3 scripts/notions_audio.py --bases site/data/bases.json --tts "$TTS" --voice "$VOICE_DIR" --out site/audio/notions || exit 0
