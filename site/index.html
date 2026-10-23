@@ -464,8 +464,9 @@ html[data-tsize="1"]{--ts:1.12} html[data-tsize="2"]{--ts:1.26} html[data-tsize=
 
 /* Mini-lecteur et notifications */
 .mini{position:fixed;z-index:35;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px));pointer-events:none}
-.mini-box{display:flex;align-items:center;gap:8px;max-width:640px;margin:0 auto;padding:8px;border-radius:16px;background:var(--band);color:var(--band-ink);box-shadow:var(--shadow);pointer-events:auto}
+.mini-box{position:relative;overflow:hidden;display:flex;align-items:center;gap:8px;max-width:640px;margin:0 auto;padding:8px;border-radius:16px;background:var(--band);color:var(--band-ink);box-shadow:var(--shadow);pointer-events:auto}
 .mini-play{display:grid;place-items:center;flex:none;width:44px;height:44px;border:0;border-radius:50%;background:var(--band-ink);color:var(--band);cursor:pointer}
+.mini-prog{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--band-ink-2);transition:width .4s linear}
 .mini-info{all:unset;flex:1;min-width:0;display:grid;gap:1px;padding:2px 4px;cursor:pointer}
 .mini-info small{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--band-ink-2)}
 .mini-info b{overflow:hidden;font-family:var(--serif);font-weight:600;font-size:14.5px;white-space:nowrap;text-overflow:ellipsis}
@@ -559,6 +560,7 @@ html[data-tsize="1"]{--ts:1.12} html[data-tsize="2"]{--ts:1.26} html[data-tsize=
     <button class="mini-info" data-action="tab" data-tab="ecouter" aria-label="Ouvrir le lecteur"><small id="mini-label"></small><b id="mini-title"></b></button>
     <button class="iconbtn" id="mini-next" data-action="next" aria-label="Chapitre suivant"></button>
     <button class="iconbtn" id="mini-stop" data-action="stop" aria-label="Arrêter l'écoute"></button>
+    <i class="mini-prog" id="mini-prog" aria-hidden="true"></i>
   </div>
 </div>
 
@@ -643,6 +645,7 @@ const P = {
   quest:'<circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1.1.9-1.1 1.6v.4"/><path d="M12 16.8h.01"/>',
   alert:'<path d="M12 4l9 16H3z"/><path d="M12 10v4.2M12 17h.01"/>',
   spark:'<path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9z"/><path d="M19 16.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
+  share:'<circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.3M8.3 13.2l7.4 4.3"/>',
   copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
   phone:'<rect x="6.5" y="2.5" width="11" height="19" rx="2.4"/><path d="M10.5 18.5h3"/>',
   refresh:'<path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4.5V9h-4.5"/>',
@@ -1541,6 +1544,7 @@ function updateMini(){
   $('#mini-label').textContent = Player.label || '';
   const ch = Player.chapters[Player.ci]; $('#mini-title').textContent = ch ? fr(ch.title) : '';
   const b = $('#mini-toggle'); b.innerHTML = icon(Player.playing ? 'pause' : 'play', 22); b.setAttribute('aria-label', Player.playing ? 'Pause' : 'Lecture');
+  const pr = $('#mini-prog'); if (pr) pr.style.width = Math.min(100, Math.round(Player.progress() * 100)) + '%';
 }
 
 /* ---------- Fiche détaillée ---------- */
@@ -1575,6 +1579,7 @@ function openDetail(key, focus){
     (it.coi ? '<div class="caution">' + icon('alert', 18) + '<p><b>Conflits d\'intérêts déclarés.</b> ' + t(it.coi) + '</p></div>' : '') + '</section>' +
     '<section class="d-sec"><h3 class="d-h">' + icon('ext', 18) + ' Sources</h3><ul class="srcs">' + it.sources.map(srcLi).join('') + '</ul>' + (it.who ? '<p class="muted small">Recherche : ' + t(it.who) + '</p>' : '') + '</section>' +
     '<div class="d-actions"><button class="btn primary" data-action="load" data-mode="item" data-key="' + esc(key) + '">' + icon('headphones', 18) + ' Écouter ce sujet</button>' +
+    '<button class="btn" data-action="share" data-key="' + esc(key) + '">' + icon('share', 18) + ' Partager</button>' +
     (study ? '<a class="btn" href="' + esc(study) + '" target="_blank" rel="noopener noreferrer">' + icon('doc', 18) + ' Étude originale</a><button class="btn ghost" data-action="copy" data-text="' + esc(study) + '">' + icon('copy', 18) + ' Copier le lien</button>' : '') + '</div>' +
     askHTML() + '</article>';
   showSheet(html, it.title);
@@ -1747,7 +1752,7 @@ function renderView(tab){
   else if (tab === 'categories') renderCats();
   else if (tab === 'favoris') renderFavs();
 }
-function renderAll(){ renderEdPill(); renderView(S.tab); updateMini(); }
+function renderAll(){ renderEdPill(); renderView(S.tab); updateMini(); openPending(); }
 function setTab(tab, opt){
   opt = opt || {};
   if (!TABS.includes(tab)) tab = 'aujourdhui';
@@ -1761,6 +1766,24 @@ function setTab(tab, opt){
 function toast(msg, ms){
   const el = $('#toast'); el.textContent = msg; el.hidden = false;
   clearTimeout(toast.timer); toast.timer = setTimeout(() => { el.hidden = true; }, ms || 2400);
+}
+/* Partage d'une fiche : le lien ouvre directement cette fiche dans la Matinale. */
+function shareItem(key){
+  const it = itemByKey(key); if (!it || !APP_URL) return;
+  const url = APP_URL + '#f=' + encodeURIComponent(key);
+  const data = { title: fr(it.title), text: fr(it.title) + ' · La Matinale des Sciences', url };
+  if (navigator.share){ navigator.share(data).catch(() => {}); } else copyText(url);
+}
+function openPending(){
+  const key = S.pendingKey; if (!key || S.status !== 'ready') return;
+  if (itemByKey(key)){ S.pendingKey = null; openDetail(key); return; }
+  const date = key.split(':')[0];
+  if (S.pendingTried || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+  S.pendingTried = true;
+  fetchEdition(date).then(ed => {
+    const k = S.pendingKey; S.pendingKey = null;
+    if (ed && itemByKey(k)) openDetail(k); else toast('Cette fiche n\'est plus disponible.');
+  }).catch(() => { S.pendingKey = null; });
 }
 function copyText(txt){
   if (!txt) return;
@@ -1811,6 +1834,7 @@ function onClick(e){
     case 'latest': if (S.latest){ S.edition = S.latest; S.followLatest = true; S.filterCat = 'all'; S.filterLvl = 0; S.query = ''; renderAll(); window.scrollTo(0, 0); } break;
     case 'ask': ask(a.dataset.q); break;
     case 'copy': copyText(a.dataset.text); break;
+    case 'share': shareItem(a.dataset.key); break;
     case 'install-help': openInstallHelp(); break;
     case 'install-now': installNow(); break;
     case 'install-done': LS.set('mds.install', 'done'); renderToday(); toast('Parfait, bonne lecture !'); break;
@@ -1917,6 +1941,7 @@ function boot(){
   applyTsize();
   bindEvents();
   const h = (location.hash || '').slice(1);
+  if (h.startsWith('f=')){ try { S.pendingKey = decodeURIComponent(h.slice(2)); } catch (e) {} }   /* lien partagé vers une fiche */
   setTab(TABS.includes(h) ? h : 'aujourdhui', { scroll:false });
   setTimeout(() => { if (S.status === 'loading') loadFallback(false); }, 4000);
   loadAudioIndex();
