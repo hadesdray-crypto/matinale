@@ -3,8 +3,10 @@
    - Ensuite, le réseau est essayé d'abord pour avoir l'édition du jour, mais jamais plus de quelques secondes :
      sans réseau, ou s'il capte mal, l'appli s'ouvre aussitôt avec la copie gardée dans le téléphone.
    - Les 7 éditions précédentes et toutes celles déjà ouvertes restent lisibles hors ligne (60 au plus).
-   - L'audio (mp3) n'est pas gardé : sans réseau, la voix du téléphone lit l'édition. */
+   - L'audio (mp3) n'est gardé que si l'utilisateur le demande (bouton « Garder l'audio du jour ») : seuls les
+     enregistrements du jour restent dans le téléphone, remplacés chaque matin. Sinon, sans réseau, la voix du téléphone lit l'édition. */
 const APPLI = 'matinale-appli-2';      // à changer quand la liste des fichiers de l'appli change
+const AUDIO = 'matinale-audio';        // audio du jour gardé à la demande : remplacé chaque matin
 const DONNEES = 'matinale-donnees';    // éditions gardées : ce cache survit aux mises à jour de l'appli
 const POLICES = [
   'syne-latin-600-normal', 'syne-latin-700-normal', 'syne-latin-800-normal',
@@ -45,7 +47,7 @@ self.addEventListener('activate', e => {
   e.waitUntil((async () => {
     const donnees = await caches.open(DONNEES);
     for (const nom of await caches.keys()) {
-      if (nom === APPLI || nom === DONNEES || !nom.startsWith('matinale-')) continue;
+      if (nom === APPLI || nom === DONNEES || nom === AUDIO || !nom.startsWith('matinale-')) continue;
       // Reprend les éditions gardées par une version précédente de l'appli, puis jette l'ancienne version.
       const ancien = await caches.open(nom);
       for (const req of await ancien.keys()) {
@@ -63,7 +65,8 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || !req.url.startsWith(self.registration.scope)) return;   // vidéos, liens externes : le navigateur s'en charge
   const chemin = new URL(req.url).pathname;
-  if (chemin.endsWith('.mp3') || chemin.endsWith('/audio/audio.json')) return;          // audio : seulement avec le réseau
+  if (chemin.endsWith('.mp3')) return audioGarde(e);                                    // audio : la copie gardée d'abord, sinon le réseau
+  if (chemin.endsWith('/audio/audio.json')) return audioIndex(e);
   if (req.mode === 'navigate') {
     if (chemin === RACINE || chemin === RACINE + 'index.html') reseauSinonCopie(e, APPLI, ATTENTE_PAGE, ici('./'));
     return;
@@ -148,4 +151,84 @@ async function editionsDAvance(latest) {
   const eds = (await donnees.keys()).filter(r => /\/data\/editions\/\d{4}-\d{2}-\d{2}\.json$/.test(r.url))
     .sort((a, b) => b.url.localeCompare(a.url));
   await Promise.all(eds.slice(EDITIONS_MAX).map(r => donnees.delete(r)));
+}
+
+
+/* ---------- Audio du jour gardé dans le téléphone (à la demande) ---------- */
+self.addEventListener('message', e => {
+  const d = e.data || {};
+  if (d.type === 'audio-garder') e.waitUntil(garderAudio(Array.isArray(d.urls) ? d.urls : [], String(d.date || '')));
+  else if (d.type === 'audio-effacer') e.waitUntil(caches.delete(AUDIO).then(() => prevenirAudio()));
+  else if (d.type === 'audio-etat') e.waitUntil(prevenirAudio());
+});
+
+async function etatAudio(erreur) {
+  const c = await caches.open(AUDIO);
+  let bytes = 0, date = '';
+  const srcs = [];
+  const meta = await c.match(ici('./audio/.date'));
+  if (meta) date = await meta.text();
+  for (const r of await c.keys()) {
+    if (!/\.mp3$/.test(r.url)) continue;
+    const rep = await c.match(r);
+    if (rep) bytes += (await rep.blob()).size;
+    srcs.push(new URL(r.url).pathname.slice(RACINE.length));
+  }
+  return { type: 'audio-etat', date, bytes, srcs, erreur: erreur || '' };
+}
+
+async function prevenirAudio(erreur) {
+  const msg = await etatAudio(erreur);
+  for (const c of await self.clients.matchAll({ type: 'window' })) c.postMessage(msg);
+}
+
+/* Télécharge les enregistrements du jour, puis jette tous les autres (ceux de la veille). */
+async function garderAudio(urls, date) {
+  const c = await caches.open(AUDIO);
+  const voulues = new Set(urls.map(u => ici(u)));
+  let complet = true;
+  for (const u of voulues) {
+    if (await c.match(u)) continue;
+    try {
+      const rep = await fetch(u, { cache: 'no-store' });
+      if (!rep.ok) { complet = false; continue; }
+      await c.put(u, rep);
+    } catch (err) { complet = false; break; }
+  }
+  try {
+    const rep = await fetch(ici('./audio/audio.json'), { cache: 'no-store' });
+    if (rep.ok) await c.put(ici('./audio/audio.json'), rep);
+  } catch (err) { complet = false; }
+  if (complet) {
+    for (const r of await c.keys()) if (/\.mp3$/.test(r.url) && !voulues.has(r.url)) await c.delete(r);
+    await c.put(ici('./audio/.date'), new Response(date));
+  }
+  await prevenirAudio(complet ? '' : 'incomplet');
+}
+
+/* Un enregistrement gardé est servi par morceaux (Range), comme le réseau le ferait : la lecture et l'avance rapide marchent. */
+function audioGarde(e) {
+  const req = e.request;
+  e.respondWith((async () => {
+    const hit = await (await caches.open(AUDIO)).match(req.url.split('?')[0]);
+    if (!hit) return fetch(req);
+    const range = req.headers.get('Range');
+    if (!range) return hit;
+    const buf = await hit.arrayBuffer();
+    const total = buf.byteLength;
+    const m = /bytes=(\d*)-(\d*)/.exec(range);
+    let debut = 0, fin = total - 1;
+    if (m && m[1] !== '') { debut = parseInt(m[1], 10); if (m[2] !== '') fin = Math.min(parseInt(m[2], 10), total - 1); }
+    else if (m && m[2] !== '') debut = Math.max(0, total - parseInt(m[2], 10));
+    if (debut > fin || debut >= total) return new Response(null, { status: 416, headers: { 'Content-Range': 'bytes */' + total } });
+    return new Response(buf.slice(debut, fin + 1), { status: 206, headers: {
+      'Content-Type': 'audio/mpeg', 'Content-Length': String(fin - debut + 1),
+      'Content-Range': 'bytes ' + debut + '-' + fin + '/' + total, 'Accept-Ranges': 'bytes' } });
+  })());
+}
+
+/* La liste des enregistrements : le réseau d'abord ; sans réseau, la copie gardée avec l'audio. */
+function audioIndex(e) {
+  const req = e.request;
+  e.respondWith(fetch(req).catch(async () => (await (await caches.open(AUDIO)).match(ici('./audio/audio.json'))) || Response.error()));
 }

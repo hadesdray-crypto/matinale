@@ -1089,7 +1089,7 @@ function renderListen(){
   }
   const fl = estMin(buildChapters('flash', ed)), fu = estMin(buildChapters('full', ed));
   el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Écouter</h2><span class="sec-sub">' + esc(cap(longDate(ed.date))) + '</span></div>' +
-    listenNoteHTML() +
+    listenNoteHTML() + '<div id="off-slot">' + offlineCardHTML() + '</div>' +
     '<div class="listen-grid"><div class="player"><p class="pl-label" id="pl-label"></p><h3 class="pl-title" id="pl-title"></h3><div class="pl-bar" aria-hidden="true"><i id="pl-fill"></i></div><div class="pl-time"><span id="pl-pos"></span><span id="pl-left"></span></div>' +
     '<div class="pl-ctrls"><button class="iconbtn lg" data-action="prev" aria-label="Chapitre précédent">' + icon('prev', 22) + '</button><button class="playbtn" id="pl-toggle" data-action="toggle" aria-label="Lecture">' + icon('play', 30) + '</button><button class="iconbtn lg" data-action="next" aria-label="Chapitre suivant">' + icon('next', 22) + '</button></div>' +
     '<div class="pl-set"><div class="speeds" role="group" aria-label="Vitesse de lecture">' + RATES.map(r => '<button class="chip sm" data-action="rate" data-rate="' + r + '" aria-pressed="' + (r === S.prefs.rate) + '">' + String(r).replace('.', ',') + '×</button>').join('') + '</div><label class="voice"><span>Voix</span><select id="voice-select"></select></label></div>' +
@@ -1368,8 +1368,9 @@ function startMode(mode, opt){
   if (!chapters.length) return;
   /* L'enregistrement du jour passe en premier (il continue écran éteint) ; sinon, la voix du téléphone. */
   const offline = navigator.onLine === false;
-  const seg = offline ? null : fileSegment(mode, opt);
-  if (offline && Player.synth && fileSegment(mode, opt)) toast('Sans réseau : la voix du téléphone lit l\'édition.');
+  const seg0 = fileSegment(mode, opt);
+  const seg = (offline && !(seg0 && S.off && S.off.srcs.has(seg0.src))) ? null : seg0;  /* sans réseau : seulement ce qui est gardé */
+  if (offline && Player.synth && seg0 && !seg) toast('Sans réseau : la voix du téléphone lit l\'édition.');
   if (seg) Player.load(mode, seg.chapters, label, edDate, seg);
   else if (Player.synth) Player.load(mode, chapters, label, edDate);
   else { openListenElsewhere(); return; }
@@ -1382,9 +1383,47 @@ function loadAudioIndex(){
     fetch('audio/audio.json', { cache:'no-store' }).then(r => r.ok ? r.json() : null).then(a => {
       if (!a || !a.date || !(a.flash || a.full)) return;
       S.audio = a;
-      if (S.tab === 'ecouter' && !Player.started) renderListen();
+      if (S.tab === 'ecouter' && !Player.started) renderListen(); else renderOffCard();
+      autoGarde();
     }).catch(() => {});
   } catch (e) {}
+}
+/* ---------- Audio gardé dans le téléphone (à la demande, remplacé chaque matin) ---------- */
+function mo(n){ return (n / 1048576).toFixed(1).replace('.', ',') + ' Mo'; }
+function offlineCardHTML(){
+  const A = S.audio;
+  if (!A || !A.items || !('serviceWorker' in navigator)) return '';
+  const its = Object.values(A.items); if (!its.length) return '';
+  const tot = its.reduce((n, i) => n + (i.bytes || 0), 0);
+  const gardé = S.off && S.off.date === A.date && S.off.srcs.size > 0;
+  let txt, btn;
+  if (S.offBusy){ txt = 'Téléchargement de l\'audio du jour…'; btn = ''; }
+  else if (gardé){
+    txt = 'Audio du jour gardé dans ton téléphone (' + S.off.srcs.size + ' sujets, ' + mo(S.off.bytes) + '). Chaque matin, il est remplacé par le nouveau : rien ne s\'accumule.';
+    btn = '<button class="btn sm ghost" data-action="off-off">Retirer de mon téléphone</button>';
+  } else {
+    txt = 'Écouter sans réseau avec la voix française : garde l\'audio du jour dans ton téléphone (≈ ' + mo(tot) + '). Il sera remplacé chaque matin.' + (S.offErr ? ' Le téléchargement n\'est pas allé au bout : réessaie avec du réseau.' : '');
+    btn = '<button class="btn sm" data-action="off-on">' + icon('headphones', 15) + ' Garder l\'audio du jour</button>';
+  }
+  return '<div class="notice info" id="off-card">' + icon('headphones', 20) + '<div><p>' + esc(txt) + '</p>' + (btn ? '<p class="notice-actions">' + btn + '</p>' : '') + '</div></div>';
+}
+function renderOffCard(){ const el = document.getElementById('off-slot'); if (el) el.innerHTML = offlineCardHTML(); }
+function swSend(msg){
+  try { navigator.serviceWorker.ready.then(r => { const w = r.active || navigator.serviceWorker.controller; if (w) w.postMessage(msg); }).catch(() => {}); } catch (e) {}
+}
+function gardeAudio(){
+  const A = S.audio; if (!A || !A.items || S.offBusy) return;
+  S.offBusy = true; S.offErr = false; renderOffCard();
+  swSend({ type:'audio-garder', date: A.date, urls: Object.values(A.items).map(i => i.src) });
+  setTimeout(() => { if (S.offBusy){ S.offBusy = false; S.offErr = true; renderOffCard(); } }, 180000);
+}
+function autoGarde(){  /* chaque matin : si l'utilisateur l'a demandé, l'audio du jour remplace celui de la veille */
+  if (LS.get('offlineAudio', false) && navigator.onLine !== false && S.audio && S.off && S.off.date !== S.audio.date && !S.offBusy) gardeAudio();
+}
+function onAudioState(d){
+  S.off = { date: d.date || '', bytes: d.bytes || 0, srcs: new Set(Array.isArray(d.srcs) ? d.srcs : []) };
+  S.offErr = !!d.erreur; S.offBusy = false;
+  renderOffCard(); autoGarde();
 }
 function fileSegment(mode, opt){
   opt = opt || {};
@@ -1694,6 +1733,8 @@ function onClick(e){
     case 'open-fav': openFav(a.dataset.key); break;
     case 'close': closeSheet(); break;
     case 'fav': toggleFav(a.dataset.key); break;
+    case 'off-on': LS.set('offlineAudio', true); gardeAudio(); break;
+    case 'off-off': LS.set('offlineAudio', false); S.offBusy = false; swSend({ type:'audio-effacer' }); break;
     case 'load': startMode(a.dataset.mode, { cat:a.dataset.cat, key:a.dataset.key, hl:a.dataset.hl }); break;
     case 'fr-filter': S.frGroup = a.dataset.g || 'all'; renderDir(); break;
     case 'vid-filter': S.vidFilter = a.dataset.f === 'fr' ? 'fr' : 'all'; renderVideos(); break;
@@ -1823,7 +1864,8 @@ function checkUpdate(){
 function watchUpdates(){
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && Date.now() - lastCheck > 15 * 60e3) checkUpdate(); });
   window.addEventListener('online', () => checkUpdate());
-  try { navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'maj') checkUpdate(); }); } catch (e) {}
+  try { navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'maj') checkUpdate(); else if (e.data && e.data.type === 'audio-etat') onAudioState(e.data); }); } catch (e) {}
+  swSend({ type:'audio-etat' });
 }
 function boot(){
   bindEvents();

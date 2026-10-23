@@ -163,7 +163,7 @@ def build_items(ed, tts, voice, out_dir, tmp):
             with wave.open(wav, 'rb') as w:
                 dur = w.getnframes() / w.getframerate()
             mp3 = os.path.join(items_dir, iid + '.mp3')
-            subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', wav, '-ac', '1', '-ar', '22050', '-codec:a', 'libmp3lame', '-b:a', '48k',
+            subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', wav, '-ac', '1', '-ar', '22050', '-codec:a', 'libmp3lame', '-b:a', '32k',
                             '-metadata', 'title=' + it['title'], '-metadata', 'artist=Matinale des Sciences', mp3], check=True)
             res[str(it['id'])] = {'src': f'audio/items/{iid}.mp3', 'duration': round(dur, 2), 'bytes': os.path.getsize(mp3),
                                   'chapters': [{'key': it['id'], 'title': it['title'], 'text': text, 'start': 0, 'end': round(dur, 2)}]}
