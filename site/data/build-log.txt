@@ -1,27 +1,9 @@
 Lecture de 31 sources (avec Gemini)…
   · CNES : https://cnes.fr/rss.xml ne répond pas (HTTPError)
   · INRAE : https://www.inrae.fr/rss.xml ne répond pas (HTTPError)
-Sources lues : 29 ; muettes : 2 ['CNES', 'INRAE']
-Articles retenus après tri : 353
-Vidéos francophones récentes : 12
-  · Gemini gemini-flash-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-2.5-flash : HTTP 404 {
-  "error": {
-    "code": 404,
-    "message": "This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use models/gemini-3.8-flash for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs
-Édition n° 4 du 2026-10-22 : 20 fiches, mode Gemini (gemini-flash-lite-latest), 11 vidéos francophones.
+  · Inserm : https://www.inserm.fr/feed/ ne répond pas (HTTPError)
+  · Inserm (salle de presse) : https://presse.inserm.fr/feed/ ne répond pas (HTTPError)
+Sources lues : 27 ; muettes : 4 ['INRAE', 'CNES', 'Inserm (salle de presse)', 'Inserm']
+Articles retenus après tri : 345
+Vidéos francophones récentes : 2
+Édition n° 5 du 2026-10-23 : 19 fiches, mode Gemini (gemini-flash-latest), 2 vidéos francophones.
