@@ -928,6 +928,353 @@ NOTIONS = [
 ]
 
 
+# Vidéos de vulgarisation et encyclopédies : chaque lien a été vérifié (la vidéo existe, titre et chaîne relevés tels quels).
+# Elles sont revérifiées chaque matin par build.py : un lien mort est masqué dans l'appli.
+VIDEOS = {
+ "energie": [
+  {
+   "url": "https://www.youtube.com/watch?v=N9fvEhg-CdU",
+   "title": "Qu'est-ce que l'énergie ? ☀⚡",
+   "by": "CEA",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=2Z9p_I3hhUc",
+   "title": "Crise énergétique ? Crise de l'entropie !",
+   "by": "ScienceEtonnante",
+   "audience": "ados-adultes"
+  }
+ ],
+ "forces-mouvement": [
+  {
+   "url": "https://www.youtube.com/watch?v=s3k1m4lQ8EU",
+   "title": "Sport de glisse : qu'est-ce que l'inertie ? - C'est Pas Sorcier",
+   "by": "C'est pas sorcier",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=dR8Xneexcy8",
+   "title": "[Les principes Clefs de la physique] Le principe d’inertie, #2",
+   "by": "CEA",
+   "audience": "ados-adultes"
+  }
+ ],
+ "gravitation": [
+  {
+   "url": "https://www.youtube.com/watch?v=dJWp9aPSuro",
+   "title": "Chute des corps : La balle la plus lourde tombe-t-elle plus vite - Ep.02 -  e-penser",
+   "by": "e-penser 2.0",
+   "audience": "ados-adultes"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=mZWA2UetWAg",
+   "title": "La Gravité selon Newton",
+   "by": "ScienceClic",
+   "audience": "ados-adultes"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=lnEdBE7d_h0",
+   "title": "Du canon à la Lune : la découverte de la gravité",
+   "by": "ScienceEtonnante",
+   "audience": "ados-adultes"
+  }
+ ],
+ "chaleur-temperature": [
+  {
+   "url": "https://www.youtube.com/watch?v=BBLfV2zJEl8",
+   "title": "Quelle est la différence entre la chaleur et la température? | Sciences et technologie | Alloprof",
+   "by": "Alloprof",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Zo4JexDpLQw",
+   "title": "Qu'est-ce que le froid ? - C'est Pas Sorcier",
+   "by": "C'est pas sorcier",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=bqMXlgUZCVw",
+   "title": "Température et Chaleur",
+   "by": "ScienceClic",
+   "audience": "ados-adultes"
+  }
+ ],
+ "etats-matiere": [
+  {
+   "url": "https://www.youtube.com/watch?v=KkNOyBfWmrM",
+   "title": "Comment l’eau se transforme en glace ? - C'est pas sorcier",
+   "by": "C'est pas sorcier",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=qJnXSWlKILo",
+   "title": "Les changements de phase | Sciences | Alloprof",
+   "by": "Alloprof",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=rhYxwv3hCNk",
+   "title": "KEZAKO: De quoi est composée la matière? Pourquoi est ce solide, liquide ou gazeux?",
+   "by": "Unisciel",
+   "audience": "ados-adultes"
+  }
+ ],
+ "electricite": [
+  {
+   "url": "https://www.youtube.com/watch?v=74AOt7IRGFY",
+   "title": "D'où vient l'électricité ? - 1 jour, 1 question",
+   "by": "1 jour, 1 question",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=py88xUzawiw",
+   "title": "ELECTRICITE Quand les branchés disjonctent - C'est Pas Sorcier",
+   "by": "C'est pas sorcier",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=-oRYuFFSokc",
+   "title": "Que se passe-t-il (vraiment) dans les fils électriques ? 💡🔌⚡️",
+   "by": "ScienceEtonnante",
+   "audience": "ados-adultes"
+  }
+ ],
+ "ondes-son": [
+  {
+   "url": "https://www.youtube.com/watch?v=ieOW7raHWQY",
+   "title": "Comment le son se propage dans un concert ? - C'est pas sorcier",
+   "by": "C'est pas sorcier",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=hv5EhRlx-DA",
+   "title": "Les Ondes",
+   "by": "ScienceClic",
+   "audience": "ados-adultes"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=cTYvCpLRwao",
+   "title": "Les mathématiques de la musique (avec Vled Tapas)",
+   "by": "ScienceEtonnante",
+   "audience": "ados-adultes"
+  }
+ ],
+ "lumiere": [
+  {
+   "url": "https://www.youtube.com/watch?v=UHtcOGv5GoM",
+   "title": "Pourquoi la lumière est-elle blanche ? - C'est Pas Sorcier",
+   "by": "C'est pas sorcier",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=kkUdOE5G9Ls",
+   "title": "Vitesse de la lumière #1 - Finie ou infinie ?",
+   "by": "Le Blob",
+   "audience": "ados-adultes"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=FvbNrwjIrNU",
+   "title": "Qu'est-ce qu'une couleur ?",
+   "by": "ScienceEtonnante",
+   "audience": "ados-adultes"
+  }
+ ],
+ "atome": [
+  {
+   "url": "https://www.youtube.com/watch?v=V0rBpLO0qn0",
+   "title": "Qu'est-ce qu'un atome? - C'est pas sorcier",
+   "by": "C'est pas sorcier",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=uSZ8bL7KA_Y",
+   "title": "De quoi un atome est-il composé ? - C'est Pas Sorcier",
+   "by": "C'est pas sorcier",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=3iIpl6tvT7A",
+   "title": "L'atome (partie 1) - 30 - e-penser",
+   "by": "e-penser 2.0",
+   "audience": "ados-adultes"
+  }
+ ],
+ "molecules": [
+  {
+   "url": "https://www.youtube.com/watch?v=9UgTTdA8q-E",
+   "title": "Les atomes et les molécules | Sciences et technologies | Alloprof",
+   "by": "Alloprof",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=K-pNGDNrOMM",
+   "title": "Comment sont reliées les molécules d'eau ? - C'est pas sorcier",
+   "by": "C'est pas sorcier",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=Iun1QLA43xE",
+   "title": "L'Eau et la Vie",
+   "by": "ScienceEtonnante",
+   "audience": "ados-adultes"
+  }
+ ],
+ "reaction-chimique": [
+  {
+   "url": "https://www.youtube.com/watch?v=oQGRBQqL4JY",
+   "title": "La conservation de la matière | Sciences et technologies | Alloprof",
+   "by": "Alloprof",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=NkCqulD8sjg",
+   "title": "KEZAKO: Pourquoi le feu brûle-t-il?",
+   "by": "Unisciel",
+   "audience": "ados-adultes"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=jAN_acB2rZI",
+   "title": "Comptabilité en chimie: Antoine-Laurent de Lavoisier et la conservation de la masse",
+   "by": "Mémosciences ASBL",
+   "audience": "ados-adultes"
+  }
+ ],
+ "acides-bases": [
+  {
+   "url": "https://www.youtube.com/watch?v=2WXEqpwHB7Q",
+   "title": "L'échelle de pH | Sciences | Alloprof",
+   "by": "Alloprof",
+   "audience": "enfants"
+  },
+  {
+   "url": "https://www.youtube.com/watch?v=beUiPkMcnGw",
+   "title": "L'acidité, c'est la base !",
+   "by": "Terre des Sciences",
+   "audience": "ados-adultes"
+  }
+ ]
+}
+
+LINKS = {
+ "energie": [
+  {
+   "label": "Vikidia, l'encyclopédie des 8-13 ans : Énergie",
+   "url": "https://fr.vikidia.org/wiki/%C3%89nergie"
+  },
+  {
+   "label": "Wikipédia : Énergie (physique)",
+   "url": "https://fr.wikipedia.org/wiki/%C3%89nergie_%28physique%29"
+  }
+ ],
+ "forces-mouvement": [
+  {
+   "label": "Vikidia, l'encyclopédie des 8-13 ans : Force",
+   "url": "https://fr.vikidia.org/wiki/Force_%28physique%29"
+  },
+  {
+   "label": "Wikipédia : Lois du mouvement de Newton",
+   "url": "https://fr.wikipedia.org/wiki/Lois_du_mouvement_de_Newton"
+  }
+ ],
+ "gravitation": [
+  {
+   "label": "Vikidia, l'encyclopédie des 8-13 ans : Gravitation",
+   "url": "https://fr.vikidia.org/wiki/Gravitation"
+  },
+  {
+   "label": "Wikipédia : Gravitation",
+   "url": "https://fr.wikipedia.org/wiki/Gravitation"
+  }
+ ],
+ "chaleur-temperature": [
+  {
+   "label": "Vikidia, l'encyclopédie des 8-13 ans : Température",
+   "url": "https://fr.vikidia.org/wiki/Temp%C3%A9rature"
+  },
+  {
+   "label": "Wikipédia : Chaleur",
+   "url": "https://fr.wikipedia.org/wiki/Chaleur"
+  }
+ ],
+ "etats-matiere": [
+  {
+   "label": "Vikidia, l'encyclopédie des 8-13 ans : État de la matière",
+   "url": "https://fr.vikidia.org/wiki/%C3%89tat_de_la_mati%C3%A8re"
+  },
+  {
+   "label": "Wikipédia : État de la matière",
+   "url": "https://fr.wikipedia.org/wiki/%C3%89tat_de_la_mati%C3%A8re"
+  }
+ ],
+ "electricite": [
+  {
+   "label": "Vikidia, l'encyclopédie des 8-13 ans : Électricité",
+   "url": "https://fr.vikidia.org/wiki/%C3%89lectricit%C3%A9"
+  },
+  {
+   "label": "Wikipédia : Électricité",
+   "url": "https://fr.wikipedia.org/wiki/%C3%89lectricit%C3%A9"
+  }
+ ],
+ "ondes-son": [
+  {
+   "label": "Wikipédia : Onde sonore",
+   "url": "https://fr.wikipedia.org/wiki/Son_%28physique%29"
+  }
+ ],
+ "lumiere": [
+  {
+   "label": "Vikidia, l'encyclopédie des 8-13 ans : Lumière",
+   "url": "https://fr.vikidia.org/wiki/Lumi%C3%A8re"
+  },
+  {
+   "label": "Wikipédia : Lumière",
+   "url": "https://fr.wikipedia.org/wiki/Lumi%C3%A8re"
+  }
+ ],
+ "atome": [
+  {
+   "label": "Vikidia, l'encyclopédie des 8-13 ans : Atome",
+   "url": "https://fr.vikidia.org/wiki/Atome"
+  },
+  {
+   "label": "Wikipédia : Atome",
+   "url": "https://fr.wikipedia.org/wiki/Atome"
+  }
+ ],
+ "molecules": [
+  {
+   "label": "Vikidia, l'encyclopédie des 8-13 ans : Molécule",
+   "url": "https://fr.vikidia.org/wiki/Mol%C3%A9cule"
+  },
+  {
+   "label": "Wikipédia : Liaison chimique",
+   "url": "https://fr.wikipedia.org/wiki/Liaison_chimique"
+  }
+ ],
+ "reaction-chimique": [
+  {
+   "label": "Vikidia, l'encyclopédie des 8-13 ans : Réaction chimique",
+   "url": "https://fr.vikidia.org/wiki/R%C3%A9action_chimique"
+  },
+  {
+   "label": "Wikipédia : Réaction chimique",
+   "url": "https://fr.wikipedia.org/wiki/R%C3%A9action_chimique"
+  }
+ ],
+ "acides-bases": [
+  {
+   "label": "Vikidia, l'encyclopédie des 8-13 ans : pH",
+   "url": "https://fr.vikidia.org/wiki/Potentiel_hydrog%C3%A8ne"
+  },
+  {
+   "label": "Wikipédia : Potentiel hydrogène",
+   "url": "https://fr.wikipedia.org/wiki/Potentiel_hydrog%C3%A8ne"
+  }
+ ]
+}
+
+
 def validate():
     ids = [n['id'] for n in NOTIONS]
     assert len(ids) == len(set(ids)), 'identifiants en double'
@@ -941,6 +1288,11 @@ def validate():
         ET.fromstring(n['svg'])   # le schéma doit être du SVG valide
     for s in START:
         assert s in ids
+    for k in list(VIDEOS) + list(LINKS):
+        assert k in ids, k
+    for vs in VIDEOS.values():
+        for v in vs:
+            assert v['url'].startswith('https://www.youtube.com/watch?v=') and v['title'] and v['audience'] in ('enfants', 'ados-adultes'), v
 
 
 def main():
@@ -952,7 +1304,8 @@ def main():
             'intro': "Les bases de la physique et de la chimie, expliquées pas à pas : chaque notion se lit à trois niveaux, "
                      "du plus simple (dès 10 ans) au niveau ingénieur.",
             'domains': DOMAINS, 'start': START,
-            'notions': [{k: v for k, v in n.items() if v not in (None, '')} for n in NOTIONS]}
+            'notions': [{k: v for k, v in dict(n, videos=VIDEOS.get(n['id'], []), links=LINKS.get(n['id'], [])).items() if v not in (None, '', [])}
+                        for n in NOTIONS]}
     with open(a.out, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, separators=(',', ':'))
     print(f'{len(NOTIONS)} notions écrites dans {a.out} ({os.path.getsize(a.out) // 1024} Ko)')
