@@ -56,6 +56,7 @@ GEMINI_MODELS = ['gemini-flash-latest', 'gemini-3.8-flash', 'gemini-flash-lite-l
 GEMINI_LITE = ['gemini-flash-lite-latest', 'gemini-3.5-flash-lite']
 GEMINI_GAP = float(os.environ.get('MATINALE_GEMINI_GAP', '4.5'))   # secondes entre deux demandes (limite par minute)
 _AI = {'last': 0.0, 'lock': threading.Lock(), 'exhausted': set()}
+NOTIONS = {}   # identifiant -> titre des notions de la section « Comprendre » (site/data/bases.json)
 
 STATS = {'feeds_ok': [], 'feeds_ko': [], 'mode': 'rss', 'model': None, 'dropped_links': 0, 'ai_sentences_removed': 0, 'ai_calls': {}}
 
@@ -753,6 +754,7 @@ Pour chaque article retenu, écris en français clair :
 - "etabli" : 1 à 3 points sûrs. "a_prouver" : 1 à 3 limites ou questions ouvertes.
 - "sante" : true si le sujet touche à la santé humaine.
 - "videos" : références ("v3"…) des VIDEOS qui portent clairement sur CE résultat précis ; [] dans le doute.
+- "notions" : 0 à 2 identifiants de NOTIONS de base qui aident vraiment à comprendre la fiche, pris UNIQUEMENT dans la liste NOTIONS ; [] si aucune ne convient.
 
 RÈGLES ABSOLUES :
 - N'utilise que les informations présentes dans le texte de l'article. N'invente aucun chiffre, nom, date, revue ou institution.
@@ -760,7 +762,10 @@ RÈGLES ABSOLUES :
 - Traduis fidèlement les articles en anglais ; garde les chiffres tels quels.
 
 Réponds uniquement avec ce JSON :
-{{"titre_edition": "titre de l'édition, moins de 80 caractères", "intro": "2 phrases qui présentent l'édition", "categories": {{"espace": "une phrase qui résume les fiches retenues dans cette catégorie"}}, "fiches": [{{"ref": "a1", "categorie": "...", "titre": "...", "chapeau": "...", "texte": ["..."], "flash": "...", "pourquoi": "...", "niveau": 3, "type": "...", "statut": "...", "relu": null, "note": "...", "etabli": ["..."], "a_prouver": ["..."], "sante": false, "videos": []}}]}}
+{{"titre_edition": "titre de l'édition, moins de 80 caractères", "intro": "2 phrases qui présentent l'édition", "categories": {{"espace": "une phrase qui résume les fiches retenues dans cette catégorie"}}, "fiches": [{{"ref": "a1", "categorie": "...", "titre": "...", "chapeau": "...", "texte": ["..."], "flash": "...", "pourquoi": "...", "niveau": 3, "type": "...", "statut": "...", "relu": null, "note": "...", "etabli": ["..."], "a_prouver": ["..."], "sante": false, "videos": [], "notions": []}}]}}
+
+NOTIONS (identifiant : titre) :
+{notions}
 
 ARTICLES :
 {articles}
@@ -790,7 +795,7 @@ def ai_edition(cands, vids, n, key, used_ids):
     arts = [{'ref': f'a{i}', 'source': c['source'], 'langue': c['lang'], 'date': c['date'].astimezone(PARIS).date().isoformat(),
              'categorie_probable': c['cat'], 'titre': c['title'], 'texte': shorten(one_line(c['summary']), 900)} for i, c in enumerate(pool)]
     vlist = [{'ref': f'v{i}', 'chaine': v['by'], 'titre': v['title'], 'description': shorten(v['_desc'], 300)} for i, v in enumerate(vids)]
-    prompt = PROMPT.format(n=n, articles='\n'.join(json.dumps(a, ensure_ascii=False) for a in arts),
+    prompt = PROMPT.format(n=n, notions='\n'.join(f'{k} : {v}' for k, v in NOTIONS.items()) or '(aucune)', articles='\n'.join(json.dumps(a, ensure_ascii=False) for a in arts),
                            videos='\n'.join(json.dumps(v, ensure_ascii=False) for v in vlist) or '(aucune)')
     res, model = gemini_call(prompt, key)
     if not isinstance(res, dict):
@@ -848,6 +853,7 @@ def ai_edition(cands, vids, n, key, used_ids):
             'videos': videos, 'numbers': [], 'sure': sure, 'unsure': unsure,
             'flash': flash if flash and ok(flash) else title, 'health': bool(f.get('sante')) or cat == 'sante',
             'videoQuery': title, 'journal': None, 'doi': '', '_src': c,
+            'notions': [x for x in (f.get('notions') or []) if isinstance(x, str) and x in NOTIONS][:2],
         })
         if len(items) >= n:
             break
@@ -924,6 +930,8 @@ def main():
         summary_md([f"### Matinale du {today}", "Édition rédigée à la main conservée."])
         return 0
 
+    bases = load_json(os.path.join(data_dir, 'bases.json'), {}) or {}
+    NOTIONS.update({n['id']: n['title'] for n in bases.get('notions') or [] if isinstance(n, dict) and n.get('id') and n.get('title')})
     cfg = load_json(a.sources, {}) or {}
     key = '' if a.no_ai else (os.environ.get('GEMINI_API_KEY') or '').strip()
     sources = [s for s in cfg.get('feeds', []) if s.get('feed') and (key or s.get('lang', 'fr') == 'fr')]

@@ -111,7 +111,7 @@ button{font:inherit;color:inherit}
 /* Onglets (mobile) */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);background:var(--card);border-top:1px solid var(--rule);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px))}
 .tabbar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;min-height:58px;padding:6px 1px;background:none;border:0;font-family:var(--display);font-weight:600;font-size:11px;color:var(--ink-3);cursor:pointer}
-.tabbar{grid-template-columns:1.05fr .8fr 1.3fr .85fr 1fr}
+.tabbar{grid-template-columns:1.1fr .85fr .8fr .85fr 1fr 1.05fr}
 .tabbar button span{white-space:nowrap}
 @media (max-width:380px){.tabbar button{font-size:10px}}
 .tabbar button[aria-current="page"]{color:var(--accent-ink)}
@@ -318,6 +318,51 @@ body.has-mini main{padding-bottom:calc(144px + env(safe-area-inset-bottom,0px))}
 .d-h{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.02em;color:var(--ink)}
 .d-dek{margin:22px 0 0;font-size:19px;line-height:1.5}
 .figure{margin:18px 0 0}
+/* Comprendre */
+.n-intro{margin:0 0 14px;max-width:720px;color:var(--ink-2);font-size:16px}
+.lvl-legend{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.lvl-legend span{display:inline-flex;align-items:center;gap:6px;font-family:var(--display);font-weight:600;font-size:12.5px;color:var(--ink-2)}
+.lvl-b{font-style:normal;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-family:var(--display);font-weight:700;font-size:12px;flex:none}
+.lvl-b.l2{background:var(--l3-soft);color:var(--l3)} .lvl-b.l3{background:var(--l1-soft);color:var(--l1)}
+.ngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:10px 0 24px}
+.ncard{all:unset;box-sizing:border-box;display:grid;gap:4px;padding:14px 16px;border-radius:16px;border:1px solid var(--rule);background:var(--card);cursor:pointer}
+.ncard:hover,.ncard:focus-visible{border-color:var(--accent)}
+.ncard b{font-family:var(--display);font-weight:700;font-size:17px;color:var(--ink)}
+.ncard span{font-size:14.5px;color:var(--ink-2)}
+.n-dom{margin:6px 0 0;font-family:var(--display);font-weight:700;font-size:18px}
+.n-dom small{display:block;font-weight:500;font-size:13px;color:var(--ink-3)}
+.schema{margin:18px 0 0;padding:12px;border:1px solid var(--rule);border-radius:16px;background:var(--card)}
+.schema svg{display:block;width:100%;height:auto;max-height:360px}
+.schema figcaption{margin-top:8px;font-size:13.5px;color:var(--ink-3)}
+.schema .ln{fill:none;stroke:var(--ink);stroke-width:1.6}
+.schema .lt{fill:none;stroke:var(--ink-3);stroke-width:1.2}
+.schema .ac{fill:none;stroke:var(--accent);stroke-width:2.4}
+.schema .dash{stroke-dasharray:5 4}
+.schema .sf{fill:var(--accent-soft)}
+.schema .c0{fill:var(--l0)} .schema .c1{fill:var(--accent)} .schema .c2{fill:var(--l2)} .schema .c3{fill:var(--l3)} .schema .c4{fill:var(--l1)}
+.schema .mk{fill:var(--ink)} .schema .mka{fill:var(--accent)}
+.schema text{font-family:var(--display);font-size:12px;fill:var(--ink-2)}
+.schema .tb{font-weight:700;font-size:13px;fill:var(--ink)}
+.schema .ts{font-size:10.5px}
+.schema .tw{fill:var(--on-accent);font-weight:700;font-size:13px}
+.lvl{margin-top:24px;padding:16px;border-radius:16px;border:1px solid var(--rule);background:var(--card)}
+.lvl .d-h{margin-bottom:12px}
+.lvl1{border-color:var(--accent-soft);background:var(--accent-soft)}
+.lvl1 p{font-size:17.5px;line-height:1.55}
+.lvl1 .lvl-b{background:var(--card)}
+details.lvl summary{cursor:pointer;list-style:none}
+details.lvl summary::-webkit-details-marker{display:none}
+details.lvl summary .more-hint{margin-left:auto;font-weight:500;font-size:12.5px;color:var(--ink-3)}
+details.lvl[open] summary .more-hint{display:none}
+.dyk{margin-top:16px;padding:14px 16px;border-radius:14px;border-left:4px solid var(--l2);background:var(--l2-soft);color:var(--ink)}
+.dyk b{display:block;margin-bottom:4px;font-family:var(--display)}
+.formulas{display:grid;gap:8px;margin:14px 0 0;padding:0;list-style:none}
+.formulas li{display:grid;gap:3px}
+.formulas code{justify-self:start;padding:6px 10px;border-radius:10px;background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:15px}
+.formulas span{font-size:13.5px;color:var(--ink-3)}
+.exp ol{margin:8px 0 0;padding-left:22px}
+.exp li{margin:6px 0}
+.n-related{display:flex;flex-wrap:wrap;gap:8px}
 .figure img{display:block;width:100%;height:auto;border-radius:14px;background:var(--paper)}
 .figure figcaption{margin-top:6px;font-size:12.5px;color:var(--ink-3)}
 .card-img{position:relative;display:block;margin:10px 10px 0;border-radius:12px;overflow:hidden;background:var(--paper)}
@@ -535,6 +580,7 @@ html[data-tsize="1"]{--ts:1.12} html[data-tsize="2"]{--ts:1.26} html[data-tsize=
       <button data-action="tab" data-tab="franco">Francophonie</button>
       <button data-action="tab" data-tab="ecouter">Écouter</button>
       <button data-action="tab" data-tab="categories">Catégories</button>
+      <button data-action="tab" data-tab="comprendre">Comprendre</button>
     </nav>
     <div class="top-actions">
       <button class="iconbtn hdr-fav" id="hdr-fav" data-action="tab" data-tab="favoris" aria-label="Mes favoris" title="Mes favoris"></button>
@@ -549,6 +595,7 @@ html[data-tsize="1"]{--ts:1.12} html[data-tsize="2"]{--ts:1.26} html[data-tsize=
   <div class="view" id="view-franco" hidden></div>
   <div class="view" id="view-ecouter" hidden></div>
   <div class="view" id="view-categories" hidden></div>
+  <div class="view" id="view-comprendre" hidden></div>
   <div class="view" id="view-favoris" hidden></div>
 </main>
 
@@ -596,10 +643,11 @@ const LEVELS = {
 };
 const KIND = { officielle:'Source officielle', reportage:'Reportage', contexte:'Contexte', tierce:'Chaîne tierce' };
 const SRC_KIND = { officiel:'Officiel', presse:'Presse', etude:'Étude originale' };
-const TABS = ['aujourdhui','videos','franco','ecouter','categories','favoris'];
+const TABS = ['aujourdhui','videos','franco','ecouter','categories','comprendre','favoris'];
 const NAV_TABS = TABS.filter(x => x !== 'favoris');
-const TAB_LABEL = { aujourdhui:"Aujourd'hui", videos:'Vidéos', franco:'Francophonie', ecouter:'Écouter', categories:'Catégories', favoris:'Favoris' };
-const TAB_ICON = { aujourdhui:'today', videos:'video', franco:'bubble', ecouter:'headphones', categories:'grid', favoris:'star' };
+const TAB_LABEL = { aujourdhui:"Aujourd'hui", videos:'Vidéos', franco:'Francophonie', ecouter:'Écouter', categories:'Catégories', comprendre:'Comprendre', favoris:'Favoris' };
+const TAB_ICON = { aujourdhui:'today', videos:'video', franco:'bubble', ecouter:'headphones', categories:'grid', comprendre:'atom', favoris:'star' };
+const TAB_SHORT = { franco:'Franco' };   /* libellés courts de la barre du bas (téléphone) */
 const RATES = [0.85, 1, 1.15, 1.3, 1.5];
 const APP_URL = (typeof location !== 'undefined' && /^https?:/.test(location.protocol)) ? location.origin + location.pathname : ''; /* adresse de la Matinale */
 const UA = (typeof navigator !== 'undefined' && navigator.userAgent) || '';
@@ -646,6 +694,7 @@ const P = {
   alert:'<path d="M12 4l9 16H3z"/><path d="M12 10v4.2M12 17h.01"/>',
   spark:'<path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9z"/><path d="M19 16.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
   share:'<circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.3M8.3 13.2l7.4 4.3"/>',
+  atom:'<circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9.5" ry="3.8" transform="rotate(120 12 12)"/>',
   copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
   phone:'<rect x="6.5" y="2.5" width="11" height="19" rx="2.4"/><path d="M10.5 18.5h3"/>',
   refresh:'<path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4.5V9h-4.5"/>',
@@ -719,7 +768,7 @@ function normalize(d, id){
     numbers: arr(x.numbers).filter(n => n && n.v),
     body: Array.isArray(x.body) ? arr(x.body) : (x.body ? [x.body] : []),
     sure: arr(x.sure), unsure: arr(x.unsure),
-    detail: arr(x.detail), keyPoints: arr(x.keyPoints),
+    detail: arr(x.detail), keyPoints: arr(x.keyPoints), notions: arr(x.notions).filter(v => typeof v === 'string'),
     image: (x.image && typeof x.image.src === 'string' && /^img\/[\w\/.-]+$/.test(x.image.src)) ? x.image : null
   }));
   ed.items.sort((a, b) => CAT_IDS.indexOf(a.cat) - CAT_IDS.indexOf(b.cat));
@@ -1391,6 +1440,7 @@ function startMode(mode, opt){
   else if (mode === 'concept'){ chapters = buildChapters('concept', ed); label = 'Le concept du jour'; }
   else if (mode === 'franco'){ chapters = buildChapters('franco', ed); label = 'Francophonie'; }
   else if (mode === 'hl'){ const h = frHighlights(ed).find(x => x.id === opt.hl); if (!h) return; chapters = [{ title: h.title, text: h.audio || arr(h.text).join(' ') }]; label = 'Francophonie'; }
+  else if (mode === 'notion'){ const n = notionById(opt.id); if (!n) return; chapters = [{ title: n.title, text: notionAudio(n) }]; label = 'Comprendre'; edDate = null; }
   else if (mode === 'flash'){ chapters = buildChapters('flash', ed); label = 'Le flash'; }
   else { chapters = buildChapters('full', ed); label = 'Édition complète'; }
   if (!chapters.length) return;
@@ -1577,12 +1627,14 @@ function openDetail(key, focus){
     ((it.sure.length || it.unsure.length) ? '<div class="su">' + (it.sure.length ? '<div class="ok"><h4>' + icon('check', 17) + ' Ce qui est établi</h4><ul>' + it.sure.map(x => '<li>' + t(x) + '</li>').join('') + '</ul></div>' : '') + (it.unsure.length ? '<div class="ko"><h4>' + icon('quest', 17) + ' Ce qui reste à prouver</h4><ul>' + it.unsure.map(x => '<li>' + t(x) + '</li>').join('') + '</ul></div>' : '') + '</div>' : '') +
     (it.health ? '<div class="caution">' + icon('alert', 18) + '<p>Information scientifique, pas un conseil médical : ne modifie pas un traitement sans l\'avis d\'un professionnel de santé.</p></div>' : '') +
     (it.coi ? '<div class="caution">' + icon('alert', 18) + '<p><b>Conflits d\'intérêts déclarés.</b> ' + t(it.coi) + '</p></div>' : '') + '</section>' +
+    (it.notions.length ? '<section class="d-sec" id="n-slot" data-ids="' + esc(it.notions.join(',')) + '"></section>' : '') +
     '<section class="d-sec"><h3 class="d-h">' + icon('ext', 18) + ' Sources</h3><ul class="srcs">' + it.sources.map(srcLi).join('') + '</ul>' + (it.who ? '<p class="muted small">Recherche : ' + t(it.who) + '</p>' : '') + '</section>' +
     '<div class="d-actions"><button class="btn primary" data-action="load" data-mode="item" data-key="' + esc(key) + '">' + icon('headphones', 18) + ' Écouter ce sujet</button>' +
     '<button class="btn" data-action="share" data-key="' + esc(key) + '">' + icon('share', 18) + ' Partager</button>' +
     (study ? '<a class="btn" href="' + esc(study) + '" target="_blank" rel="noopener noreferrer">' + icon('doc', 18) + ' Étude originale</a><button class="btn ghost" data-action="copy" data-text="' + esc(study) + '">' + icon('copy', 18) + ' Copier le lien</button>' : '') + '</div>' +
     askHTML() + '</article>';
   showSheet(html, it.title);
+  if (it.notions.length) loadBases().then(fillNotionSlot);
   if (focus === 'videos') requestAnimationFrame(() => { const v = $('#d-videos'); if (v) v.scrollIntoView({ block:'start' }); });
 }
 function showSheet(html, label){
@@ -1750,6 +1802,7 @@ function renderView(tab){
   else if (tab === 'franco') renderFranco();
   else if (tab === 'ecouter') renderListen();
   else if (tab === 'categories') renderCats();
+  else if (tab === 'comprendre') renderComprendre();
   else if (tab === 'favoris') renderFavs();
 }
 function renderAll(){ renderEdPill(); renderView(S.tab); updateMini(); openPending(); }
@@ -1766,6 +1819,83 @@ function setTab(tab, opt){
 function toast(msg, ms){
   const el = $('#toast'); el.textContent = msg; el.hidden = false;
   clearTimeout(toast.timer); toast.timer = setTimeout(() => { el.hidden = true; }, ms || 2400);
+}
+/* ---------- Comprendre : les bases de la physique et de la chimie ---------- */
+function loadBases(){
+  if (S.bases && S.bases !== 'error') return Promise.resolve(S.bases);
+  if (S.basesP) return S.basesP;
+  S.basesP = fetch('data/bases.json').then(r => r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status))).then(d => {
+    if (!d || !Array.isArray(d.notions)) throw new Error('format');
+    d.byId = Object.fromEntries(d.notions.filter(n => n && n.id && n.title).map(n => [n.id, n]));
+    S.bases = d; return d;
+  }).catch(e => { S.bases = 'error'; S.basesP = null; throw e; });
+  return S.basesP;
+}
+function notionById(id){ return (S.bases && S.bases.byId && S.bases.byId[id]) || null; }
+function notionAudio(n){ return [n.title + '.', n.tagline + '.'].concat(arr(n.kid), n.dyk ? ['Le savais-tu ? ' + n.dyk] : [], arr(n.more)).join(' '); }
+function renderComprendre(){
+  const el = $('#view-comprendre'); if (!el) return;
+  if (S.bases === 'error'){ el.innerHTML = box('Comprendre', "La section n'a pas pu se charger. Vérifie ta connexion, puis réessaie.", '<button class="btn sm primary" data-action="bases-retry">' + icon('refresh', 15) + ' Réessayer</button>'); return; }
+  if (!S.bases){ el.innerHTML = '<section class="section"><div class="wrap"><p class="muted">Chargement…</p></div></section>'; loadBases().then(() => { if (S.tab === 'comprendre') renderComprendre(); }, () => { if (S.tab === 'comprendre') renderComprendre(); }); return; }
+  const B = S.bases;
+  el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Comprendre</h2><span class="sec-sub">' + B.notions.length + ' notions</span></div>' +
+    '<p class="n-intro">' + t(B.intro || '') + '</p>' +
+    '<div class="lvl-legend"><span><i class="lvl-b">1</i> Pour tous, dès 10 ans</span><span><i class="lvl-b l2">2</i> Pour aller plus loin</span><span><i class="lvl-b l3">3</i> Niveau ingénieur</span></div>' +
+    '<label class="search"><span class="sr">Rechercher une notion</span>' + icon('search', 18) + '<input id="nq" type="search" placeholder="Rechercher : atome, lumière, pH…" value="' + esc(S.nq || '') + '" autocomplete="off"></label>' +
+    '<div id="nlist"></div></div></section>';
+  renderNotionList();
+}
+function renderNotionList(){
+  const box_ = $('#nlist'); if (!box_ || !S.bases || S.bases === 'error') return;
+  const B = S.bases, q = norm(S.nq || '');
+  const card = n => '<button class="ncard" data-action="notion" data-id="' + esc(n.id) + '"><b>' + t(n.title) + '</b><span>' + t(n.tagline || '') + '</span></button>';
+  const match = n => !q || norm([n.title, n.tagline].concat(arr(n.kid), arr(n.more)).join(' ')).includes(q);
+  let html = '';
+  if (!q && arr(B.start).length) html += '<h3 class="n-dom">Par où commencer ?</h3><div class="ngrid">' + arr(B.start).map(id => B.byId[id]).filter(Boolean).map(card).join('') + '</div>';
+  arr(B.domains).forEach(d => {
+    const ns = B.notions.filter(n => n.domain === d.id && match(n)); if (!ns.length) return;
+    html += '<h3 class="n-dom">' + esc(d.label) + '<small>' + esc(d.sub || '') + '</small></h3><div class="ngrid">' + ns.map(card).join('') + '</div>';
+  });
+  box_.innerHTML = html || '<p class="muted">Aucune notion ne correspond à « ' + esc(S.nq) + ' ».</p>';
+}
+function newsForNotion(id){
+  const out = [];
+  Array.from(S.editions.values()).sort((a, b) => String(b.date).localeCompare(String(a.date))).forEach(ed => ed.items.forEach(it => { if (arr(it.notions).includes(id)) out.push(it); }));
+  return out.slice(0, 5);
+}
+function openNotion(id){
+  const n = notionById(id); if (!n){ if (S.bases && S.bases !== 'error') toast('Notion introuvable.'); return; }
+  const dom = arr(S.bases.domains).find(d => d.id === n.domain) || {};
+  const svg = typeof n.svg === 'string' && n.svg.startsWith('<svg') ? n.svg : '';
+  const news = newsForNotion(id);
+  const html = '<div class="sheet-head"><div class="in pad"><span class="cat-tag">' + icon('atom', 16) + esc('Comprendre · ' + (dom.label || '')) + '</span><button class="iconbtn" style="margin-left:auto" data-action="close" aria-label="Fermer">' + icon('close') + '</button></div></div>' +
+    '<article class="detail pad notion"><h2 class="d-title">' + t(n.title) + '</h2><p class="d-dek">' + t(n.tagline || '') + '</p>' +
+    (svg ? '<figure class="schema">' + svg + (n.caption ? '<figcaption>' + t(n.caption) + '</figcaption>' : '') + '</figure>' : '') +
+    '<div class="d-tools"><button class="btn sm" data-action="load" data-mode="notion" data-id="' + esc(id) + '">' + icon('headphones', 16) + ' Écouter</button><div class="tsize" role="group" aria-label="Taille du texte"><button data-action="tsize" data-d="-1" aria-label="Texte plus petit">A−</button><button data-action="tsize" data-d="1" aria-label="Texte plus grand">A+</button></div></div>' +
+    '<section class="d-sec lvl lvl1"><h3 class="d-h"><i class="lvl-b">1</i> Pour tous, dès 10 ans</h3>' + arr(n.kid).map(p => '<p>' + t(p) + '</p>').join('') + '</section>' +
+    (n.dyk ? '<div class="dyk"><b>Le savais-tu ?</b>' + t(n.dyk) + '</div>' : '') +
+    '<section class="d-sec lvl"><h3 class="d-h"><i class="lvl-b l2">2</i> Pour aller plus loin</h3>' + arr(n.more).map(p => '<p>' + t(p) + '</p>').join('') + '</section>' +
+    '<details class="d-sec lvl"><summary class="d-h"><i class="lvl-b l3">3</i> Niveau ingénieur<span class="more-hint">formules et ordres de grandeur ›</span></summary>' +
+      arr(n.expert).map(p => '<p>' + t(p) + '</p>').join('') +
+      (arr(n.formulas).length ? '<ul class="formulas">' + n.formulas.map(f => '<li><code>' + esc(f.f) + '</code><span>' + t(f.l || '') + '</span></li>').join('') + '</ul>' : '') + '</details>' +
+    (arr(n.numbers).length ? '<div class="nums">' + n.numbers.map(x => '<div class="num"><b>' + t(x.v) + '</b><span>' + t(x.l || '') + '</span></div>').join('') + '</div>' : '') +
+    (n.exp && arr(n.exp.steps).length ? '<section class="d-sec lvl exp"><h3 class="d-h">' + icon('quest', 18) + ' À essayer chez soi : ' + t(n.exp.title || '') + '</h3><ol>' + n.exp.steps.map(x => '<li>' + t(x) + '</li>').join('') + '</ol>' + (n.exp.safety ? '<div class="caution">' + icon('alert', 18) + '<p>' + t(n.exp.safety) + '</p></div>' : '') + '</section>' : '') +
+    (news.length ? '<section class="d-sec"><h3 class="d-h">' + icon('doc', 18) + ' Dans l\'actualité</h3><ul class="rows">' + news.map(rowHTML).join('') + '</ul></section>' : '') +
+    (arr(n.related).length ? '<section class="d-sec"><h3 class="d-h">Notions liées</h3><div class="n-related">' + n.related.map(r => notionById(r)).filter(Boolean).map(r => '<button class="chip" data-action="notion" data-id="' + esc(r.id) + '">' + icon('atom', 14) + ' ' + t(r.title) + '</button>').join('') + '</div></section>' : '') +
+    '<div class="d-actions"><button class="btn" data-action="share-notion" data-id="' + esc(id) + '">' + icon('share', 18) + ' Partager</button></div></article>';
+  showSheet(html, n.title);
+}
+function fillNotionSlot(){
+  const el = $('#n-slot'); if (!el) return;
+  const ns = String(el.dataset.ids || '').split(',').map(notionById).filter(Boolean);
+  if (!ns.length){ el.remove(); return; }
+  el.innerHTML = '<h3 class="d-h">' + icon('atom', 18) + ' Pour comprendre</h3><div class="n-related">' + ns.map(n => '<button class="chip" data-action="notion" data-id="' + esc(n.id) + '">' + t(n.title) + '</button>').join('') + '</div>';
+}
+function shareNotion(id){
+  const n = notionById(id); if (!n || !APP_URL) return;
+  const url = APP_URL + '#n=' + encodeURIComponent(id);
+  const data = { title: fr(n.title), text: fr(n.title) + ' · Comprendre, La Matinale des Sciences', url };
+  if (navigator.share){ navigator.share(data).catch(() => {}); } else copyText(url);
 }
 /* Partage d'une fiche : le lien ouvre directement cette fiche dans la Matinale. */
 function shareItem(key){
@@ -1803,7 +1933,10 @@ function onClick(e){
     case 'tsize': { const v = Math.max(0, Math.min(3, Number(LS.get('mds.tsize', 0)) + Number(a.dataset.d))); LS.set('mds.tsize', v); applyTsize(); break; }
     case 'off-on': LS.set('offlineAudio', true); gardeAudio(); break;
     case 'off-off': LS.set('offlineAudio', false); S.offBusy = false; swSend({ type:'audio-effacer' }); break;
-    case 'load': startMode(a.dataset.mode, { cat:a.dataset.cat, key:a.dataset.key, hl:a.dataset.hl }); break;
+    case 'load': startMode(a.dataset.mode, { cat:a.dataset.cat, key:a.dataset.key, hl:a.dataset.hl, id:a.dataset.id }); break;
+    case 'notion': openNotion(a.dataset.id); break;
+    case 'share-notion': shareNotion(a.dataset.id); break;
+    case 'bases-retry': S.bases = null; S.basesP = null; renderComprendre(); break;
     case 'fr-filter': S.frGroup = a.dataset.g || 'all'; renderDir(); break;
     case 'vid-filter': S.vidFilter = a.dataset.f === 'fr' ? 'fr' : 'all'; renderVideos(); break;
     case 'jump': { e.preventDefault(); const target = document.getElementById(a.dataset.target || ''); if (target) target.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block:'start' }); break; }
@@ -1843,10 +1976,10 @@ function onClick(e){
   }
 }
 function bindEvents(){
-  $('#tabbar').innerHTML = NAV_TABS.map(x => '<button data-action="tab" data-tab="' + x + '" aria-current="false">' + icon(TAB_ICON[x], 22) + '<span>' + esc(TAB_LABEL[x]) + '</span></button>').join('');
+  $('#tabbar').innerHTML = NAV_TABS.map(x => '<button data-action="tab" data-tab="' + x + '" aria-current="false">' + icon(TAB_ICON[x], 22) + '<span>' + esc(TAB_SHORT[x] || TAB_LABEL[x]) + '</span></button>').join('');
   $('#hdr-fav').innerHTML = icon('star', 19);
   $('#mini-next').innerHTML = icon('next', 20); $('#mini-stop').innerHTML = icon('close', 20);
-  document.addEventListener('input', e => { if (e.target && e.target.id === 'fq'){ S.frQuery = e.target.value; renderDir(); } });
+  document.addEventListener('input', e => { if (e.target && e.target.id === 'fq'){ S.frQuery = e.target.value; renderDir(); } if (e.target && e.target.id === 'nq'){ S.nq = e.target.value; renderNotionList(); } });
   document.addEventListener('click', onClick);
   document.addEventListener('submit', e => { if (e.target && e.target.id === 'ask-form'){ e.preventDefault(); const inp = $('#ask-input'); const v = inp ? inp.value.trim() : ''; if (v) ask(v); } });
   document.addEventListener('input', e => { if (e.target && e.target.id === 'q'){ S.query = e.target.value; renderFeed(); } });
@@ -1942,7 +2075,10 @@ function boot(){
   bindEvents();
   const h = (location.hash || '').slice(1);
   if (h.startsWith('f=')){ try { S.pendingKey = decodeURIComponent(h.slice(2)); } catch (e) {} }   /* lien partagé vers une fiche */
-  setTab(TABS.includes(h) ? h : 'aujourdhui', { scroll:false });
+  let nid = null; if (h.startsWith('n=')){ try { nid = decodeURIComponent(h.slice(2)); } catch (e) {} }   /* lien partagé vers une notion */
+  setTab(nid ? 'comprendre' : (TABS.includes(h) ? h : 'aujourdhui'), { scroll:false });
+  if (nid) loadBases().then(() => openNotion(nid));
+  else setTimeout(() => { loadBases().catch(() => {}); }, 6000);   /* gardée dans le téléphone pour le hors-ligne */
   setTimeout(() => { if (S.status === 'loading') loadFallback(false); }, 4000);
   loadAudioIndex();
   /* Version autonome : ni compte ni base, les fichiers publiés avec le site suffisent. */
