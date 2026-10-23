@@ -1915,7 +1915,9 @@ function toast(msg, ms){
 const NAV = { timer:0, exiting:false };
 const navUrl = () => location.pathname + location.search + '#' + S.tab;
 function navArm(){
-  clearTimeout(NAV.timer); NAV.exiting = false;
+  clearTimeout(NAV.timer);
+  if (NAV.exiting){ const tt = $('#toast'); if (tt && /^Appuie encore/.test(tt.textContent)) tt.hidden = true; }
+  NAV.exiting = false;
   try {
     if (history.state && history.state.mds === 'top') return;
     history.replaceState({ mds:'root' }, '', navUrl()); history.pushState({ mds:'top' }, '', navUrl());
@@ -1929,7 +1931,8 @@ function navBack(){   /* une étape en arrière dans l'appli ; false s'il n'y a 
 }
 function onPopState(e){
   const st = e.state;
-  if (st && st.mds === 'top'){ navBack(); try { history.replaceState(st, '', navUrl()); } catch (er) {} return; }
+  if (!st || !st.mds){ try { history.replaceState({ mds:'top' }, '', location.href); } catch (er) {} return; }   /* adresse changée à la main : l'événement hashchange s'en occupe */
+  if (st.mds === 'top'){ navBack(); try { history.replaceState(st, '', navUrl()); } catch (er) {} return; }
   if (navBack()){ navArm(); return; }
   NAV.exiting = true;
   try { history.replaceState({ mds:'root' }, '', navUrl()); } catch (er) {}
