@@ -9,6 +9,9 @@ Produit dans DOSSIER_SORTIE : flash.mp3, full.mp3 et audio.json (chapitres avec 
 Les chapitres sont construits exactement comme dans la page (même ordre, mêmes textes).
 """
 import argparse, json, os, re, subprocess, sys, tempfile, wave, datetime
+import concurrent.futures as cf
+
+WORKERS = max(1, os.cpu_count() or 1)   # une voix par cœur du processeur : la fabrication va plusieurs fois plus vite
 
 CAT_IDS = ['espace', 'sante', 'cerveau', 'physique', 'terre', 'vivant', 'archeo', 'tech', 'inventions']
 LEVELS = {4: 'Établi', 3: 'Solide', 2: 'Préliminaire', 1: 'Hypothèse', 0: 'Non évalué'}
@@ -107,10 +110,10 @@ def chapters_for(ed, mode):
     return [c for c in ch if str(c.get('text') or '').strip()]
 
 
-def synth(tts, voice, text, out_wav):
+def synth(tts, voice, text, out_wav, threads=None):
     model = [f for f in os.listdir(voice) if f.endswith('.onnx')][0]
     cmd = [tts, f'--vits-model={os.path.join(voice, model)}', f'--vits-tokens={os.path.join(voice, "tokens.txt")}',
-           f'--vits-data-dir={os.path.join(voice, "espeak-ng-data")}', f'--num-threads={max(1, os.cpu_count() or 1)}',
+           f'--vits-data-dir={os.path.join(voice, "espeak-ng-data")}', f'--num-threads={threads or WORKERS}',
            f'--output-filename={out_wav}', text]
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode != 0 or not os.path.exists(out_wav):
@@ -119,10 +122,12 @@ def synth(tts, voice, text, out_wav):
 
 def build(ed, mode, tts, voice, out_dir, tmp):
     chs = chapters_for(ed, mode)
+    wavs = [os.path.join(tmp, f'{mode}-{i:02d}.wav') for i in range(len(chs))]
+    with cf.ThreadPoolExecutor(max_workers=WORKERS) as ex:   # les chapitres sont fabriqués en parallèle, puis mis bout à bout dans l'ordre
+        list(ex.map(lambda ic: synth(tts, voice, speechify(ic[1]['text']), wavs[ic[0]], threads=1), enumerate(chs)))
     frames, params, t, rate = [], None, 0.0, None
     for i, c in enumerate(chs):
-        wav_path = os.path.join(tmp, f'{mode}-{i:02d}.wav')
-        synth(tts, voice, speechify(c['text']), wav_path)
+        wav_path = wavs[i]
         with wave.open(wav_path, 'rb') as w:
             if params is None:
                 params, rate = w.getparams(), w.getframerate()
@@ -154,14 +159,16 @@ def build_items(ed, tts, voice, out_dir, tmp):
     os.makedirs(items_dir, exist_ok=True)
     day = re.sub(r'[^0-9-]', '', str(ed.get('date') or ''))[:10] or 'jour'
     res = {}
-    for n, it in enumerate(arr(ed.get('items'))):
+
+    def one(n_it):
+        n, it = n_it
         if not isinstance(it, dict) or not it.get('id') or not it.get('title'):
-            continue
+            return
         iid = re.sub(r'[^A-Za-z0-9_-]', '-', str(it['id']))[:80]
         try:
             text = item_full_audio(it)
             wav = os.path.join(tmp, f'item-{n:02d}.wav')
-            synth(tts, voice, speechify(text), wav)
+            synth(tts, voice, speechify(text), wav, threads=1)
             with wave.open(wav, 'rb') as w:
                 dur = w.getnframes() / w.getframerate()
             os.makedirs(os.path.join(items_dir, day), exist_ok=True)
@@ -172,7 +179,10 @@ def build_items(ed, tts, voice, out_dir, tmp):
                                   'chapters': [{'key': it['id'], 'title': it['title'], 'text': text, 'start': 0, 'end': round(dur, 2)}]}
         except Exception as e:  # noqa: BLE001
             print('fiche ignorée', it.get('id'), type(e).__name__, str(e)[:120], file=sys.stderr)
-    return res
+    with cf.ThreadPoolExecutor(max_workers=WORKERS) as ex:   # plusieurs fiches à la fois
+        list(ex.map(one, enumerate(arr(ed.get('items')))))
+    order = [str(it.get('id')) for it in arr(ed.get('items')) if isinstance(it, dict)]
+    return {k: res[k] for k in order if k in res}
 
 
 def main():

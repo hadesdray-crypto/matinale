@@ -35,6 +35,7 @@ BATCH = 3                # articles par appel à Gemini
 IMAGE_SOURCES = {'NASA': 'NASA', 'NASA (technologie)': 'NASA'}   # sources dont les images sont libres de droits
 MAX_IMG_BYTES = 3_000_000
 IMG_WIDTH = 960
+MAX_CHECKS = 2           # au plus 2 images montrées à l'IA par fiche (économie du quota gratuit)
 
 
 class _Extract(HTMLParser):
@@ -144,7 +145,7 @@ def write_details(batch, key, gemini_call, helpers, stats):
     arts = [{'ref': f'd{i + 1}', 'source': it['_src']['source'], 'langue': it['_src']['lang'], 'titre': it['_src']['title'],
              'texte': _shorten(pg['text'], MAX_CHARS)} for i, (it, pg) in enumerate(batch)]
     prompt = PROMPT.format(articles='\n'.join(json.dumps(a, ensure_ascii=False) for a in arts))
-    res, _model = gemini_call(prompt, key)
+    res, _model = gemini_call(prompt, key, light=True)
     if not isinstance(res, dict):
         return 0
     done = 0
@@ -370,7 +371,7 @@ def vision_ok(path, title, key, gemini_call):
     try:
         with open(path, 'rb') as fh:
             data = base64.b64encode(fh.read()).decode()
-        res, _m = gemini_call(VISION_PROMPT.format(titre=title), key, images=[('image/jpeg', data)])
+        res, _m = gemini_call(VISION_PROMPT.format(titre=title), key, images=[('image/jpeg', data)], light=True)
     except Exception:  # noqa: BLE001
         return False
     return isinstance(res, dict) and res.get('ok') is True
@@ -387,7 +388,7 @@ def illustrations(items, key, gemini_call, log, site_dir, today, http=None, paus
         chunk = todo[i:i + 10]
         fiches = [{'ref': f'i{n + 1}', 'titre': it['title'], 'categorie': it.get('cat')} for n, it in enumerate(chunk)]
         prompt = ILL_PROMPT.format(fiches='\n'.join(json.dumps(f, ensure_ascii=False) for f in fiches))
-        res, _m = gemini_call(prompt, key)
+        res, _m = gemini_call(prompt, key, light=True)
         for f in (res or {}).get('images') or [] if isinstance(res, dict) else []:
             idx = f.get('ref') if isinstance(f, dict) else None
             if isinstance(idx, str) and idx[1:].isdigit() and 0 < int(idx[1:]) <= len(chunk):
@@ -398,8 +399,10 @@ def illustrations(items, key, gemini_call, log, site_dir, today, http=None, paus
     used, n_ok, refused = set(), 0, 0
     wfetch = lambda url, **kw: http(url, accept='image/jpeg,image/png,*/*;q=0.5', limit=MAX_IMG_BYTES)
     for it in todo:
-        found = None
+        found, checks = None, 0
         for q in queries.get(id(it), []):
+            if checks >= MAX_CHECKS:
+                break
             cands = []
             for name, search in (('Commons', commons_search), ('Openverse', openverse_search)):
                 try:
@@ -411,11 +414,13 @@ def illustrations(items, key, gemini_call, log, site_dir, today, http=None, paus
                 if cands:
                     break
             for c in cands[:3]:
+                if checks >= MAX_CHECKS:
+                    break
                 got = fetch_image(c['thumb'], wfetch, img_dir, re.sub(r'[^A-Za-z0-9_-]', '-', it['id'])[:60])
                 if not got:
                     continue
                 if vision:
-                    time.sleep(pause)
+                    checks += 1
                     if not vision_ok(got[0], it['title'], key, gemini_call):
                         refused += 1
                         try:

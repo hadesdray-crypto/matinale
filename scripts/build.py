@@ -20,6 +20,7 @@ Ce que fait le script, chaque matin (lancé par GitHub Actions) :
 Si rien de neuf n'est trouvé, l'édition précédente reste en ligne : la page n'est jamais cassée.
 Aucune dépendance : uniquement la bibliothèque standard de Python 3.9+.
 """
+import threading
 import time
 import argparse
 import concurrent.futures as cf
@@ -49,9 +50,14 @@ LEVEL_NAMES = {4: 'Établi', 3: 'Solide', 2: 'Préliminaire', 1: 'Hypothèse', 0
 MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
 JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
 GEMINI_ENDPOINT = os.environ.get('GEMINI_ENDPOINT', 'https://generativelanguage.googleapis.com')
-GEMINI_MODELS = ['gemini-flash-latest', 'gemini-3.8-flash', 'gemini-2.5-flash', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite']
+# Modèle « Flash » (quota gratuit très court, ~20 demandes/jour) : seulement pour écrire l'édition.
+# Modèle « Flash-Lite » (quota bien plus large) : toutes les petites tâches (détails, mots-clés, contrôle des images).
+GEMINI_MODELS = ['gemini-flash-latest', 'gemini-3.8-flash', 'gemini-flash-lite-latest', 'gemini-3.5-flash-lite']
+GEMINI_LITE = ['gemini-flash-lite-latest', 'gemini-3.5-flash-lite']
+GEMINI_GAP = float(os.environ.get('MATINALE_GEMINI_GAP', '4.5'))   # secondes entre deux demandes (limite par minute)
+_AI = {'last': 0.0, 'lock': threading.Lock(), 'exhausted': set()}
 
-STATS = {'feeds_ok': [], 'feeds_ko': [], 'mode': 'rss', 'model': None, 'dropped_links': 0, 'ai_sentences_removed': 0}
+STATS = {'feeds_ok': [], 'feeds_ko': [], 'mode': 'rss', 'model': None, 'dropped_links': 0, 'ai_sentences_removed': 0, 'ai_calls': {}}
 
 
 def log(*a):
@@ -675,16 +681,30 @@ def numbers_ok(text, allowed):
     return number_set(text) <= allowed
 
 
-def gemini_call(prompt, key, images=None):
-    """images : liste facultative de (type MIME, données en base64), jointes à la question."""
-    models = ([os.environ['GEMINI_MODEL']] if os.environ.get('GEMINI_MODEL') else []) + GEMINI_MODELS
+def _ai_wait():
+    """Espace les demandes pour rester sous la limite par minute de l'offre gratuite."""
+    with _AI['lock']:
+        d = _AI['last'] + GEMINI_GAP - time.time()
+        if d > 0:
+            time.sleep(d)
+        _AI['last'] = time.time()
+
+
+def gemini_call(prompt, key, images=None, light=False):
+    """images : liste facultative de (type MIME, données en base64), jointes à la question.
+    light=True : petite tâche, confiée au modèle Flash-Lite pour garder le quota Flash pour l'édition."""
+    models = ([os.environ['GEMINI_MODEL']] if os.environ.get('GEMINI_MODEL') and not light else []) + (GEMINI_LITE if light else GEMINI_MODELS)
     parts = [{'text': prompt}] + [{'inline_data': {'mime_type': m, 'data': d}} for m, d in (images or [])]
     body = json.dumps({'contents': [{'role': 'user', 'parts': parts}],
                        'generationConfig': {'temperature': 0.2, 'responseMimeType': 'application/json', 'maxOutputTokens': 32768}}).encode()
     for m in dict.fromkeys(models):
+        if m in _AI['exhausted']:
+            continue   # quota du jour épuisé pour ce modèle : inutile de redemander
         url = f'{GEMINI_ENDPOINT}/v1beta/models/{m}:generateContent'
         req = urllib.request.Request(url, data=body, headers={'Content-Type': 'application/json', 'x-goog-api-key': key})
         try:
+            _ai_wait()
+            STATS['ai_calls'][m] = STATS['ai_calls'].get(m, 0) + 1
             with urllib.request.urlopen(req, timeout=240) as r:
                 data = json.load(r)
             parts = data['candidates'][0]['content']['parts']
@@ -694,6 +714,9 @@ def gemini_call(prompt, key, images=None):
         except urllib.error.HTTPError as e:
             msg = e.read()[:300].decode('utf-8', 'replace')
             log(f'  · Gemini {m} : HTTP {e.code} {msg}')
+            if e.code == 429 and re.search(r'(per day|PerDay|daily|quota)', msg, re.I):
+                _AI['exhausted'].add(m)
+                log(f'  · {m} : quota du jour épuisé, ce modèle n\'est plus utilisé jusqu\'à demain.')
             if e.code in (400, 401, 403) and ('API key' in msg or 'API_KEY' in msg or 'PERMISSION' in msg):
                 log('  · La clé GEMINI_API_KEY est refusée : vérifie-la dans les réglages du dépôt (Secrets).')
                 return None, None
@@ -1008,6 +1031,7 @@ def main():
 
     mode = f"Gemini ({STATS['model']})" if STATS['mode'] == 'gemini' else 'sans IA (titres et résumés des sources)'
     log(f"Édition n° {number} du {today} : {n} fiches, mode {mode}, {len(fr_videos)} vidéos francophones.")
+    log('Demandes à l\'IA : ' + (', '.join(f'{k} {v}' for k, v in STATS['ai_calls'].items()) or 'aucune'))
     summary_md([f"### Matinale du {today} — édition n° {number}", '', f"- **{n} fiches**, mode : {mode}",
                 f"- Sources lues : {len(STATS['feeds_ok'])} · muettes : {', '.join(STATS['feeds_ko']) or 'aucune'}",
                 f"- Liens morts écartés : {STATS['dropped_links']} · phrases de l'IA retirées (chiffre absent de la source) : {STATS['ai_sentences_removed']}",
