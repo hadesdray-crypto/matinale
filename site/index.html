@@ -320,7 +320,8 @@ body.has-mini main{padding-bottom:calc(144px + env(safe-area-inset-bottom,0px))}
 .figure{margin:18px 0 0}
 .figure img{display:block;width:100%;height:auto;border-radius:14px;background:var(--paper)}
 .figure figcaption{margin-top:6px;font-size:12.5px;color:var(--ink-3)}
-.card-img{display:block;margin:10px 10px 0;border-radius:12px;overflow:hidden;background:var(--paper)}
+.card-img{position:relative;display:block;margin:10px 10px 0;border-radius:12px;overflow:hidden;background:var(--paper)}
+.img-tag{position:absolute;left:8px;bottom:8px;padding:3px 9px;border-radius:999px;background:rgba(9,18,32,.72);color:#fff;font-family:var(--display);font-weight:600;font-size:11px}
 .card-img img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
 .d-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:18px 0 0}
 .seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;padding:3px;gap:2px;background:var(--card)}
@@ -772,7 +773,7 @@ function srcLi(s){
 function cardHTML(it, ed){
   const c = CAT[it.cat];
   const isNew = S.latest && ed.date === S.latest.date && !S.read.has(it.key);
-  const pic = it.image ? '<div class="card-img"><img src="' + esc(it.image.src) + '" alt="' + esc(it.image.alt || '') + '" loading="lazy" decoding="async" onerror="this.parentNode.remove()"></div>' : '';
+  const pic = it.image ? '<div class="card-img"><img src="' + esc(it.image.src) + '" alt="' + esc(it.image.alt || '') + '" loading="lazy" decoding="async" onerror="this.parentNode.remove()">' + (it.image.kind === 'illustration' ? '<span class="img-tag">Illustration · crédit dans la fiche</span>' : '') + '</div>' : '';
   const media = it.videos.length
     ? '<div class="card-media">' + vtileHTML(it.videos[0], { row:true }) + (it.videos.length > 1 ? '<button class="more-v" data-action="open" data-key="' + esc(it.key) + '" data-focus="videos">' + icon('video', 15) + ' + ' + (it.videos.length - 1) + ' vidéo' + (it.videos.length > 2 ? 's' : '') + '</button>' : '') + '</div>'
     : '<div class="novid">' + icon('video', 16) + '<span>Pas encore de vidéo vérifiée</span><a href="' + esc(ytSearch(it.videoQuery || it.title)) + '" target="_blank" rel="noopener noreferrer">Chercher sur YouTube ' + icon('ext', 13) + '</a></div>';
@@ -1559,7 +1560,7 @@ function openDetail(key, focus){
   const html = '<div class="sheet-head"><div class="in pad">' + catTag(CAT[it.cat]) + '<span class="sheet-date">' + esc(dateLabel(it)) + '</span>' + favBtn(it) + '<button class="iconbtn" data-action="close" aria-label="Fermer la fiche">' + icon('close') + '</button></div></div>' +
     '<article class="detail pad" data-dmode="' + (it.detail.length && LS.get('mds.dmode', 'sum') === 'long' ? 'long' : 'sum') + '"><h2 class="d-title">' + t(it.title) + '</h2>' +
     '<div class="ev-row">' + evHTML(it) + (ev.reviewed === true ? '<span class="reviewed">' + icon('check', 15) + ' Relu par des pairs</span>' : '') + (ev.reviewed === false ? '<span class="reviewed no">' + icon('alert', 15) + ' Non relu par des pairs</span>' : '') + '<span class="status">' + t(ev.status || '') + '</span></div>' +
-    (it.image ? '<figure class="figure"><img src="' + esc(it.image.src) + '" alt="' + esc(it.image.alt || '') + '"' + (it.image.w ? ' width="' + esc(it.image.w) + '" height="' + esc(it.image.h) + '"' : '') + ' decoding="async" onerror="this.parentNode.remove()"><figcaption>Image : ' + esc(it.image.credit || '') + '</figcaption></figure>' : '') +
+    (it.image ? '<figure class="figure"><img src="' + esc(it.image.src) + '" alt="' + esc(it.image.alt || '') + '"' + (it.image.w ? ' width="' + esc(it.image.w) + '" height="' + esc(it.image.h) + '"' : '') + ' decoding="async" onerror="this.parentNode.remove()"><figcaption>' + (it.image.kind === 'illustration' ? 'Illustration libre de droits, pas l\'image de l\'article. ' + esc(it.image.credit || '') + (isHttp(it.image.url) ? ' · <a href="' + esc(it.image.url) + '" target="_blank" rel="noopener noreferrer">Voir l\'image d\'origine</a>' : '') : 'Image : ' + esc(it.image.credit || '')) + '</figcaption></figure>' : '') +
     '<section class="d-sec" id="d-videos"><h3 class="d-h">' + icon('video', 18) + ' Les vidéos</h3>' + videosBlock(it) + '</section>' +
     '<p class="d-dek">' + t(it.dek) + '</p>' +
     '<div class="d-tools">' + (it.detail.length ? '<div class="seg" role="group" aria-label="Niveau de détail"><button data-action="dmode" data-m="sum" aria-pressed="' + (LS.get('mds.dmode', 'sum') !== 'long') + '">Résumé</button><button data-action="dmode" data-m="long" aria-pressed="' + (LS.get('mds.dmode', 'sum') === 'long') + '">Article détaillé</button></div>' : '') + '<div class="tsize" role="group" aria-label="Taille du texte"><button data-action="tsize" data-d="-1" aria-label="Texte plus petit">A−</button><button data-action="tsize" data-d="1" aria-label="Texte plus grand">A+</button></div></div>' +

@@ -5,7 +5,9 @@ Pour chaque fiche retenue, ce module :
   1. lit la page de l'article d'origine (texte seulement) ;
   2. demande à Gemini une fiche détaillée de 300 à 450 mots, écrite dans ses propres mots (jamais une copie) ;
   3. vérifie : un chiffre absent de l'article, une phrase recopiée de l'article ou un lien -> la phrase est retirée ;
-  4. pour les sources dont les images sont libres de droits (NASA), garde une image réduite pour la lire sans réseau.
+  4. pour les sources dont les images sont libres de droits (NASA), garde une image réduite pour la lire sans réseau ;
+  5. pour les autres fiches, cherche sur Wikimedia Commons une illustration à licence libre (CC0, domaine public, CC BY, CC BY-SA)
+     qui évoque le sujet : elle est présentée comme « illustration », jamais comme l'image de l'article.
 
 Tout est facultatif : si une étape échoue pour une fiche, la fiche garde simplement son résumé.
 Bibliothèque standard uniquement (Pillow est utilisé pour réduire les images s'il est installé).
@@ -15,7 +17,9 @@ import io
 import json
 import os
 import re
+import time
 import urllib.parse
+import urllib.request
 from html.parser import HTMLParser
 
 SKIP_TAGS = {'script', 'style', 'noscript', 'nav', 'footer', 'header', 'aside', 'form', 'svg', 'iframe', 'figcaption',
@@ -243,3 +247,159 @@ def enrich(items, key, fetch, gemini_call, helpers, log, stats, site_dir, today)
     stats['images'] = n_img
     if n_img:
         log(f'Images libres de droits gardées : {n_img}.')
+    try:
+        n_ill = illustrations([it for it in items if not it.get('image')], key, gemini_call, log, site_dir, today)
+        stats['illustrations'] = n_ill
+    except Exception as e:  # noqa: BLE001 - l'illustration est un plus : sans elle, la fiche n'a simplement pas d'image
+        log(f'  · illustrations indisponibles ({type(e).__name__} : {str(e)[:100]})')
+
+
+
+# ---------------------------------------------------------------- Illustrations libres de droits (Wikimedia Commons)
+
+COMMONS = 'https://commons.wikimedia.org/w/api.php'
+UA_WIKI = 'MatinaleDesSciences/1.0 (https://github.com/hadesdray-crypto/matinale; revue de presse scientifique non commerciale)'
+LICENSE_OK = re.compile(r'^(CC0|CC BY(-SA)? [0-9.]+|Public domain|PD[- ].+)', re.I)
+LICENSE_NO = re.compile(r'(NC|ND|GFDL|fair use|non[- ]?free)', re.I)
+TITLE_BAD = re.compile(r'(portrait|logo|flag|drapeau|map of|carte|diagram|chart|screenshot|poster|stamp|coat of arms|signature|cover|selfie|'
+                       r'statue|mugshot|face of|visage|nude|nu\b|icon)', re.I)
+ILL_PROMPT = """Pour chaque fiche scientifique ci-dessous, propose des mots-clés de recherche en ANGLAIS pour trouver sur Wikimedia Commons
+une photo d'illustration générique et concrète du sujet (un objet, un paysage, un instrument, un animal, un lieu).
+Règles : 2 à 4 mots par requête, 2 requêtes par fiche (la seconde plus générale). Aucun nom de personne, de marque, de logo ni de revue.
+Pas de mot abstrait (study, research, discovery). Pour la santé, évite les photos de patients : préfère un instrument, une cellule, un laboratoire.
+
+Réponds uniquement avec ce JSON :
+{{"images": [{{"ref": "i1", "requetes": ["requête précise", "requête générale"]}}]}}
+
+FICHES :
+{fiches}
+"""
+
+
+def _http(url, timeout=25, accept='application/json', limit=4_000_000):
+    req = urllib.request.Request(url, headers={'User-Agent': UA_WIKI, 'Accept': accept})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.read(limit), r.geturl()
+
+
+def _strip(html_text):
+    return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', html_text or '')).strip()
+
+
+def commons_search(query, http=None):
+    """Renvoie des candidats [{title, thumb, w, h, page, license, artist, desc}] à licence libre, du plus pertinent au moins pertinent."""
+    http = http or _http
+    params = {'action': 'query', 'generator': 'search', 'gsrnamespace': '6', 'gsrsearch': query + ' filetype:bitmap', 'gsrlimit': '12',
+              'prop': 'imageinfo', 'iiprop': 'url|size|mime|extmetadata', 'iiurlwidth': '960', 'format': 'json', 'formatversion': '2'}
+    data, _ = http(COMMONS + '?' + urllib.parse.urlencode(params))
+    pages = (json.loads(data).get('query') or {}).get('pages') or []
+    pages = sorted(pages, key=lambda p: p.get('index', 0))
+    words = [w for w in re.findall(r'[a-z]{4,}', query.lower())]
+    out = []
+    for pg in pages:
+        info = (pg.get('imageinfo') or [None])[0]
+        if not info:
+            continue
+        meta = info.get('extmetadata') or {}
+        val = lambda k: _strip(str((meta.get(k) or {}).get('value') or ''))
+        lic = val('LicenseShortName')
+        if not lic or not LICENSE_OK.match(lic) or LICENSE_NO.search(lic) or LICENSE_NO.search(val('UsageTerms')):
+            continue
+        if val('NonFree').lower() in ('true', '1', 'yes'):
+            continue
+        if re.search(r'(personality|trademark)', val('Restrictions'), re.I):
+            continue
+        title = str(pg.get('title') or '')
+        if TITLE_BAD.search(title) or info.get('mime') not in ('image/jpeg', 'image/png'):
+            continue
+        w, h = info.get('width') or 0, info.get('height') or 0
+        if w < 1000 or not h or not (1.25 <= w / h <= 2.3) or not info.get('thumburl'):
+            continue
+        desc = val('ImageDescription')
+        if words and not any(x in (title + ' ' + desc).lower() for x in words):
+            continue   # le fichier ne parle pas du sujet cherché
+        out.append({'title': title, 'thumb': info['thumburl'], 'w': info.get('thumbwidth'), 'h': info.get('thumbheight'),
+                    'page': info.get('descriptionurl') or '', 'license': lic, 'artist': _shorten(val('Artist'), 60), 'desc': _shorten(desc, 140)})
+    return out
+
+
+OPENVERSE = 'https://api.openverse.org/v1/images/'
+OV_LICENSES = {'cc0': 'CC0', 'pdm': 'Public domain', 'by': 'CC BY', 'by-sa': 'CC BY-SA'}
+
+
+def openverse_search(query, http=None):
+    """Deuxième source ouverte : Openverse (images sous licence Creative Commons de nombreux sites). Mêmes candidats que Commons."""
+    http = http or _http
+    params = {'q': query, 'license': 'cc0,pdm,by,by-sa', 'extension': 'jpg,png', 'aspect_ratio': 'wide', 'size': 'large',
+              'mature': 'false', 'page_size': '10'}
+    data, _ = http(OPENVERSE + '?' + urllib.parse.urlencode(params))
+    words = re.findall(r'[a-z]{4,}', query.lower())
+    out = []
+    for r in (json.loads(data).get('results') or []):
+        lic = OV_LICENSES.get(str(r.get('license') or '').lower())
+        if not lic or r.get('mature') or not r.get('thumbnail'):
+            continue
+        if lic.startswith('CC BY'):
+            lic += ' ' + str(r.get('license_version') or '').strip()
+        title = str(r.get('title') or '')
+        w, h = r.get('width') or 0, r.get('height') or 0
+        if TITLE_BAD.search(title) or w < 1000 or not h or not (1.25 <= w / h <= 2.3):
+            continue
+        if words and not any(x in (title + ' ' + ' '.join(t.get('name', '') for t in (r.get('tags') or []) if isinstance(t, dict))).lower() for x in words):
+            continue
+        out.append({'title': title, 'thumb': r['thumbnail'], 'w': None, 'h': None, 'page': r.get('foreign_landing_url') or '',
+                    'license': lic.strip(), 'artist': _shorten(_strip(str(r.get('creator') or '')), 60),
+                    'desc': '', 'site': str(r.get('source') or '').capitalize()})
+    return out
+
+
+def illustrations(items, key, gemini_call, log, site_dir, today, http=None, pause=1.0):
+    """Ajoute 'image' (kind = illustration) aux fiches qui n'en ont pas. Renvoie le nombre d'images gardées."""
+    http = http or _http
+    todo = [it for it in items if not it.get('image')]
+    if not todo:
+        return 0
+    queries = {}
+    for i in range(0, len(todo), 10):
+        chunk = todo[i:i + 10]
+        fiches = [{'ref': f'i{n + 1}', 'titre': it['title'], 'categorie': it.get('cat')} for n, it in enumerate(chunk)]
+        prompt = ILL_PROMPT.format(fiches='\n'.join(json.dumps(f, ensure_ascii=False) for f in fiches))
+        res, _m = gemini_call(prompt, key)
+        for f in (res or {}).get('images') or [] if isinstance(res, dict) else []:
+            idx = f.get('ref') if isinstance(f, dict) else None
+            if isinstance(idx, str) and idx[1:].isdigit() and 0 < int(idx[1:]) <= len(chunk):
+                qs = [q.strip() for q in (f.get('requetes') or []) if isinstance(q, str) and 3 <= len(q.strip()) <= 60][:2]
+                if qs:
+                    queries[id(chunk[int(idx[1:]) - 1])] = qs
+    img_dir = os.path.join(site_dir, 'img', today)
+    used, n_ok = set(), 0
+    wfetch = lambda url, **kw: http(url, accept='image/jpeg,image/png,*/*;q=0.5', limit=MAX_IMG_BYTES)
+    for it in todo:
+        found = None
+        for q in queries.get(id(it), []):
+            cands = []
+            for name, search in (('Commons', commons_search), ('Openverse', openverse_search)):
+                try:
+                    cands = [c for c in search(q, http) if c['thumb'] not in used]
+                except Exception as e:  # noqa: BLE001
+                    log(f'  · {name} : {type(e).__name__} {str(e)[:80]}')
+                    cands = []
+                time.sleep(pause)
+                if cands:
+                    break
+            for c in cands[:3]:
+                got = fetch_image(c['thumb'], wfetch, img_dir, re.sub(r'[^A-Za-z0-9_-]', '-', it['id'])[:60])
+                if got:
+                    found = (c, got)
+                    break
+            if found:
+                break
+        if found:
+            c, (path, w, h) = found
+            used.add(c['thumb'])
+            who = c['artist'] or 'auteur non indiqué'
+            it['image'] = {'src': os.path.relpath(path, site_dir).replace(os.sep, '/'), 'w': w, 'h': h, 'alt': it['title'], 'kind': 'illustration',
+                           'credit': f"{who}, {c['license']}, {c.get('site') or 'Wikimedia Commons'}", 'url': c['page']}
+            n_ok += 1
+    log(f'Illustrations libres de droits : {n_ok} sur {len(todo)} fiches.')
+    return n_ok
