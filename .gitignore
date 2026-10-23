@@ -4,3 +4,5 @@ site/audio/items/
 site/audio/audio.json
 __pycache__/
 *.tmp
+# Images libres de droits : refaites chaque matin avec l'édition.
+site/img/

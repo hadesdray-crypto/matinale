@@ -42,9 +42,9 @@ from zoneinfo import ZoneInfo
 HERE = os.path.dirname(os.path.abspath(__file__))
 PARIS = ZoneInfo('Europe/Paris')
 UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36 MatinaleDesSciences/1.0'
-CAT_IDS = ['espace', 'sante', 'cerveau', 'physique', 'terre', 'vivant', 'archeo', 'tech']
+CAT_IDS = ['espace', 'sante', 'cerveau', 'physique', 'terre', 'vivant', 'archeo', 'tech', 'inventions']
 CAT_LABEL = {'espace': 'Espace', 'sante': 'Santé', 'cerveau': 'Cerveau & psychologie', 'physique': 'Physique & chimie',
-             'terre': 'Terre & climat', 'vivant': 'Vivant & nature', 'archeo': 'Archéologie & paléo', 'tech': 'Tech & IA'}
+             'terre': 'Terre & climat', 'vivant': 'Vivant & nature', 'archeo': 'Archéologie & paléo', 'tech': 'Tech & IA', 'inventions': 'Inventions'}
 LEVEL_NAMES = {4: 'Établi', 3: 'Solide', 2: 'Préliminaire', 1: 'Hypothèse', 0: 'Non évalué'}
 MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
 JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
@@ -397,6 +397,9 @@ KW = {
                'grotte', 'art rupestre', 'inrap', 'necropole', 'en:archaeolog', 'en:archeolog', 'en:excavat', 'en:prehistor', 'en:neanderthal',
                'en:fossil', 'en:dinosaur', 'en:ancient', 'en:roman$', 'en:egypt', 'en:pharaoh', 'en:mummy', 'en:tomb$', 'en:burial',
                'en:skeleton', 'en:shipwreck', 'en:hominin'],
+    'inventions': ['invention', 'inventeur', 'inventrice', 'brevet', 'prototype', 'innovation', 'invente ', 'a invente', 'nouveau materiau',
+                   'nouvelle technologie', 'dispositif', 'en:invention', 'en:invent', 'en:patent', 'en:prototype', 'en:innovation', 'en:novel device',
+                   'en:new device', 'en:breakthrough', 'en:engineers develop', 'en:engineers built', 'en:engineers create'],
     'tech': ['intelligence artificielle', 'ia$', 'algorithme', 'robot', 'ordinateur', 'informatique', 'numerique', 'logiciel', 'puce$',
              'puces$', 'processeur', 'batterie', 'hydrogene', 'eolien', 'photovoltaique', 'panneaux solaires', 'voiture electrique',
              'technolog', 'cyber', 'drone', 'imprimante 3d', 'en:artificial intelligence', 'en:ai$', 'en:machine learning', 'en:algorithm',
@@ -700,13 +703,13 @@ def gemini_call(prompt, key):
 PROMPT = """Tu es le rédacteur scientifique de « La Matinale des Sciences », une revue de presse quotidienne en français, sérieuse et sans erreur, pour le grand public.
 
 Voici des ARTICLES publiés ces dernières heures par des sources reconnues, et des VIDEOS récentes de chaînes francophones.
-Choisis les {n} articles les plus importants qui annoncent un résultat scientifique nouveau (découverte, étude, mesure, observation, mission spatiale).
+Choisis les {n} articles les plus importants qui annoncent un résultat scientifique nouveau (découverte, étude, mesure, observation, mission spatiale) ou une invention technique nouvelle.
 Écarte l'opinion, la politique, l'économie, les produits commerciaux et les conseils pratiques. Au plus 3 articles par catégorie.
 Si deux articles parlent du même résultat, garde celui de la source la plus officielle.
 
 Pour chaque article retenu, écris en français clair :
 - "ref" : la référence de l'article (ex. "a12").
-- "categorie" : une valeur parmi espace, sante, cerveau, physique, terre, vivant, archeo, tech.
+- "categorie" : une valeur parmi espace, sante, cerveau, physique, terre, vivant, archeo, tech, inventions. La catégorie « inventions » regroupe les nouvelles inventions, prototypes et innovations techniques concrètes (matériaux, machines, robots, batteries, dispositifs) ; garde-en 2 ou 3 par édition quand il y en a de sérieuses.
 - "titre" : titre informatif de moins de 90 caractères, sans point d'exclamation.
 - "chapeau" : 1 ou 2 phrases qui disent l'essentiel.
 - "texte" : 2 ou 3 paragraphes courts (liste de chaînes).
@@ -873,6 +876,7 @@ def main():
     ap.add_argument('--force', action='store_true', help="remplace même une édition du jour rédigée à la main")
     ap.add_argument('--now', help='date et heure ISO, pour les essais')
     ap.add_argument('--no-link-check', action='store_true')
+    ap.add_argument('--no-detail', action='store_true', help="ne fabrique pas les fiches détaillées ni les images")
     a = ap.parse_args()
 
     now = dt.datetime.fromisoformat(a.now) if a.now else dt.datetime.now(dt.timezone.utc)
@@ -946,6 +950,13 @@ def main():
                     f"Sources lues : {len(STATS['feeds_ok'])} · muettes : {', '.join(STATS['feeds_ko']) or 'aucune'}"])
         return 0
 
+    if key and STATS['mode'] == 'gemini' and not a.no_detail:
+        try:
+            import detail
+            detail.enrich(items, key, fetch, gemini_call, (number_set, numbers_ok, sentences), log, STATS, a.site, today)
+        except Exception as e:  # noqa: BLE001 - la fiche détaillée est un plus : sans elle, la fiche garde son résumé
+            log(f'Fiches détaillées indisponibles ({type(e).__name__} : {str(e)[:120]}).')
+
     srcs_used = sorted({it['_src']['source'] for it in items})
     top = max(items, key=lambda it: (it['_src']['priority'], it['_src']['score'], bool(it['videos'])))
     for it in items:
@@ -993,7 +1004,8 @@ def main():
     summary_md([f"### Matinale du {today} — édition n° {number}", '', f"- **{n} fiches**, mode : {mode}",
                 f"- Sources lues : {len(STATS['feeds_ok'])} · muettes : {', '.join(STATS['feeds_ko']) or 'aucune'}",
                 f"- Liens morts écartés : {STATS['dropped_links']} · phrases de l'IA retirées (chiffre absent de la source) : {STATS['ai_sentences_removed']}",
-                f"- Vidéos francophones : {len(fr_videos)}"])
+                f"- Vidéos francophones : {len(fr_videos)}",
+                f"- Fiches détaillées : {STATS.get('details', 0)} (pages lisibles : {STATS.get('pages_read', 0)}) · images libres de droits : {STATS.get('images', 0)}"])
     return 0
 
 

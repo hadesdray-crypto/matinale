@@ -286,6 +286,138 @@
    "kind": "etude",
    "priority": 2,
    "verifie": "2026-10-21"
+  },
+  {
+   "name": "Interesting Engineering",
+   "feed": "https://interestingengineering.com/feed",
+   "site": "https://interestingengineering.com",
+   "lang": "en",
+   "kind": "presse",
+   "priority": 1,
+   "cat": "inventions",
+   "fixed": true,
+   "verifie": "2026-10-23"
+  },
+  {
+   "name": "New Atlas",
+   "feed": "https://newatlas.com/index.rss",
+   "site": "https://newatlas.com",
+   "lang": "en",
+   "kind": "presse",
+   "priority": 1,
+   "cat": "inventions",
+   "fixed": true,
+   "verifie": "2026-10-23"
+  },
+  {
+   "name": "TechXplore",
+   "feed": "https://techxplore.com/rss-feed/",
+   "site": "https://techxplore.com",
+   "lang": "en",
+   "kind": "presse",
+   "priority": 2,
+   "cat": "inventions",
+   "fixed": true,
+   "verifie": "2026-10-23"
+  },
+  {
+   "name": "IEEE Spectrum",
+   "feed": "https://spectrum.ieee.org/feeds/feed.rss",
+   "site": "https://spectrum.ieee.org",
+   "lang": "en",
+   "kind": "presse",
+   "priority": 2,
+   "cat": "inventions",
+   "fixed": true,
+   "verifie": "2026-10-23"
+  },
+  {
+   "name": "MIT Technology Review",
+   "feed": "https://www.technologyreview.com/feed/",
+   "site": "https://www.technologyreview.com",
+   "lang": "en",
+   "kind": "presse",
+   "priority": 2,
+   "cat": "inventions",
+   "fixed": true,
+   "verifie": "2026-10-23"
+  },
+  {
+   "name": "Sciences et Avenir (high-tech)",
+   "feed": "https://www.sciencesetavenir.fr/high-tech/rss.xml",
+   "site": "https://www.sciencesetavenir.fr",
+   "lang": "fr",
+   "kind": "presse",
+   "priority": 2,
+   "cat": "inventions",
+   "fixed": true,
+   "verifie": "2026-10-23"
+  },
+  {
+   "name": "ScienceDaily (ingénierie)",
+   "feed": "https://www.sciencedaily.com/rss/matter_energy/engineering.xml",
+   "site": "https://www.sciencedaily.com",
+   "lang": "en",
+   "kind": "presse",
+   "priority": 1,
+   "cat": "inventions",
+   "fixed": true,
+   "verifie": "2026-10-23"
+  },
+  {
+   "name": "ScienceDaily (robotique)",
+   "feed": "https://www.sciencedaily.com/rss/computers_math/robotics.xml",
+   "site": "https://www.sciencedaily.com",
+   "lang": "en",
+   "kind": "presse",
+   "priority": 1,
+   "cat": "inventions",
+   "fixed": true,
+   "verifie": "2026-10-23"
+  },
+  {
+   "name": "NASA (technologie)",
+   "feed": "https://www.nasa.gov/technology/feed/",
+   "site": "https://www.nasa.gov",
+   "lang": "en",
+   "kind": "officiel",
+   "priority": 3,
+   "cat": "inventions",
+   "fixed": true,
+   "verifie": "2026-10-23"
+  },
+  {
+   "name": "ESA (technologie)",
+   "feed": "https://www.esa.int/rssfeed/Our_Activities/Space_Engineering_Technology",
+   "site": "https://www.esa.int",
+   "lang": "en",
+   "kind": "officiel",
+   "priority": 3,
+   "cat": "inventions",
+   "fixed": true,
+   "verifie": "2026-10-23"
+  },
+  {
+   "name": "INPI",
+   "feed": "https://www.inpi.fr/rss.xml",
+   "site": "https://www.inpi.fr",
+   "lang": "fr",
+   "kind": "officiel",
+   "priority": 2,
+   "cat": "inventions",
+   "fixed": true,
+   "verifie": "2026-10-23"
+  },
+  {
+   "name": "OMPI (brevets)",
+   "feed": "https://www.wipo.int/pressroom/en/rss.xml",
+   "site": "https://www.wipo.int",
+   "lang": "en",
+   "kind": "officiel",
+   "priority": 2,
+   "cat": "inventions",
+   "fixed": true,
+   "verifie": "2026-10-23"
   }
  ]
 }

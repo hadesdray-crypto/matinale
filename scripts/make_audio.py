@@ -10,7 +10,7 @@ Les chapitres sont construits exactement comme dans la page (même ordre, mêmes
 """
 import argparse, json, os, re, subprocess, sys, tempfile, wave, datetime
 
-CAT_IDS = ['espace', 'sante', 'cerveau', 'physique', 'terre', 'vivant', 'archeo', 'tech']
+CAT_IDS = ['espace', 'sante', 'cerveau', 'physique', 'terre', 'vivant', 'archeo', 'tech', 'inventions']
 LEVELS = {4: 'Établi', 3: 'Solide', 2: 'Préliminaire', 1: 'Hypothèse', 0: 'Non évalué'}
 MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
 JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']

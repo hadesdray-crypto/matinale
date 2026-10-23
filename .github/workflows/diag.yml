@@ -1,4 +1,4 @@
-# Contrôle ponctuel des adresses de sources (lancement manuel uniquement). Écrit le rapport sur la branche « diag ».
+# Contrôle ponctuel (lancement manuel uniquement). Écrit le rapport sur la branche « diag ».
 name: Contrôle des sources
 on:
   workflow_dispatch:
@@ -10,12 +10,12 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
-      - run: python3 scripts/diag_sources.py scripts/diag_urls.json
+      - run: python3 scripts/diag_articles.py
       - name: Publier le rapport sur la branche diag
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -q --orphan diag
           git rm -rq --cached . ; git add diag
-          git commit -q -m "Rapport de contrôle des sources"
+          git commit -q -m "Rapport de contrôle"
           git push -q -f origin diag
