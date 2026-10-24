@@ -82,6 +82,11 @@ def speechify(s):
     return re.sub(r'\s+', ' ', s).strip()
 
 
+# Question de fin du flash : l'application ouvre ensuite le micro (même phrase que FLASH_ASK dans site/index.html).
+FLASH_ASK = ("C'est la fin du flash. Tu veux approfondir un sujet ? Dis son numéro, par exemple : sujet cinq, "
+             "ou touche-le sur l'écran. Sinon, dis : non merci.")
+
+
 def chapters_for(ed, mode):
     items = [dict(it) for it in arr(ed.get('items')) if isinstance(it, dict) and it.get('id') and it.get('title')]
     for it in items:
@@ -93,13 +98,13 @@ def chapters_for(ed, mode):
     ch = []
     if mode == 'flash':
         ch.append({'title': 'Ouverture', 'text': pd.get('flashIntro') or f'Bonjour, voici le flash de la Matinale des sciences du {dt}.'})
-        for it in items:
-            ch.append({'key': it['id'], 'title': it['title'], 'text': it.get('flash') or it.get('dek') or it['title']})
-        ch.append({'title': 'Clôture', 'text': pd.get('flashOutro') or "Les détails, les vidéos et les sources sont dans l'application. Belle journée !"})
+        for n, it in enumerate(items, 1):   # chaque sujet est annoncé avec son numéro, le même que dans l'application
+            ch.append({'key': it['id'], 'title': it['title'], 'text': f'Sujet {n}. ' + (it.get('flash') or it.get('dek') or it['title'])})
+        ch.append({'title': 'Clôture', 'text': FLASH_ASK})
     else:
         ch.append({'title': 'Ouverture', 'text': pd.get('intro') or f'Bonjour et bienvenue dans la Matinale des sciences du {dt}.'})
-        for it in items:
-            ch.append({'key': it['id'], 'title': it['title'], 'text': item_audio(it)})
+        for n, it in enumerate(items, 1):
+            ch.append({'key': it['id'], 'title': it['title'], 'text': f'Sujet {n}. ' + item_audio(it)})
         c = ed.get('concept') or {}
         if c.get('title'):
             ch.append({'title': 'Le concept du jour', 'text': concept_audio(c)})

@@ -12,6 +12,11 @@ on:
       - "site/data/bases.json"
       - "scripts/notions_audio.py"
   workflow_dispatch:
+    inputs:
+      refaire_audio:
+        description: "Refaire l'audio du jour (flash, édition complète, fiches) sans refaire l'édition"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -25,7 +30,7 @@ concurrency:
 jobs:
   site:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v5
 
@@ -50,8 +55,22 @@ jobs:
             git commit -q -m "Audio des notions" && git pull -q --rebase origin main && git push -q || echo "::warning::Audio des notions publié mais pas sauvegardé : il sera refait au prochain passage."
           fi
 
+      - name: Refaire l'audio du jour avec la voix française (sans refaire l'édition)
+        if: ${{ inputs.refaire_audio }}
+        timeout-minutes: 25
+        continue-on-error: true
+        run: |
+          . scripts/voice.sh
+          if [ "$VOICE_OK" = 1 ] && python3 scripts/make_audio.py --edition site/data/latest.json --tts "$TTS" --voice "$VOICE_DIR" --out site/audio; then
+            echo "Audio du jour refait."
+          else
+            rm -f site/audio/audio.json site/audio/*.mp3; rm -rf site/audio/items
+            echo "::warning::Audio non refait : celui déjà en ligne est repris."
+          fi
+
       - name: Reprendre l'audio du jour déjà en ligne
         run: |
+          if [ -f site/audio/audio.json ]; then echo "Audio du jour déjà prêt."; exit 0; fi
           base="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
           mkdir -p site/audio
           if curl -fsSL --retry 3 -o site/audio/audio.json "$base/audio/audio.json" \
@@ -71,6 +90,8 @@ jobs:
           base = sys.argv[1].rstrip('/')
           def get(rel):
               dest = os.path.join('site', rel)
+              if os.path.exists(dest):   # déjà là (audio refait à l'instant) : on garde
+                  return True
               os.makedirs(os.path.dirname(dest), exist_ok=True)
               try:
                   with urllib.request.urlopen(base + '/' + urllib.parse.quote(rel), timeout=60) as r, open(dest, 'wb') as f:
