@@ -1,14 +1,15 @@
 Liens de « Comprendre » : 56 valides sur 56.
 Lecture de 42 sources (avec Gemini)…
-Sources lues : 42 ; muettes : 0 []
-Articles retenus après tri : 409
+Sources lues : 41 ; muettes : 1 ['arXiv astrophysique (prépublication)']
+Articles retenus après tri : 207
 Vidéos francophones récentes : 0
+  · Gemini gemini-flash-latest : TimeoutError The read operation timed out
 Fiches détaillées : 14 pages lisibles sur 20 fiches.
-  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting ',' delimiter: line 1 column 7863 (char 7862)
-  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting ',' delimiter: line 1 column 9268 (char 9267)
-Fiches détaillées écrites : 12.
-Images libres de droits gardées : 2.
-  · Openverse : TimeoutError The read operation timed out
-Illustrations libres de droits : 11 sur 18 fiches (16 image(s) écartée(s) par le contrôle de Gemini).
-Édition n° 6 du 2026-10-24 : 20 fiches, mode Gemini (gemini-flash-latest), 0 vidéos francophones.
-Demandes à l'IA : gemini-flash-latest 1, gemini-flash-lite-latest 34, gemini-3.5-flash-lite 2
+  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting ',' delimiter: line 1 column 7402 (char 7401)
+  · Gemini gemini-3.5-flash-lite : JSONDecodeError Expecting ',' delimiter: line 1 column 8180 (char 8179)
+  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting ',' delimiter: line 1 column 8483 (char 8482)
+Fiches détaillées écrites : 10.
+Images libres de droits gardées : 1.
+Illustrations libres de droits : 10 sur 19 fiches (21 image(s) écartée(s) par le contrôle de Gemini).
+Édition n° 7 du 2026-10-25 : 20 fiches, mode Gemini (gemini-3.8-flash), 0 vidéos francophones.
+Demandes à l'IA : gemini-flash-latest 1, gemini-3.8-flash 1, gemini-flash-lite-latest 38, gemini-3.5-flash-lite 2
