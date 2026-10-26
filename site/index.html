@@ -1316,8 +1316,29 @@ function buildChapters(mode, ed, cat){
   }
   return ch.filter(c => c.text && String(c.text).trim());
 }
+/* Prononciation : les sigles sont épelés ou lus comme des mots, selon l'usage. Pour corriger un sigle, ajouter une ligne dans SIGLES. */
+const LETTRES = { A:'a', B:'bé', C:'cé', D:'dé', E:'eu', F:'effe', G:'gé', H:'ache', I:'i', J:'ji', K:'ka', L:'elle', M:'emme', N:'enne', O:'o', P:'pé', Q:'ku', R:'erre', S:'esse', T:'té', U:'u', V:'vé', W:'double vé', X:'ix', Y:'i grec', Z:'zède' };
+const SIGLES = {
+  ADN:'a dé enne', ARN:'a erre enne', IA:'i a', AI:'é aïe', QI:'ku i', UE:'u eu', UK:'you kay', TV:'té vé', TU:'té u', FR:'France',
+  NASA:'nasa', ESA:'ésa', CNES:'cnèsse', GIEC:'guiéque', OTAN:'otan', ONU:'onu', UNESCO:'unesco', COVID:'covide', CHU:'chu', WASP:'wasp', TESS:'tesse', GPS:'gé pé esse',
+  COP:'cop', URSS:'u erre esse esse', SNCF:'esse enne cé effe', OMS:'o emme esse', PIB:'pé i bé', CNRS:'cé enne erre esse', INSERM:'inserm', CEA:'cé eu a', ESO:'é esse o', IRL:'i erre elle', FC:'effe cé', PSG:'pé esse gé', NFL:'enne effe elle'
+};
+const EXCLUS = new Set(['EN','DA','HS','CU','PT','RN','II','III','IV','VI','VII','VIII','IX','XI','XII','MMX','MAGA','VOUS','FRANCE','TRIUMPH','BROADEN','RMS','OSI','SAF','GLP','GIP']);
+function epeler(m){ return m.split('').map(c => LETTRES[c] || c).join(' '); }
+function sigleOral(m){
+  if (SIGLES[m]) return SIGLES[m];
+  const nb = m.match(/^([A-Z]{2,5})(\d+)$/); if (nb) return (SIGLES[nb[1]] || epeler(nb[1])) + ' ' + nb[2];
+  if (EXCLUS.has(m)) return m;
+  return epeler(m);
+}
 function speechify(s){
-  return String(s || '')
+  s = String(s || '');
+  const titreMaj = /\b[A-ZÀ-Ý]{2,}(?:\s+[A-ZÀ-Ý]{2,}\b){3,}/.test(s); /* phrase en capitales : on ne l'épelle pas */
+  return (titreMaj ? s : s.replace(/(^|[^A-Za-zÀ-ÿ0-9-])([A-Z]{2,5}\d{0,3})(?![A-Za-zÀ-ÿ0-9])/g, (x, p, m) => p + sigleOral(m)))
+    .replace(/(\d)\s?°C/g, '$1 degrés Celsius').replace(/(\d)\s?°/g, '$1 degrés')
+    .replace(/(\d)\s?%/g, '$1 pour cent').replace(/(\d)\s?€/g, '$1 euros')
+    .replace(/(\d)\s?km(?![\/²A-Za-z])/g, '$1 kilomètres').replace(/(\d)\s?kg\b/g, '$1 kilogrammes')
+    .replace(/\b1er\b/g, 'premier').replace(/\b1re\b/g, 'première')
     .replace(/≈\s?/g, 'environ ').replace(/×\s?/g, 'fois ').replace(/&/g, ' et ')
     .replace(/km²/g, ' kilomètres carrés').replace(/km\/h/g, ' kilomètres à l’heure')
     .replace(/10⁻¹⁵/g, 'dix puissance moins quinze')
