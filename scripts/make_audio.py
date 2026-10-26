@@ -52,8 +52,43 @@ def concept_audio(c):
     return c.get('audio') or ' '.join(['Le concept du jour : ' + c['title'] + '.'] + arr(c.get('text')))
 
 
+LETTRES = {'A': 'a', 'B': 'bé', 'C': 'cé', 'D': 'dé', 'E': 'eu', 'F': 'effe', 'G': 'gé', 'H': 'ache', 'I': 'i', 'J': 'ji', 'K': 'ka',
+           'L': 'elle', 'M': 'emme', 'N': 'enne', 'O': 'o', 'P': 'pé', 'Q': 'ku', 'R': 'erre', 'S': 'esse', 'T': 'té', 'U': 'u', 'V': 'vé',
+           'W': 'double vé', 'X': 'ix', 'Y': 'i grec', 'Z': 'zède'}
+# Mêmes règles que dans la page (site/index.html) : pour corriger un sigle, modifier les deux listes.
+SIGLES = {
+    'ADN': 'a dé enne', 'ARN': 'a erre enne', 'IA': 'i a', 'AI': 'é aïe', 'QI': 'ku i', 'UE': 'u eu', 'UK': 'you kay', 'TV': 'té vé',
+    'TU': 'té u', 'FR': 'France', 'NASA': 'nasa', 'ESA': 'ésa', 'CNES': 'cnèsse', 'GIEC': 'guiéque', 'OTAN': 'otan', 'ONU': 'onu',
+    'UNESCO': 'unesco', 'COVID': 'covide', 'CHU': 'chu', 'WASP': 'wasp', 'TESS': 'tesse', 'GPS': 'gé pé esse', 'COP': 'cop',
+    'URSS': 'u erre esse esse', 'SNCF': 'esse enne cé effe', 'OMS': 'o emme esse', 'PIB': 'pé i bé', 'CNRS': 'cé enne erre esse',
+    'INSERM': 'inserm', 'CEA': 'cé eu a', 'ESO': 'é esse o', 'IRL': 'i erre elle', 'FC': 'effe cé', 'PSG': 'pé esse gé', 'NFL': 'enne effe elle',
+}
+EXCLUS = {'EN', 'DA', 'HS', 'CU', 'PT', 'RN', 'II', 'III', 'IV', 'VI', 'VII', 'VIII', 'IX', 'XI', 'XII', 'MMX', 'MAGA', 'VOUS', 'FRANCE',
+          'TRIUMPH', 'BROADEN', 'RMS', 'OSI', 'SAF', 'GLP', 'GIP'}
+
+
+def sigle_oral(m):
+    if m in SIGLES:
+        return SIGLES[m]
+    nb = re.match(r'^([A-Z]{2,5})(\d+)$', m)
+    if nb:
+        return (SIGLES.get(nb.group(1)) or ' '.join(LETTRES.get(c, c) for c in nb.group(1))) + ' ' + nb.group(2)
+    if m in EXCLUS:
+        return m
+    return ' '.join(LETTRES.get(c, c) for c in m)
+
+
 def speechify(s):
     s = str(s or '')
+    if not re.search(r'\b[A-ZÀ-Ý]{2,}(?:\s+[A-ZÀ-Ý]{2,}\b){3,}', s):  # une phrase en capitales n'est pas épelée
+        s = re.sub(r'(^|[^A-Za-zÀ-ÿ0-9-])([A-Z]{2,5}\d{0,3})(?![A-Za-zÀ-ÿ0-9])', lambda x: x.group(1) + sigle_oral(x.group(2)), s)
+    s = re.sub(r'(\d)\s?°C', r'\1 degrés Celsius', s)
+    s = re.sub(r'(\d)\s?°', r'\1 degrés', s)
+    s = re.sub(r'(\d)\s?%', r'\1 pour cent', s)
+    s = re.sub(r'(\d)\s?€', r'\1 euros', s)
+    s = re.sub(r'(\d)\s?km(?![/²A-Za-z])', r'\1 kilomètres', s)
+    s = re.sub(r'(\d)\s?kg\b', r'\1 kilogrammes', s)
+    s = re.sub(r'\b1er\b', 'premier', s).replace('1re', 'première')
     s = re.sub(r'≈\s?', 'environ ', s)
     s = re.sub(r'×\s?', 'fois ', s)
     s = s.replace('&', ' et ').replace('km²', ' kilomètres carrés').replace('km/h', ' kilomètres à l’heure')
