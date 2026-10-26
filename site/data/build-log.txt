@@ -1,15 +1,13 @@
 Liens de « Comprendre » : 56 valides sur 56.
 Lecture de 42 sources (avec Gemini)…
 Sources lues : 41 ; muettes : 1 ['arXiv astrophysique (prépublication)']
-Articles retenus après tri : 207
+Articles retenus après tri : 139
 Vidéos francophones récentes : 0
   · Gemini gemini-flash-latest : TimeoutError The read operation timed out
-Fiches détaillées : 14 pages lisibles sur 20 fiches.
-  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting ',' delimiter: line 1 column 7402 (char 7401)
-  · Gemini gemini-3.5-flash-lite : JSONDecodeError Expecting ',' delimiter: line 1 column 8180 (char 8179)
-  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting ',' delimiter: line 1 column 8483 (char 8482)
+  · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
+Fiches détaillées : 10 pages lisibles sur 16 fiches.
+  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting ',' delimiter: line 1 column 6456 (char 6455)
 Fiches détaillées écrites : 10.
-Images libres de droits gardées : 1.
-Illustrations libres de droits : 10 sur 19 fiches (21 image(s) écartée(s) par le contrôle de Gemini).
-Édition n° 7 du 2026-10-25 : 20 fiches, mode Gemini (gemini-3.8-flash), 0 vidéos francophones.
-Demandes à l'IA : gemini-flash-latest 1, gemini-3.8-flash 1, gemini-flash-lite-latest 38, gemini-3.5-flash-lite 2
+Illustrations libres de droits : 13 sur 16 fiches (7 image(s) écartée(s) par le contrôle de Gemini).
+Édition n° 8 du 2026-10-26 : 16 fiches, mode Gemini (gemini-flash-lite-latest), 0 vidéos francophones.
+Demandes à l'IA : gemini-flash-latest 1, gemini-3.8-flash 1, gemini-flash-lite-latest 27, gemini-3.5-flash-lite 1
