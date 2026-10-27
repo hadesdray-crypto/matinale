@@ -517,6 +517,8 @@ html[data-tsize="1"]{--ts:1.12} html[data-tsize="2"]{--ts:1.26} html[data-tsize=
 .mt-ev{margin:0;display:flex;gap:6px;align-items:flex-start;font-size:14.5px;line-height:1.4;color:var(--ink)}
 .mt-ev .ic{flex:none;margin-top:3px;color:var(--warn)}
 .mt-ok{margin:0;display:flex;gap:6px;align-items:center;font-size:14.5px;color:var(--l4)}
+.mt-state{margin:2px 0 0;display:flex;gap:7px;align-items:center;font-family:var(--display);font-weight:700;font-size:16px}
+.mt-state.ok{color:var(--l4)} .mt-state.ko{color:var(--warn)}
 .mt-src{padding:1px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-family:var(--mono);font-size:11px;font-weight:500}
 .mt-chips{display:flex;flex-wrap:wrap;gap:8px}
 .mt-watch{margin:0;display:flex;gap:6px;align-items:center;font-size:14px;color:var(--accent-ink)}
@@ -2462,27 +2464,33 @@ async function trajet(a, b){
   res.at = Date.now();
   return res;
 }
-function trajetPhrases(res, opts){
-  opts = opts || {}; const p = [], r = res.r;
-  if (r && r.sansTrafic){
-    p.push('Trajet : ' + Math.round(r.km) + ' kilomètres, environ ' + r.min + ' minutes sans compter le trafic.');
-    if (res.err === 'cle') p.push('La clé TomTom ne marche pas : vérifie-la dans les réglages.');
-    else if (!MPget().tomtom && !opts.court) p.push('Pour le trafic en direct, ajoute la clé TomTom dans les réglages.');
-  } else if (r){
-    let s = 'Trajet : ' + Math.round(r.km) + ' kilomètres, ' + r.min + ' minutes avec le trafic actuel';
-    if (r.usual != null && r.min - r.usual >= 3) s += ', ' + (r.min - r.usual) + ' de plus que d\'habitude'; else if (r.usual != null && r.usual - r.min >= 3) s += ', un peu mieux que d\'habitude';
-    p.push(s + '.');
-    const j = r.jams.filter(x => x.min >= 2);
-    if (j.length === 1) p.push(cap(j[0].cat) + ' sur le trajet : ' + j[0].min + ' minutes perdues.');
-    else if (j.length > 1) p.push(j.length + ' ralentissements sur le trajet : ' + j.reduce((s2, x) => s2 + x.min, 0) + ' minutes perdues en tout.');
-  } else if (!MPget().tomtom) { if (!opts.court) p.push('Pour le temps de trajet en direct, ajoute la clé TomTom dans les réglages.'); }
-  else if (res.err === 'cle') p.push('La clé TomTom ne marche pas : vérifie-la dans les réglages.');
-  else if (!online()) p.push('Pas de réseau : je ne peux pas vérifier la route.');
-  else p.push('Je n\'arrive pas à calculer le temps de trajet pour l\'instant.');
-  const ev = res.ev.slice(0, 2);
-  if (ev.length) p.push('Bison Futé signale : ' + ev.map(bfPhrase).join(' ; ') + '.');
-  else if (r || res.ev) p.push(r && !r.jams.some(x => x.min >= 2) ? 'Rien de signalé sur la route.' : '');
-  return p.filter(Boolean);
+/* État de la route : y a-t-il quelque chose qui change le temps de trajet habituel ? */
+function routeEtat(res){
+  const r = res.r, causes = [];
+  let retard = null;
+  if (r && !r.sansTrafic){
+    const d = r.usual != null ? r.min - r.usual : r.jams.reduce((x, j) => x + j.min, 0);
+    if (d >= 3) retard = d;
+    r.jams.filter(j => j.min >= 2).forEach(j => causes.push(cap(j.cat) + ' : +' + j.min + ' min'));
+  }
+  res.ev.slice(0, 3).forEach(e => causes.push(bfPhrase(e)));
+  /* Sans trafic en direct, une marge selon ce que signale Bison Futé (estimation). */
+  const marge = retard == null && res.ev.length ? (res.ev.some(e => /accident|bouchon|arrêt|coupée|fermée|obstacle/.test(e.t)) ? 15 : 5) : 0;
+  return { probleme: !!(retard || causes.length), retard, marge, causes };
+}
+function trajetPhrases(res){
+  const p = [], r = res.r, E = routeEtat(res);
+  if (!r && !res.ev.length){
+    p.push(!online() ? 'Pas de réseau : je ne peux pas vérifier la route.' : res.err === 'cle' ? 'La clé TomTom ne marche pas : vérifie-la dans les réglages.' : 'Je n\'ai pas d\'information sur la route pour l\'instant.');
+    return p;
+  }
+  if (!E.probleme){ p.push('Route normale' + (r ? ', environ ' + r.min + ' minutes' : '') + ' : rien de signalé, sauf imprévu en route.'); return p; }
+  if (E.retard) p.push('Attention : ' + E.retard + ' minutes de plus que d\'habitude, ' + r.min + ' minutes en tout.');
+  const jams = r && !r.sansTrafic ? r.jams.filter(j => j.min >= 2) : [];
+  if (jams.length) p.push(jams.length === 1 ? cap(jams[0].cat) + ' sur le trajet.' : jams.length + ' ralentissements sur le trajet.');
+  if (res.ev.length) p.push((E.retard ? '' : 'Attention : ') + 'Bison Futé signale ' + res.ev.slice(0, 2).map(e => bfPhrase(e).replace(/^./, c => c.toLowerCase())).join(' ; ') + '.');
+  if (!E.retard && E.marge) p.push('Prévois environ ' + E.marge + ' minutes de plus.');
+  return p;
 }
 
 /* ---------- Où je vais aujourd'hui : bouton du matin, voix, ou planning de Memo-SSIAP (lu dans le téléphone) ---------- */
@@ -2518,8 +2526,8 @@ async function routeDuJour(force, ask){
   if (kmBetween(a, L) < 0.4){ M.rt = { job, L, surPlace:true, at:Date.now() }; return M.rt; }
   const res = await trajet(a, L);
   const arr = atToday(job.heure), wx = M.wx;
-  let pars = null;
-  if (arr && res.r && res.r.min != null) pars = new Date(arr.getTime() - (res.r.min + (p.marge || 0) + (wx ? wx.buffer || 0 : 0)) * 60000);
+  let pars = null; const E = routeEtat(res);
+  if (arr && res.r && res.r.min != null) pars = new Date(arr.getTime() - (res.r.min + (p.marge || 0) + (wx ? wx.buffer || 0 : 0) + E.marge) * 60000);
   M.rt = Object.assign({ job, L, a, pars }, res);
   return M.rt;
 }
@@ -2535,9 +2543,9 @@ function routePhrases(rt){
   const arr = rt.job && atToday(rt.job.heure);
   if (arr && arr.getTime() < Date.now()) out.push('L\'heure de prise de poste est déjà passée.');
   else if (rt.pars){
-    const wx = S.matin && S.matin.wx, buf = wx && wx.buffer ? wx.buffer : 0;
-    if (rt.pars.getTime() < Date.now()) out.push('Tu es un peu juste : en partant maintenant, arrivée vers ' + hSay(new Date(Date.now() + rt.r.min * 60000)) + '.');
-    else out.push('Pour être sur place ' + (p.marge || 0) + ' minutes avant' + (buf ? ', avec ' + buf + ' minutes de plus pour la météo' : '') + ', pars avant ' + hSay(rt.pars) + (rt.r && rt.r.sansTrafic ? ', sans compter le trafic' : '') + '.');
+    const wx = S.matin && S.matin.wx, buf = wx && wx.buffer ? wx.buffer : 0, E = routeEtat(rt);
+    if (rt.pars.getTime() < Date.now()) out.push('Tu es un peu juste : en partant maintenant, arrivée vers ' + hSay(new Date(Date.now() + (rt.r.min + E.marge) * 60000)) + '.');
+    else if (E.probleme || buf) out.push((buf ? 'Avec la météo, compte ' + buf + ' minutes de plus. ' : '') + 'Pars avant ' + hSay(rt.pars) + '.');   /* route normale : pas besoin d'en dire plus */
   }
   return out;
 }
@@ -2566,13 +2574,14 @@ function matinInner(){
   else {
     const L = p.lieux.find(l => l.id === job.lieu);
     h += '<p class="mt-q">' + icon('car', 16) + ' ' + esc(L ? L.nom : (job.lieuTxt || '?')) + (job.heure ? ' · prise de poste ' + esc(hhmmDisp(job.heure)) : '') + (job.src === 'memo' ? ' <span class="mt-src">planning</span>' : '') + ' <button class="lnk" data-action="m-jour-change">Changer</button></p>';
-    if (rt && rt.r){
-      h += '<p class="mt-big">' + rt.r.min + ' min · ' + String(rt.r.km).replace('.', ',') + ' km' + (rt.r.sansTrafic ? ' <small class="mt-src">sans trafic</small>' : '') + (rt.r.usual != null && rt.r.min - rt.r.usual >= 3 ? ' <small class="mt-plus">+' + (rt.r.min - rt.r.usual) + ' min</small>' : '') + (rt.pars ? ' · <b>pars avant ' + esc(hDisp(rt.pars)) + '</b>' : '') + '</p>';
-      rt.r.jams.filter(x => x.min >= 2).slice(0, 2).forEach(x => { h += '<p class="mt-ev">' + icon('alert', 14) + ' ' + esc(cap(x.cat)) + ' : +' + x.min + ' min</p>'; });
+    if (rt && (rt.r || (rt.ev && rt.ev.length))){
+      const E = routeEtat(rt);
+      h += '<p class="mt-state ' + (E.probleme ? 'ko' : 'ok') + '">' + icon(E.probleme ? 'alert' : 'check', 16) + ' ' + (E.probleme ? (E.retard ? 'Attention : +' + E.retard + ' min' : 'Attention sur la route' + (E.marge ? ' (prévois +' + E.marge + ' min)' : '')) : 'Route normale, rien de signalé') + '</p>';
+      if (rt.r) h += '<p class="mt-big">' + rt.r.min + ' min' + (rt.r.sansTrafic ? ' <small class="mt-src">hors trafic</small>' : '') + (rt.pars ? ' · <b>pars avant ' + esc(hDisp(rt.pars)) + '</b>' : '') + '</p>';
+      if (rt.r && !rt.r.sansTrafic) rt.r.jams.filter(x => x.min >= 2).slice(0, 2).forEach(x => { h += '<p class="mt-ev">' + icon('alert', 14) + ' ' + esc(cap(x.cat)) + ' : +' + x.min + ' min</p>'; });
     }
     if (rt && rt.r && rt.r.sansTrafic && !MPget().tomtom) h += '<p class="mt-sub">Trafic en direct : ajoute la clé TomTom (gratuite) dans les réglages, ou touche « Y aller ».</p>';
     if (rt && rt.ev) rt.ev.slice(0, 3).forEach(e => { h += '<p class="mt-ev">' + icon('alert', 14) + ' ' + esc(bfPhrase(e)) + (e.d ? ' — ' + esc(e.d.slice(0, 110)) : '') + ' <span class="mt-src">Bison Futé</span></p>'; });
-    if (rt && rt.ev && !rt.ev.length && rt.r && !rt.r.jams.some(x => x.min >= 2)) h += '<p class="mt-ok">' + icon('check', 14) + ' Rien de signalé sur la route.</p>';
     if (rt && rt.manque) h += '<p class="mt-sub">« ' + esc(rt.job.lieuTxt) + ' » n\'est pas dans tes lieux : ajoute-le dans les réglages.</p>';
     if (L) h += '<div class="mt-chips">' + yAllerBtns(L) + '</div>';
   }
