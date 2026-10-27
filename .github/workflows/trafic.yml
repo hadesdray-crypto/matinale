@@ -1,0 +1,34 @@
+# Matinale des Sciences : relevé des événements routiers Bison Futé (routes nationales), toutes les 20 minutes de 5 h à 22 h.
+# Le résultat (trafic.json, quelques dizaines de Ko) est publié seul sur la branche « trafic » : l'appli le lit directement,
+# sans refaire le site. Données publiques (Licence Ouverte 2.0), aucune donnée personnelle.
+name: Trafic (Bison Futé)
+
+on:
+  schedule:
+    - cron: "*/20 3-21 * * *"   # en heure UTC : couvre 5 h à 22 h à Paris en hiver, 5 h à 23 h en été
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trafic
+  cancel-in-progress: true
+
+jobs:
+  releve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: scripts
+      - name: Relever les événements
+        run: python3 scripts/trafic.py --out out
+      - name: Publier sur la branche trafic (un seul fichier, sans historique)
+        run: |
+          cd out
+          git init -q && git checkout -q -b trafic
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add trafic.json && git commit -q -m "Trafic $(TZ=Europe/Paris date '+%F %H:%M')"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" trafic
