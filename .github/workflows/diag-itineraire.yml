@@ -1,0 +1,16 @@
+# Contrôle ponctuel : calcul d'itinéraire gratuit de l'IGN (Géoplateforme), sans clé.
+name: Diagnostic itinéraire IGN
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: |
+          mkdir -p keep
+          U='https://data.geopf.fr/navigation/itineraire?resource=bdtopo-osrm&start=1.165,49.216&end=1.151,49.024&profile=car&optimization=fastest&getSteps=false&getBbox=false&distanceUnit=kilometer&timeUnit=minute&geometryFormat=geojson'
+          { curl -sS -m 30 -D - -o r.json -H "Origin: https://hadesdray-crypto.github.io" "$U" | grep -iE '^(HTTP|access-control-allow-origin|content-type)'; head -c 800 r.json; echo; python3 -c "import json;d=json.load(open('r.json'));print('distance',d.get('distance'),d.get('distanceUnit'),'durée',d.get('duration'),d.get('timeUnit'),'points',len((d.get('geometry') or {}).get('coordinates') or []))"; } > keep/itineraire.txt 2>&1
+          cat keep/itineraire.txt
+          cd keep && git init -q && git checkout -q -b diag && git config user.name "github-actions[bot]" && git config user.email "41898282+github-actions[bot]@users.noreply.github.com" && git add -A && git commit -q -m diag && git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" diag
