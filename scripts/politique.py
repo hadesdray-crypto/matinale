@@ -23,8 +23,9 @@ from build import (JUNK, PARIS, STATS, clean_url, fetch, gemini_call, link_statu
                    number_set, numbers_ok, one_line, read_source, s_, sentences, shorten, similar, slugify, summary_md, write_json)
 
 ZONES = ('france', 'monde')
-OFF_TOPIC = re.compile(r"\b(football|ligue 1|ligue des champions|rugby|tennis|jeux olympiques|match|people|horoscope|recette|meteo|loto"
-                       r"|bons? plans?|promo|soldes|serie tele|telerealite|cinema|box-office|quiz)\b")
+OFF_TOPIC = re.compile(r"\b(football|footballeur|ligue 1|ligue des champions|coupe du monde|euro 20\d\d|ballon d or|mbappe|psg|rugby|tennis|basket|nba|cyclisme|tour de france"
+                       r"|formule 1|f1|jeux olympiques|match|mercato|transfert|sponsors?|people|star|chanteu|acteur|actrice|festival|oscars?|cesars?|eurovision"
+                       r"|horoscope|recette|meteo|loto|bons? plans?|promo|soldes|serie tele|telerealite|cinema|box-office|quiz)\b")
 
 PROMPT = """Tu es le rédacteur de la rubrique « Politique et monde » de « La Matinale », une revue de presse quotidienne en français, neutre et fiable, pour le grand public.
 
@@ -134,7 +135,7 @@ def ai_edition(cands, n, key, used_ids):
             break
     arts = [{'ref': f'a{i}', 'source': c['source'], 'langue': c['lang'], 'zone_probable': c['zone'], 'date': c['date'].astimezone(PARIS).isoformat(timespec='minutes'),
              'titre': c['title'], 'texte': shorten(one_line(c['summary']), 600)} for i, c in enumerate(pool)]
-    res, model = gemini_call(PROMPT.format(n=n, articles='\n'.join(json.dumps(a, ensure_ascii=False) for a in arts)), key)
+    res, model = gemini_call(PROMPT.format(n=n + 2, articles='\n'.join(json.dumps(a, ensure_ascii=False) for a in arts)), key)
     if not isinstance(res, dict):
         return None
     refs = {a['ref']: c for a, c in zip(arts, pool)}
@@ -157,6 +158,9 @@ def ai_edition(cands, n, key, used_ids):
             return good
         title, dek = s_(f.get('titre'), 140), s_(f.get('chapeau'), 450)
         if not title or not dek or not ok(title) or not ok(dek):
+            continue
+        if OFF_TOPIC.search(norm(title + ' ' + dek)):
+            log(f'  · hors sujet écarté : {title}')
             continue
         body = [' '.join(x for x in sentences(p.strip()) if ok(x)) for p in (f.get('texte') or []) if isinstance(p, str) and 0 < len(p.strip()) <= 900][:4]
         body = [p for p in body if p]
