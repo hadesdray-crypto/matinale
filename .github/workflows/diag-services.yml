@@ -1,0 +1,46 @@
+# Contrôle ponctuel : les services utilisés par la météo, la route et la voix hors connexion répondent-ils ?
+# Résultats écrits sur la branche « diag » (aucune donnée personnelle).
+name: Diagnostic des services
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Tester les services
+        run: |
+          mkdir -p out && cd out
+          O="Origin: https://hadesdray-crypto.github.io"
+          t() { echo "== $1"; curl -sS -m 30 -D - -o "$2" -H "$O" "$3" | grep -iE '^(HTTP|access-control-allow-origin|content-type|content-length)' ; echo "taille: $(wc -c < "$2")"; head -c 1500 "$2"; echo; }
+          {
+          t "open-meteo forecast meteofrance_seamless" om1.json "https://api.open-meteo.com/v1/forecast?latitude=49.22&longitude=1.17&models=meteofrance_seamless&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_gusts_10m,precipitation&hourly=temperature_2m,apparent_temperature,precipitation,precipitation_probability,weather_code,wind_speed_10m,wind_gusts_10m,visibility,uv_index&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=Europe%2FParis&forecast_days=2"
+          t "open-meteo forecast best_match (probabilité de pluie)" om2.json "https://api.open-meteo.com/v1/forecast?latitude=49.22&longitude=1.17&hourly=precipitation_probability,uv_index,visibility&timezone=Europe%2FParis&forecast_days=1"
+          t "open-meteo meteofrance endpoint" om3.json "https://api.open-meteo.com/v1/meteofrance?latitude=49.22&longitude=1.17&hourly=temperature_2m,precipitation&forecast_days=1"
+          t "geoplateforme search" g1.json "https://data.geopf.fr/geocodage/search?q=hopital%20Evreux&limit=3"
+          t "geoplateforme reverse" g2.json "https://data.geopf.fr/geocodage/reverse?lon=1.17&lat=49.22&limit=1"
+          t "geoplateforme poi" g3.json "https://data.geopf.fr/geocodage/search?q=mairie%20de%20Vernon&index=poi&limit=3"
+          t "api-adresse (ancienne)" g4.json "https://api-adresse.data.gouv.fr/search/?q=Louviers&limit=1"
+          t "bison fute evenements" bf.xml "http://tipi.bison-fute.gouv.fr/bison-fute-ouvert/publicationsDIR/Evenementiel-DIR/grt/RRN/content.xml"
+          t "tomtom routing sans cle" tt.json "https://api.tomtom.com/routing/1/calculateRoute/49.215,1.165:49.024,1.151/json?traffic=true&key=x"
+          echo "== tomtom preflight"; curl -sS -m 20 -D - -o /dev/null -X OPTIONS -H "$O" -H "Access-Control-Request-Method: GET" "https://api.tomtom.com/routing/1/calculateRoute/49.215,1.165:49.024,1.151/json" | grep -iE '^(HTTP|access-control)'
+          } > services.txt 2>&1
+          ls -la
+      - name: Voix hors connexion (Vosk)
+        run: |
+          cd out
+          npm pack vosk-browser@latest >/dev/null 2>&1 && ls -la *.tgz && tar xzf vosk-browser-*.tgz && ls -la package package/dist 2>/dev/null | head -30 && cat package/package.json | head -40 > vosk-browser-package.txt && cp package/LICENSE* vosk-browser-LICENSE.txt 2>/dev/null; ls package/dist > vosk-dist.txt 2>&1
+          curl -sS -m 60 https://alphacephei.com/vosk/models > models.html && grep -i -A3 "small-fr" models.html | head -40 > models-fr.txt
+          curl -sSL -m 300 -o fr.zip https://alphacephei.com/vosk/models/vosk-model-small-fr-0.22.zip && ls -la fr.zip && unzip -q fr.zip && ls -R vosk-model-small-fr-0.22 | head -40 > model-tree.txt && du -sh vosk-model-small-fr-0.22 >> model-tree.txt
+          cat vosk-model-small-fr-0.22/README* > model-readme.txt 2>/dev/null || true
+          mv vosk-model-small-fr-0.22 model && tar czf vosk-fr.tar.gz model && ls -la vosk-fr.tar.gz >> model-tree.txt
+          mkdir -p ../keep && cp services.txt vosk-*.txt models-fr.txt model-*.txt vosk-fr.tar.gz ../keep/ 2>/dev/null; cp package/dist/vosk.js ../keep/ 2>/dev/null; head -c 300000 bf.xml > ../keep/bf-extrait.xml
+          ls -la ../keep
+      - name: Écrire sur la branche diag
+        run: |
+          cd keep
+          git init -q && git checkout -q -b diag
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -q -m "Diagnostic des services"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" diag
