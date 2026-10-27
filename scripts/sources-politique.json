@@ -1,0 +1,29 @@
+{
+  "_note": "Rubrique Politique & monde : flux d'actualité de tendances variées et sources officielles. zone : france ou monde. bord : indication de ligne éditoriale (équilibre de la sélection), jamais affichée comme un jugement.",
+  "feeds": [
+    {"name": "franceinfo — Politique", "feed": "https://www.francetvinfo.fr/politique.rss", "zone": "france", "bord": "service public", "priority": 3},
+    {"name": "Public Sénat", "feed": "https://www.publicsenat.fr/feed", "zone": "france", "bord": "service public (Sénat)", "priority": 3},
+    {"name": "Vie-publique.fr", "feed": "https://www.vie-publique.fr/fil-actualite/rss.xml", "zone": "france", "bord": "officiel", "kind": "officiel", "priority": 3},
+    {"name": "Le Monde — Politique", "feed": "https://www.lemonde.fr/politique/rss_full.xml", "zone": "france", "bord": "centre gauche", "priority": 2},
+    {"name": "Le Figaro — Politique", "feed": "https://www.lefigaro.fr/rss/figaro_politique.xml", "zone": "france", "bord": "droite", "priority": 2},
+    {"name": "Libération — Politique", "feed": "https://www.liberation.fr/arc/outboundfeeds/rss-all/category/politique/?outputType=xml", "zone": "france", "bord": "gauche", "priority": 2},
+    {"name": "Les Échos — Politique", "feed": "https://syndication.lesechos.fr/rss/rss_politique.xml", "zone": "france", "bord": "libéral", "priority": 2},
+    {"name": "Le Point — Politique", "feed": "https://www.lepoint.fr/politique/rss.xml", "zone": "france", "bord": "centre droit", "priority": 2},
+    {"name": "20 Minutes — Politique", "feed": "https://www.20minutes.fr/feeds/rss-politique.xml", "zone": "france", "bord": "généraliste", "priority": 2},
+    {"name": "L'Humanité — Politique", "feed": "https://www.humanite.fr/sections/politique/feed", "zone": "france", "bord": "gauche radicale", "priority": 1},
+    {"name": "Valeurs actuelles — Politique", "feed": "https://www.valeursactuelles.com/feed?post_type=post&taxonomy_name=politique", "zone": "france", "bord": "droite", "priority": 1},
+    {"name": "BFMTV — Politique", "feed": "https://www.bfmtv.com/rss/politique/", "zone": "france", "bord": "généraliste", "priority": 2},
+    {"name": "franceinfo — Monde", "feed": "https://www.francetvinfo.fr/monde.rss", "zone": "monde", "bord": "service public", "priority": 3},
+    {"name": "France 24", "feed": "https://www.france24.com/fr/rss", "zone": "monde", "bord": "service public", "priority": 3},
+    {"name": "RFI", "feed": "https://www.rfi.fr/fr/rss", "zone": "monde", "bord": "service public", "priority": 3},
+    {"name": "ONU Info", "feed": "https://news.un.org/feed/subscribe/fr/news/all/rss.xml", "zone": "monde", "bord": "officiel", "kind": "officiel", "priority": 2},
+    {"name": "Le Monde — International", "feed": "https://www.lemonde.fr/international/rss_full.xml", "zone": "monde", "bord": "centre gauche", "priority": 2},
+    {"name": "Le Figaro — International", "feed": "https://www.lefigaro.fr/rss/figaro_international.xml", "zone": "monde", "bord": "droite", "priority": 2},
+    {"name": "Libération — International", "feed": "https://www.liberation.fr/arc/outboundfeeds/rss-all/category/international/?outputType=xml", "zone": "monde", "bord": "gauche", "priority": 2},
+    {"name": "Courrier international", "feed": "https://www.courrierinternational.com/feed/all/rss.xml", "zone": "monde", "bord": "presse étrangère traduite", "priority": 2},
+    {"name": "Euronews", "feed": "https://fr.euronews.com/rss?format=mrss&level=theme&name=news", "zone": "monde", "bord": "européen", "priority": 2},
+    {"name": "BBC News — World", "feed": "https://feeds.bbci.co.uk/news/world/rss.xml", "zone": "monde", "bord": "service public britannique", "lang": "en", "priority": 2},
+    {"name": "DW — Monde", "feed": "https://rss.dw.com/xml/rss-fr-all", "zone": "monde", "bord": "service public allemand", "priority": 2},
+    {"name": "Al Jazeera", "feed": "https://www.aljazeera.com/xml/rss/all.xml", "zone": "monde", "bord": "qatari", "lang": "en", "priority": 1}
+  ]
+}

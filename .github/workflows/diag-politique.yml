@@ -1,0 +1,36 @@
+# Contrôle ponctuel des flux de la rubrique Politique & monde (résultat sur la branche diag).
+name: Diagnostic des flux politiques
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - run: |
+          mkdir -p keep
+          python3 - > keep/flux-politique.txt 2>&1 <<'PY'
+          import sys, json, datetime as dt
+          sys.path.insert(0, 'scripts')
+          import build
+          cfg = json.load(open('scripts/sources-politique.json', encoding='utf-8'))
+          now = dt.datetime.now(dt.timezone.utc)
+          for s in cfg['feeds']:
+              try:
+                  ents, used = build.read_source(s)
+                  ds = [e['date'] for e in ents if e.get('date')]
+                  recent = [d for d in ds if d > now - dt.timedelta(hours=24)]
+                  ex = ents[0]['title'][:70] if ents else ''
+                  summ = len((ents[0].get('summary') or '')) if ents else 0
+                  print(f"{'OK ' if ents else 'KO '} {s['name']:<32} {len(ents):>3} articles, {len(recent):>3} en 24 h, résumé {summ:>4} car. | {used} | {ex}")
+              except Exception as e:
+                  print('ERR', s['name'], type(e).__name__, str(e)[:120])
+          PY
+          cat keep/flux-politique.txt
+      - run: |
+          cd keep && git init -q && git checkout -q -b diag
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -q -m "Diagnostic des flux politiques"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" diag
