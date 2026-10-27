@@ -1,13 +1,20 @@
 Liens de « Comprendre » : 56 valides sur 56.
 Lecture de 42 sources (avec Gemini)…
-Sources lues : 41 ; muettes : 1 ['arXiv astrophysique (prépublication)']
-Articles retenus après tri : 139
+Sources lues : 42 ; muettes : 0 []
+Articles retenus après tri : 332
 Vidéos francophones récentes : 0
-  · Gemini gemini-flash-latest : TimeoutError The read operation timed out
-  · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
-Fiches détaillées : 10 pages lisibles sur 16 fiches.
-  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting ',' delimiter: line 1 column 6456 (char 6455)
-Fiches détaillées écrites : 10.
-Illustrations libres de droits : 13 sur 16 fiches (7 image(s) écartée(s) par le contrôle de Gemini).
-Édition n° 8 du 2026-10-26 : 16 fiches, mode Gemini (gemini-flash-lite-latest), 0 vidéos francophones.
-Demandes à l'IA : gemini-flash-latest 1, gemini-3.8-flash 1, gemini-flash-lite-latest 27, gemini-3.5-flash-lite 1
+  · Gemini gemini-flash-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+Fiches détaillées : 12 pages lisibles sur 20 fiches.
+Fiches détaillées écrites : 12.
+/home/runner/.local/lib/python3.12/site-packages/PIL/Image.py:3593: DecompressionBombWarning: Image size (90317000 pixels) exceeds limit of 89478485 pixels, could be decompression bomb DOS attack.
+  warnings.warn(
+Illustrations libres de droits : 12 sur 20 fiches (15 image(s) écartée(s) par le contrôle de Gemini).
+Édition n° 9 du 2026-10-27 : 20 fiches, mode Gemini (gemini-3.8-flash), 0 vidéos francophones.
+Demandes à l'IA : gemini-flash-latest 1, gemini-3.8-flash 1, gemini-flash-lite-latest 33
