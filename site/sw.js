@@ -69,6 +69,7 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || !req.url.startsWith(self.registration.scope)) return;   // vidéos, liens externes : le navigateur s'en charge
   const chemin = new URL(req.url).pathname;
+  if (/\/(voix|vendor)\//.test(chemin)) return;   // voix hors connexion : gardée à part par l'appli (cache « matinale-voix »)
   if (/\/img\/\d{4}-\d{2}-\d{2}\//.test(chemin)) return imageGarde(e);                     // images du jour : copie du téléphone d'abord
   if (chemin.endsWith('.mp3')) return audioGarde(e);                                    // audio : la copie gardée d'abord, sinon le réseau
   if (/\/audio\/index\/\d{4}-\d{2}-\d{2}\.json$/.test(chemin)) return audioIndexJour(e);

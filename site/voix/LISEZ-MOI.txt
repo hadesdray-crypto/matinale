@@ -1,0 +1,7 @@
+Voix hors connexion de la Matinale (téléchargée seulement si l'utilisateur la demande, dans les réglages du matin).
+
+- voix/vosk-fr.tar.gz : modèle de reconnaissance vocale française « vosk-model-small-fr-0.22 » d'Alpha Cephei,
+  licence Apache 2.0 (https://alphacephei.com/vosk/models). Repaqueté tel quel en .tar.gz (dossier « model »).
+- vendor/vosk.js : bibliothèque « vosk-browser » 0.0.8 (licence Apache 2.0, https://github.com/ccoreilly/vosk-browser).
+
+Tout se passe dans le téléphone : aucun son n'est envoyé ailleurs.

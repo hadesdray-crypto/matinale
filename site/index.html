@@ -480,6 +480,63 @@ html[data-tsize="1"]{--ts:1.12} html[data-tsize="2"]{--ts:1.26} html[data-tsize=
 .pl-time{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:12px;color:var(--band-ink-2)}
 .pl-ctrls{display:flex;align-items:center;justify-content:center;gap:10px;padding-block:4px}
 @media (min-width:420px){.pl-ctrls{gap:16px}}
+/* Mon point du matin */
+.mt-sec{padding-top:14px}
+.matin{display:grid;gap:10px;padding:16px;border-radius:20px;border:1px solid var(--rule);background:var(--card);box-shadow:var(--shadow)}
+.mt-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mt-h{margin:0;font-family:var(--display);font-size:19px}
+.mt-wx{display:flex;align-items:center;gap:12px}
+.mt-ic{flex:none;display:grid;place-items:center;width:56px;height:56px;border-radius:16px;background:var(--accent-soft);color:var(--accent-ink)}
+.mt-wx-main{display:grid;gap:2px;min-width:0}
+.mt-temp{font-family:var(--display);font-size:30px;line-height:1}
+.mt-temp small{font-size:18px;color:var(--ink-3)}
+.mt-sub{margin:0;font-size:14.5px;color:var(--ink-2);line-height:1.45}
+.mt-q{margin:0;font-family:var(--display);font-weight:700;font-size:15.5px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.mt-big{margin:2px 0 0;font-family:var(--display);font-size:20px}
+.mt-big b{color:var(--accent-ink);white-space:nowrap}
+.mt-plus{color:var(--warn);font-size:15px}
+.mt-alerts{display:flex;flex-wrap:wrap;gap:6px}
+.mt-alert{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:var(--warn-soft);color:var(--warn);font-family:var(--display);font-weight:700;font-size:13px}
+.mt-conseil{margin:0;display:flex;gap:8px;align-items:flex-start;font-size:15.5px;line-height:1.45}
+.mt-conseil .ic{flex:none;margin-top:3px;color:var(--accent-ink)}
+.mt-old{margin:0;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.mt-route{display:grid;gap:6px;padding-top:10px;border-top:1px solid var(--rule)}
+.mt-ev{margin:0;display:flex;gap:6px;align-items:flex-start;font-size:14.5px;line-height:1.4;color:var(--ink)}
+.mt-ev .ic{flex:none;margin-top:3px;color:var(--warn)}
+.mt-ok{margin:0;display:flex;gap:6px;align-items:center;font-size:14.5px;color:var(--l4)}
+.mt-src{padding:1px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-family:var(--mono);font-size:11px;font-weight:500}
+.mt-chips{display:flex;flex-wrap:wrap;gap:8px}
+.mt-watch{margin:0;display:flex;gap:6px;align-items:center;font-size:14px;color:var(--accent-ink)}
+.mt-actions{display:flex;flex-wrap:wrap;gap:8px}
+.mt-actions .btn{flex:1 1 auto;justify-content:center}
+.mt-actions .btn.on{background:var(--l4);border-color:var(--l4);color:#fff}
+.mt-foot{margin:0;font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.mt-empty{display:grid;gap:8px}
+.mt-empty p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.lnk{all:unset;cursor:pointer;color:var(--accent-ink);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+/* Itinéraire et réglages du matin */
+.iti-form,.rg-form{display:flex;gap:8px;margin:4px 0 10px}
+.rg-form.col{flex-direction:column}
+.iti-form input,.rg-form input[type=text],.rg-form input[type=password]{flex:1;min-width:0;height:46px;padding:0 12px;border-radius:12px;border:1px solid var(--rule);background:var(--card);color:var(--ink);font-size:16px}
+.iti-res{display:grid;gap:6px;margin-top:12px;padding:14px;border-radius:16px;border:1px solid var(--rule);background:var(--card)}
+.iti-res h3{margin:0;font-family:var(--display);font-size:18px}
+.iti-res p{margin:0;font-size:15px;line-height:1.45}
+.iti-other summary{cursor:pointer;color:var(--accent-ink);font-weight:700;margin:6px 0}
+.rg-sec{padding:14px 0;border-bottom:1px solid var(--rule)}
+.rg-sec h3{margin:0 0 8px;font-family:var(--display);font-size:16px}
+.rg-tick{display:flex;gap:10px;align-items:flex-start;margin:6px 0;font-size:15px;line-height:1.4}
+.rg-tick input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--accent)}
+.rg-line{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0;font-size:15px}
+.rg-line select{height:40px;padding:0 8px;border-radius:10px;border:1px solid var(--rule);background:var(--card);color:var(--ink);font-size:15px}
+.rg-lieux{display:grid;gap:6px;margin:0 0 10px;padding:0;list-style:none}
+.rg-lieux li{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;border:1px solid var(--rule);background:var(--card)}
+.rg-lieux li span{flex:1;min-width:0;display:grid}
+.rg-lieux small{color:var(--ink-3);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rg .seg{display:flex;flex-wrap:wrap;gap:12px;font-size:15px}
+.rg-res{display:grid;gap:6px}
+.pbar{height:8px;border-radius:99px;background:var(--accent-soft);overflow:hidden;margin-top:8px}
+.pbar i{display:block;width:0;height:100%;background:var(--accent);transition:width .3s}
+.mic-fab.libre{background:var(--l4);color:#fff;animation:micpulse 2.4s ease-in-out infinite}
 /* Sommaire numéroté, numéros des sujets, navigation entre les sujets */
 .numb{flex:none;display:inline-grid;place-items:center;min-width:34px;height:34px;padding:0 6px;border-radius:10px;background:var(--accent);color:var(--on-accent);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-weight:800;font-size:18px;font-variant-numeric:tabular-nums;line-height:1}
 .numb.sm{min-width:26px;height:26px;padding:0 5px;border-radius:8px;font-size:13.5px}
@@ -755,6 +812,18 @@ const P = {
   play:'<path d="M8 5.2v13.6L19 12z" fill="currentColor" stroke="none"/>',
   pause:'<path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z" fill="currentColor" stroke="none"/>',
   next:'<path d="M6 6.2v11.6L14.6 12z" fill="currentColor" stroke="none"/><path d="M18 6v12"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/>',
+  car:'<path d="M4 16.5V12l2-5h12l2 5v4.5"/><path d="M3.5 12h17v4.5h-17zM6.5 19v-2.5M17.5 19v-2.5"/><circle cx="7.5" cy="14.2" r=".6" fill="currentColor"/><circle cx="16.5" cy="14.2" r=".6" fill="currentColor"/>',
+  pin:'<path d="M12 21s-6.5-6.2-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 14.8 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.4"/>',
+  route:'<circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8.2 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.8"/>',
+  shirt:'<path d="M8.5 3.5L4 6l1.5 4 2-.8V20.5h9V9.2l2 .8L20 6l-4.5-2.5a3.5 3.5 0 0 1-7 0z"/>',
+  sun:'<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/>',
+  cloud:'<path d="M7 18.5h10.2a4 4 0 0 0 .5-8 5.8 5.8 0 0 0-11.1 1.6A3.3 3.3 0 0 0 7 18.5z"/>',
+  rain:'<path d="M7 15.5h10.2a3.8 3.8 0 0 0 .5-7.6 5.6 5.6 0 0 0-10.7 1.5A3 3 0 0 0 7 15.5z"/><path d="M8.5 18l-1 2.5M12.5 18l-1 2.5M16.5 18l-1 2.5"/>',
+  snow:'<path d="M7 14.5h10.2a3.8 3.8 0 0 0 .5-7.6 5.6 5.6 0 0 0-10.7 1.5A3 3 0 0 0 7 14.5z"/><path d="M8.5 18.5h.01M12 20h.01M15.5 18.5h.01M10 21.5h.01M14 21.5h.01"/>',
+  storm:'<path d="M7 14.5h10.2a3.8 3.8 0 0 0 .5-7.6 5.6 5.6 0 0 0-10.7 1.5A3 3 0 0 0 7 14.5z"/><path d="M12.5 15l-2 3.5h3l-2 3.5"/>',
+  fog:'<path d="M7 12.5h10.2a3.6 3.6 0 0 0 .3-7.2 5.4 5.4 0 0 0-10.3 1.4A2.9 2.9 0 0 0 7 12.5z"/><path d="M4 15.5h16M6 18.5h12M8 21.5h8"/>',
+  download:'<path d="M12 3.5v12M7 11l5 5 5-5M4.5 20.5h15"/>',
   mic:'<rect x="9" y="3" width="6" height="11.5" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',
   back10:'<path d="M4 12a8 8 0 1 0 2.4-5.7L4 8.6"/><path d="M4 4.2v4.4h4.4"/><text x="12.6" y="15.6" text-anchor="middle" font-size="7.6" font-weight="700" font-family="system-ui,sans-serif" fill="currentColor" stroke="none">10</text>',
   fwd10:'<path d="M20 12a8 8 0 1 1-2.4-5.7L20 8.6"/><path d="M20 4.2v4.4h-4.4"/><text x="11.4" y="15.6" text-anchor="middle" font-size="7.6" font-weight="700" font-family="system-ui,sans-serif" fill="currentColor" stroke="none">10</text>',
@@ -1061,9 +1130,10 @@ function footerHTML(ed){
 }
 function renderToday(){
   const el = $('#view-aujourdhui'); if (!el) return;
+  setTimeout(() => matinMaj(false), 50);
   const ed = S.edition;
   if (S.status !== 'ready' || !ed){ el.innerHTML = stateHTML(); return; }
-  el.innerHTML = mastheadHTML(ed) + fallbackNoticeHTML() + installBannerHTML() + sommaireHTML(ed) + topHTML(ed) + frStripHTML(ed) + catSumHTML(ed) + feedSectionHTML(ed) + conceptHTML(ed) + agendaHTML(ed) + methodHTML() + footerHTML(ed);
+  el.innerHTML = matinCardHTML() + mastheadHTML(ed) + fallbackNoticeHTML() + installBannerHTML() + sommaireHTML(ed) + topHTML(ed) + frStripHTML(ed) + catSumHTML(ed) + feedSectionHTML(ed) + conceptHTML(ed) + agendaHTML(ed) + methodHTML() + footerHTML(ed);
   renderFeed();
 }
 
@@ -2078,21 +2148,708 @@ function ratePop(open){
   if (b) b.setAttribute('aria-expanded', String(!!open));
 }
 
+/* ---------- Le point du matin : météo, route, itinéraire ----------
+   Tout se calcule dans le téléphone, sans IA : aucune demande Gemini.
+   Ce qui part du téléphone : une position arrondie au kilomètre (Open-Meteo pour la météo, Géoplateforme de l'IGN pour le nom
+   de la commune et les adresses) et, seulement si une clé TomTom est enregistrée, le départ et l'arrivée d'un trajet.
+   Les lieux, les horaires, la clé et les réglages restent dans le téléphone (jamais sur GitHub). */
+const MATIN_LS = 'mds.matin';
+function MPget(){
+  const d = { geo:true, ville:null, lieux:[], heures:['08:15', '08:45'], marge:10, tomtom:'', memo:false, jour:null, moteur:'auto' };
+  const v = LS.get(MATIN_LS, null); return Object.assign(d, v && typeof v === 'object' ? v : {});
+}
+function MPset(p){ LS.set(MATIN_LS, p); }
+const pad2 = n => String(n).padStart(2, '0');
+const isoDay = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+const hourKey = d => isoDay(d) + 'T' + pad2(d.getHours()) + ':00';
+const hDisp = d => d.getHours() + '\u00a0h\u00a0' + pad2(d.getMinutes());
+const hSay = d => d.getHours() + (d.getHours() > 1 ? ' heures' : ' heure') + (d.getMinutes() ? ' ' + d.getMinutes() : '');
+const hhmmDisp = s => { const m = /^(\d{1,2}):(\d{2})$/.exec(s || ''); return m ? (+m[1]) + '\u00a0h\u00a0' + m[2] : s; };
+const atToday = s => { const m = /^(\d{1,2}):(\d{2})$/.exec(s || ''); if (!m) return null; const d = new Date(); d.setHours(+m[1], +m[2], 0, 0); return d; };
+const cmdNorm = raw => norm(raw).replace(/[’'`\-]/g, ' ').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+const online = () => navigator.onLine !== false;
+function fetchJSON(url, ms){
+  const c = window.AbortController ? new AbortController() : null;
+  const tm = setTimeout(() => { try { c && c.abort(); } catch (e) {} }, ms || 12000);
+  return fetch(url, c ? { signal:c.signal, cache:'no-store' } : { cache:'no-store' })
+    .then(r => { clearTimeout(tm); if (!r.ok){ const e = new Error('HTTP ' + r.status); e.status = r.status; throw e; } return r.json(); }, e => { clearTimeout(tm); throw e; });
+}
+/* Distances (km), assez précises pour quelques dizaines de kilomètres. */
+function kmBetween(a, b){ const k = Math.cos((a.lat + b.lat) * Math.PI / 360); const dx = (b.lon - a.lon) * 111.32 * k, dy = (b.lat - a.lat) * 110.57; return Math.sqrt(dx * dx + dy * dy); }
+function kmToSeg(p, a, b){
+  const k = Math.cos(p.lat * Math.PI / 180), ax = a.lon * 111.32 * k, ay = a.lat * 110.57, bx = b.lon * 111.32 * k, by = b.lat * 110.57, px = p.lon * 111.32 * k, py = p.lat * 110.57;
+  const vx = bx - ax, vy = by - ay, l2 = vx * vx + vy * vy; let u = l2 ? ((px - ax) * vx + (py - ay) * vy) / l2 : 0; u = Math.max(0, Math.min(1, u));
+  const dx = px - (ax + u * vx), dy = py - (ay + u * vy); return Math.sqrt(dx * dx + dy * dy);
+}
+
+/* Position du téléphone. precise : pour un itinéraire (sinon une position approximative suffit). */
+function geoPos(precise){
+  return new Promise(res => {
+    if (!navigator.geolocation) return res(null);
+    let fini = false; const fin = v => { if (!fini){ fini = true; res(v); } };
+    setTimeout(() => fin(null), 16000);
+    try { navigator.geolocation.getCurrentPosition(p => fin({ lat:p.coords.latitude, lon:p.coords.longitude }), () => fin(null), { enableHighAccuracy:!!precise, maximumAge: precise ? 90000 : 20 * 60000, timeout:15000 }); } catch (e) { fin(null); }
+  });
+}
+async function geoState(){ try { const s = await navigator.permissions.query({ name:'geolocation' }); return s.state; } catch (e) { return 'prompt'; } }
+const r2 = x => Math.round(x * 100) / 100, r3 = x => Math.round(x * 1000) / 1000;
+async function meteoPlace(ask){
+  const p = MPget();
+  if (p.geo && (ask || (await geoState()) === 'granted')){
+    const g = await geoPos(false);
+    if (g){ const w = { lat:r2(g.lat), lon:r2(g.lon), src:'gps' }; LS.set('mds.pos', Object.assign({ at:Date.now() }, w)); return w; }
+  }
+  if (p.ville && p.ville.lat) return { lat:p.ville.lat, lon:p.ville.lon, nom:p.ville.nom, src:'ville' };
+  const last = LS.get('mds.pos', null); if (last && last.lat) return Object.assign({}, last, { src:'cache' });
+  return null;
+}
+/* Nom de la commune (Géoplateforme de l'IGN), gardé dans le téléphone. */
+async function communeDe(pos){
+  if (pos.nom) return pos.nom;
+  const k = r2(pos.lat) + ',' + r2(pos.lon), memo = LS.get('mds.communes', {}) || {};
+  if (memo[k]) return memo[k];
+  if (!online()) return '';
+  try {
+    const j = await fetchJSON('https://data.geopf.fr/geocodage/reverse?lon=' + pos.lon + '&lat=' + pos.lat + '&limit=1', 8000);
+    const pr = j.features && j.features[0] && j.features[0].properties; const nom = pr ? (pr.city || pr.name || '') : '';
+    if (nom){ const ks = Object.keys(memo); if (ks.length > 30) delete memo[ks[0]]; memo[k] = nom; LS.set('mds.communes', memo); }
+    return nom;
+  } catch (e) { return ''; }
+}
+/* Recherche d'une adresse ou d'un lieu : TomTom si une clé est enregistrée (lieux publics compris), sinon la Base Adresse Nationale. */
+async function chercheLieu(q, near){
+  q = String(q || '').trim(); if (!q) return [];
+  const p = MPget(), qn = cmdNorm(q);
+  const mine = p.lieux.filter(l => cmdNorm(l.nom) === qn || cmdNorm(l.nom).includes(qn) || qn.includes(cmdNorm(l.nom)));
+  if (mine.length) return mine.map(l => ({ nom:l.nom, label:l.adr || l.nom, lat:l.lat, lon:l.lon, mine:true }));
+  if (!online()) return [];
+  const bias = near ? '&lat=' + r2(near.lat) + '&lon=' + r2(near.lon) : '';
+  if (p.tomtom){
+    try {
+      const j = await fetchJSON('https://api.tomtom.com/search/2/search/' + encodeURIComponent(q) + '.json?key=' + encodeURIComponent(p.tomtom) + '&countrySet=FR&language=fr-FR&limit=5' + bias, 9000);
+      const out = (j.results || []).filter(r => r.position).map(r => ({ nom: (r.poi && r.poi.name) || (r.address && (r.address.freeformAddress || r.address.municipality)) || q, label: [(r.poi && r.poi.name), r.address && r.address.freeformAddress].filter(Boolean).join(' · '), lat:r.position.lat, lon:r.position.lon }));
+      if (out.length) return out;
+    } catch (e) {}
+  }
+  const list = [];
+  try {
+    const j = await fetchJSON('https://data.geopf.fr/geocodage/search?q=' + encodeURIComponent(q) + '&limit=5&autocomplete=0' + bias, 9000);
+    (j.features || []).forEach(f => { const pr = f.properties || {}, c = f.geometry && f.geometry.coordinates; if (c) list.push({ nom: pr.type === 'municipality' ? pr.city : (pr.name || pr.label), label: pr.label + (pr.context ? ' (' + String(pr.context).split(',')[0] + ')' : ''), lat:c[1], lon:c[0], score:pr.score || 0 }); });
+  } catch (e) {}
+  if ((!list.length || list[0].score < 0.55) && /\b(mairie|hopital|hôpital|clinique|gare|college|collège|lycee|lycée|ecole|école|centre|magasin|supermarche|supermarché|caserne|stade|piscine|usine|zone|parc|aeroport|aéroport|chu|ehpad|poste|prefecture|préfecture)\b/i.test(q)){
+    try {
+      const j = await fetchJSON('https://data.geopf.fr/geocodage/search?q=' + encodeURIComponent(q) + '&index=poi&limit=5' + bias, 9000);
+      const poi = (j.features || []).map(f => { const pr = f.properties || {}, c = f.geometry && f.geometry.coordinates; const city = [].concat(pr.city || [])[0] || ''; return c ? { nom: pr.toponym || [].concat(pr.name || [])[0] || q, label: (pr.toponym || q) + (city ? ' · ' + city : ''), lat:c[1], lon:c[0], score:0.6 } : null; }).filter(Boolean);
+      if (near) poi.sort((a, b) => kmBetween(near, a) - kmBetween(near, b));
+      list.unshift(...poi.slice(0, 3));
+    } catch (e) {}
+  }
+  return list;
+}
+
+/* ---------- Météo (modèles de Météo-France : AROME, ARPEGE, via Open-Meteo, gratuit et sans clé) ---------- */
+const WMO = c => c == null ? '' : c === 0 ? 'ciel dégagé' : c <= 2 ? 'quelques nuages' : c === 3 ? 'ciel couvert' : c <= 48 ? 'brouillard' : c <= 57 ? 'bruine' : c <= 67 ? 'pluie' : c <= 77 ? 'neige' : c <= 82 ? 'averses' : c <= 86 ? 'averses de neige' : 'orages';
+const WICON = c => c == null ? 'cloud' : c <= 1 ? 'sun' : c <= 3 ? 'cloud' : c <= 48 ? 'fog' : (c <= 67 || (c >= 80 && c <= 82)) ? 'rain' : (c <= 77 || c === 85 || c === 86) ? 'snow' : 'storm';
+async function meteoFetch(pos){
+  const base = 'https://api.open-meteo.com/v1/forecast?latitude=' + pos.lat + '&longitude=' + pos.lon + '&timezone=Europe%2FParis';
+  const j = await fetchJSON(base + '&models=meteofrance_seamless&forecast_days=2&current=temperature_2m,apparent_temperature,weather_code,wind_gusts_10m,precipitation' +
+    '&hourly=temperature_2m,apparent_temperature,precipitation,weather_code,wind_gusts_10m,visibility', 12000);
+  let uv = null; try { const a = await fetchJSON(base + '&forecast_days=1&daily=uv_index_max', 8000); uv = a.daily && a.daily.uv_index_max ? a.daily.uv_index_max[0] : null; } catch (e) {}
+  return { j, uv, at:Date.now(), lat:pos.lat, lon:pos.lon };
+}
+function meteoResume(w, place){
+  const j = w.j || {}, H = j.hourly || {}, T = H.time || [], now = new Date(), hNow = now.getHours();
+  const v = (k, i) => { const a = H[k]; return a ? a[i] : null; };
+  let i0 = T.indexOf(hourKey(now)); if (i0 < 0) i0 = Math.max(0, T.findIndex(x => x > hourKey(now)));
+  const iEnd = Math.min(T.length, i0 + (hNow < 14 ? Math.max(6, 20 - hNow) : 12));
+  const rg = []; for (let i = i0; i < iEnd; i++) rg.push(i);
+  if (!rg.length) return null;
+  const nums = a => a.filter(x => typeof x === 'number');
+  const temps = nums(rg.map(i => v('temperature_2m', i)));
+  const cur = j.current || {};
+  const t0 = Math.round(typeof cur.temperature_2m === 'number' ? cur.temperature_2m : temps[0]);
+  const f0 = Math.round(typeof cur.apparent_temperature === 'number' ? cur.apparent_temperature : (v('apparent_temperature', i0) ?? t0));
+  const tmax = Math.round(Math.max(...temps, t0)), tmin = Math.round(Math.min(...temps, t0));
+  const fMatin = Math.round(Math.min(f0, ...nums(rg.slice(0, 3).map(i => v('apparent_temperature', i)))));
+  const hOf = i => +String(T[i]).slice(11, 13);
+  const wet = rg.filter(i => (v('precipitation', i) || 0) >= 0.2);
+  let rain = null;
+  if (wet.length){ const a = wet[0]; let b = a; for (const i of wet){ if (i - b <= 2) b = i; else break; } rain = { from:hOf(a), to:(hOf(b) + 1) % 24, now:a === i0, mm:Math.round(rg.filter(i => i >= a && i <= b).reduce((s, i) => s + (v('precipitation', i) || 0), 0) * 10) / 10 }; }
+  const gust = Math.round(Math.max(0, ...nums(rg.map(i => v('wind_gusts_10m', i)))));
+  const codes = rg.map(i => v('weather_code', i)), code = typeof cur.weather_code === 'number' ? cur.weather_code : codes[0];
+  const alerts = [];
+  if (codes.some(c => c >= 95)) alerts.push('orages');
+  if (codes.some(c => (c >= 71 && c <= 77) || c === 85 || c === 86)) alerts.push('neige');
+  const froid = rg.slice(0, 6).some(i => (v('temperature_2m', i) ?? 9) <= 0.5);
+  if (codes.some(c => [56, 57, 66, 67].includes(c)) || (froid && (wet.length || codes.slice(0, 6).some(c => c >= 51)))) alerts.push('verglas');
+  else if (froid) alerts.push('gel, attention au verglas');
+  if (rg.slice(0, 5).some(i => [45, 48].includes(v('weather_code', i)) || (typeof v('visibility', i) === 'number' && v('visibility', i) < 1000))) alerts.push('brouillard');
+  if (gust >= 70) alerts.push(gust >= 90 ? 'vent violent' : 'fortes rafales');
+  if (rg.reduce((s, i) => s + (v('precipitation', i) || 0), 0) >= 15) alerts.push('fortes pluies');
+  const tenue = fMatin <= 0 ? 'manteau chaud, bonnet et gants' : fMatin <= 6 ? 'manteau ou grosse veste' : fMatin <= 12 ? 'veste chaude' : fMatin <= 17 ? 'veste légère ou pull' : fMatin <= 23 ? 'tee-shirt et une petite laine' : 'tenue légère';
+  const plus = [];
+  if (rain) plus.push(gust >= 50 ? 'un imperméable à capuche plutôt qu\'un parapluie' : 'un parapluie');
+  if (tmax - fMatin >= 10) plus.push('habille-toi en couches, il fera bien plus doux ensuite');
+  if ((w.uv || 0) >= 6 && !rain) plus.push('lunettes de soleil et crème');
+  const conseil = cap(tenue) + (plus.length ? ', ' + plus.join(', ') : '') + '.';
+  const p = [];
+  p.push('Météo' + (place ? ' à ' + place : '') + ' : ' + t0 + ' degrés en ce moment' + (Math.abs(f0 - t0) >= 2 ? ', ressenti ' + f0 : '') + (WMO(code) ? ', ' + WMO(code) : '') + '.');
+  p.push(hNow < 14 ? 'Jusqu\'à ' + tmax + ' degrés cet après-midi.' : 'Entre ' + tmin + ' et ' + tmax + ' degrés dans les prochaines heures.');
+  p.push(rain ? (rain.now ? 'Il pleut en ce moment, jusque vers ' + rain.to + ' heures.' : 'Pluie entre ' + rain.from + ' heures et ' + rain.to + ' heures.') : 'Pas de pluie prévue.');
+  if (gust >= 50) p.push('Rafales jusqu\'à ' + gust + ' kilomètres heure.');
+  if (alerts.length) p.push('Attention : ' + alerts.join(', ') + '.');
+  p.push('Conseil : ' + conseil);
+  const buffer = alerts.some(a => /verglas|neige|brouillard/.test(a)) ? 10 : alerts.includes('fortes pluies') ? 5 : 0;
+  return { place, t0, f0, tmin, tmax, code, rain, gust, alerts, conseil, buffer, text:p.join(' '), at:w.at };
+}
+async function meteoMaj(force, ask){
+  const M = S.matin = S.matin || {};
+  const old = LS.get('mds.meteo', null);
+  if (!force && M.wx && Date.now() - M.wx.at < 20 * 60000) return M.wx;
+  if (!online()){ if (old) M.wx = Object.assign({}, old, { horsLigne:true }); return M.wx || null; }
+  const pos = await meteoPlace(ask);
+  if (!pos){ M.wxNeed = true; return M.wx || null; }
+  M.wxNeed = false;
+  try {
+    const [w, nom] = await Promise.all([meteoFetch(pos), communeDe(pos)]);
+    const r = meteoResume(w, nom);
+    if (r){ M.wx = r; LS.set('mds.meteo', r); }
+  } catch (e) { if (old) M.wx = Object.assign({}, old, { horsLigne:true }); }
+  return M.wx || null;
+}
+
+/* ---------- Trafic : Bison Futé (routes nationales, relevé toutes les 20 minutes) et TomTom (toutes les routes, avec une clé) ---------- */
+const BF_URL = 'https://raw.githubusercontent.com/hadesdray-crypto/matinale/trafic/trafic.json';
+async function bisonFute(){
+  const M = S.matin = S.matin || {};
+  if (M.bf && Date.now() - M.bfAt < 10 * 60000) return M.bf;
+  if (!online()) return M.bf || null;
+  try { const j = await fetchJSON(BF_URL + '?t=' + Math.floor(Date.now() / 300000), 10000); if (j && Array.isArray(j.ev)){ M.bf = j; M.bfAt = Date.now(); } } catch (e) {}
+  return M.bf || null;
+}
+const BF_SKIP = new Set(['vitesse réduite', 'aire de service fermée', 'perturbation']);
+function bfSurTrajet(bf, a, b, pts){
+  if (!bf || !bf.ev) return [];
+  const near = e => {
+    const ps = [{ lat:e.y, lon:e.x }].concat(e.y2 ? [{ lat:e.y2, lon:e.x2 }] : []);
+    if (pts && pts.length > 1){ const st = Math.max(1, Math.ceil(pts.length / 400)); for (const q of ps) for (let i = 0; i + st < pts.length + st; i += st){ const k = Math.min(i, pts.length - 1), k2 = Math.min(k + st, pts.length - 1); if (kmToSeg(q, { lat:pts[k][0], lon:pts[k][1] }, { lat:pts[k2][0], lon:pts[k2][1] }) < 1.2) return true; } return false; }
+    return ps.some(q => kmToSeg(q, a, b) < 4);
+  };
+  return bf.ev.filter(e => !BF_SKIP.has(e.t) && near(e)).sort((x, y) => (y.s || 0) - (x.s || 0));
+}
+const bfPhrase = e => cap(e.t) + (e.r ? ' sur la ' + e.r : '') + (e.v ? ' vers ' + e.v : '');
+const TT_CAT = { JAM:'bouchon', ROAD_WORK:'travaux', ROAD_CLOSURE:'route fermée', OTHER:'ralentissement' };
+async function tomtomRoute(a, b){
+  const k = MPget().tomtom; if (!k) return null;
+  const u = 'https://api.tomtom.com/routing/1/calculateRoute/' + r3(a.lat) + ',' + r3(a.lon) + ':' + r3(b.lat) + ',' + r3(b.lon) + '/json?key=' + encodeURIComponent(k) +
+    '&traffic=true&travelMode=car&routeType=fastest&departAt=now&sectionType=traffic&computeTravelTimeFor=all';
+  const j = await fetchJSON(u, 15000);
+  const R = j.routes && j.routes[0]; if (!R) return null;
+  const s = R.summary || {}, m = x => typeof x === 'number' ? Math.round(x / 60) : null;
+  return { min:m(s.travelTimeInSeconds), usual:m(s.historicTrafficTravelTimeInSeconds), libre:m(s.noTrafficTravelTimeInSeconds), km:Math.round((s.lengthInMeters || 0) / 100) / 10,
+    pts:[].concat(...(R.legs || []).map(l => (l.points || []).map(p => [p.latitude, p.longitude]))),
+    jams:(R.sections || []).filter(x => x.sectionType === 'TRAFFIC').map(x => ({ cat:TT_CAT[x.simpleCategory] || 'ralentissement', min:Math.round((x.delayInSeconds || 0) / 60) })) };
+}
+async function trajet(a, b){
+  const res = { r:null, err:null, ev:[] };
+  if (MPget().tomtom && online()){ try { res.r = await tomtomRoute(a, b); } catch (e) { res.err = (e.status === 401 || e.status === 403) ? 'cle' : 'reseau'; } }
+  const bf = await bisonFute();
+  res.ev = bfSurTrajet(bf, a, b, res.r && res.r.pts);
+  res.at = Date.now();
+  return res;
+}
+function trajetPhrases(res, opts){
+  opts = opts || {}; const p = [], r = res.r;
+  if (r){
+    let s = 'Trajet : ' + r.min + ' minutes avec le trafic actuel';
+    if (r.usual != null && r.min - r.usual >= 3) s += ', ' + (r.min - r.usual) + ' de plus que d\'habitude'; else if (r.usual != null && r.usual - r.min >= 3) s += ', un peu mieux que d\'habitude';
+    p.push(s + '.');
+    const j = r.jams.filter(x => x.min >= 2);
+    if (j.length === 1) p.push(cap(j[0].cat) + ' sur le trajet : ' + j[0].min + ' minutes perdues.');
+    else if (j.length > 1) p.push(j.length + ' ralentissements sur le trajet : ' + j.reduce((s2, x) => s2 + x.min, 0) + ' minutes perdues en tout.');
+  } else if (!MPget().tomtom) { if (!opts.court) p.push('Pour le temps de trajet en direct, ajoute la clé TomTom dans les réglages.'); }
+  else if (res.err === 'cle') p.push('La clé TomTom ne marche pas : vérifie-la dans les réglages.');
+  else if (!online()) p.push('Pas de réseau : je ne peux pas vérifier la route.');
+  else p.push('Je n\'arrive pas à calculer le temps de trajet pour l\'instant.');
+  const ev = res.ev.slice(0, 2);
+  if (ev.length) p.push('Bison Futé signale : ' + ev.map(bfPhrase).join(' ; ') + '.');
+  else if (r || res.ev) p.push(r && !r.jams.some(x => x.min >= 2) ? 'Rien de signalé sur la route.' : '');
+  return p.filter(Boolean);
+}
+
+/* ---------- Où je vais aujourd'hui : bouton du matin, voix, ou planning de Memo-SSIAP (lu dans le téléphone) ---------- */
+function lieuParNom(txt){
+  const p = MPget(), q = cmdNorm(txt || ''); if (!q) return null;
+  return p.lieux.find(l => cmdNorm(l.nom) === q) || p.lieux.find(l => q.includes(cmdNorm(l.nom)) || cmdNorm(l.nom).includes(q) || cmdNorm(l.adr || '').includes(q)) || null;
+}
+function memoPlanning(day){
+  let P = null; try { P = JSON.parse(localStorage.getItem('memo-ssiap:planning') || 'null'); } catch (e) {}
+  const es = (P && Array.isArray(P.e) ? P.e : []).filter(e => e && e.d === day && /^\d{1,2}:\d{2}$/.test(e.deb || '')).sort((x, y) => String(x.deb).localeCompare(String(y.deb)));
+  if (!es.length) return null;
+  const e = es[0], L = lieuParNom(e.lieu || e.aff || '');
+  return { date:day, heure:e.deb, lieu: L ? L.id : null, lieuTxt: e.lieu || '', src:'memo' };
+}
+function jourDuJour(){
+  const p = MPget(), day = isoDay(new Date());
+  if (p.jour && p.jour.date === day) return p.jour.choix ? null : p.jour;
+  if (p.memo){ const m = memoPlanning(day); if (m) return m; }
+  return null;
+}
+function fixeJour(j){ const p = MPget(); p.jour = Object.assign({ date:isoDay(new Date()) }, j); MPset(p); S.matin = S.matin || {}; S.matin.rt = null; }
+async function routeDuJour(force, ask){
+  const M = S.matin = S.matin || {};
+  const job = jourDuJour(), p = MPget();
+  if (!job || job.repos){ M.rt = null; return null; }
+  const L = p.lieux.find(l => l.id === job.lieu);
+  if (!L){ M.rt = { job, manque:true }; return M.rt; }
+  if (!force && M.rt && M.rt.L && M.rt.L.id === L.id && Date.now() - M.rt.at < 5 * 60000) return M.rt;
+  let a = null;
+  const g = online() && (ask || (await geoState()) === 'granted') ? await geoPos(true) : null;
+  if (g) a = g; else { const h = p.lieux.find(l => l.type === 'maison'); if (h) a = { lat:h.lat, lon:h.lon }; }
+  if (!a){ M.rt = { job, L, sansDepart:true, at:Date.now() }; return M.rt; }
+  if (kmBetween(a, L) < 0.4){ M.rt = { job, L, surPlace:true, at:Date.now() }; return M.rt; }
+  const res = await trajet(a, L);
+  const arr = atToday(job.heure), wx = M.wx;
+  let pars = null;
+  if (arr && res.r && res.r.min != null) pars = new Date(arr.getTime() - (res.r.min + (p.marge || 0) + (wx ? wx.buffer || 0 : 0)) * 60000);
+  M.rt = Object.assign({ job, L, a, pars }, res);
+  return M.rt;
+}
+function routePhrases(rt){
+  if (!rt) return [];
+  const p = MPget();
+  const quand = rt.job && rt.job.heure ? ', prise de poste à ' + hSay(atToday(rt.job.heure)) : '';
+  if (rt.manque) return ['Aujourd\'hui : ' + (rt.job.lieuTxt || 'lieu inconnu') + quand + '. Ce lieu n\'est pas dans tes lieux enregistrés : ajoute-le dans les réglages du matin.'];
+  const out = ['Aujourd\'hui : ' + rt.L.nom + quand + '.'];
+  if (rt.surPlace) return out.concat(['Tu y es déjà.']);
+  if (rt.sansDepart) return out.concat(['Je ne connais pas ta position : active la localisation, ou enregistre ta maison dans les réglages.']);
+  out.push(...trajetPhrases(rt));
+  const arr = rt.job && atToday(rt.job.heure);
+  if (arr && arr.getTime() < Date.now()) out.push('L\'heure de prise de poste est déjà passée.');
+  else if (rt.pars){
+    const wx = S.matin && S.matin.wx, buf = wx && wx.buffer ? wx.buffer : 0;
+    if (rt.pars.getTime() < Date.now()) out.push('Tu es un peu juste : en partant maintenant, arrivée vers ' + hSay(new Date(Date.now() + rt.r.min * 60000)) + '.');
+    else out.push('Pour être sur place ' + (p.marge || 0) + ' minutes avant' + (buf ? ', avec ' + buf + ' minutes de plus pour la météo' : '') + ', pars avant ' + hSay(rt.pars) + '.');
+  }
+  return out;
+}
+
+/* ---------- Carte « Mon point du matin » en haut de l'accueil ---------- */
+function matinCardHTML(){ return '<section class="section mt-sec"><div class="wrap"><div class="matin" id="matin">' + matinInner() + '</div></div></section>'; }
+function matinInner(){
+  const M = S.matin || {}, p = MPget(), wx = M.wx, rt = M.rt, job = jourDuJour();
+  let h = '<div class="mt-head"><h2 class="mt-h">Mon point du matin</h2><button class="iconbtn" data-action="m-reglages" aria-label="Réglages du point du matin">' + icon('gear', 19) + '</button></div>';
+  /* météo */
+  if (wx){
+    h += '<div class="mt-wx"><span class="mt-ic">' + icon(WICON(wx.code), 34) + '</span><div class="mt-wx-main"><b class="mt-temp">' + wx.t0 + '°<small> → ' + wx.tmax + '°</small></b>' +
+      '<span class="mt-sub">' + esc(cap(WMO(wx.code))) + (wx.place ? ' · ' + esc(wx.place) : '') + '</span>' +
+      '<span class="mt-sub">' + (wx.rain ? (wx.rain.now ? 'Pluie jusque vers ' + wx.rain.to + ' h' : 'Pluie ' + wx.rain.from + ' h – ' + wx.rain.to + ' h') : 'Pas de pluie prévue') + (wx.gust >= 50 ? ' · rafales ' + wx.gust + ' km/h' : '') + '</span></div></div>' +
+      (wx.alerts.length ? '<div class="mt-alerts">' + wx.alerts.map(a => '<span class="mt-alert">' + icon('alert', 14) + ' ' + esc(cap(a)) + '</span>').join('') + '</div>' : '') +
+      '<p class="mt-conseil">' + icon('shirt', 16) + ' ' + esc(wx.conseil) + '</p>' +
+      (wx.horsLigne ? '<p class="mt-old">Prévision gardée de ' + esc(hDisp(new Date(wx.at))) + ' (pas de réseau).</p>' : '');
+  } else if (M.wxNeed){
+    h += '<div class="mt-empty"><p>Pour la météo de l\'endroit où tu es, autorise la localisation (ou choisis une ville dans les réglages).</p><button class="btn sm primary" data-action="m-geo">' + icon('pin', 15) + ' Météo de ma position</button></div>';
+  } else h += '<p class="mt-sub">' + (online() ? 'Météo en cours de chargement…' : 'Pas de réseau : la météo apparaîtra à la prochaine connexion.') + '</p>';
+  /* route */
+  h += '<div class="mt-route">';
+  if (!p.lieux.some(l => l.type === 'travail')) h += '<p class="mt-sub">' + icon('car', 16) + ' Ajoute tes lieux de travail pour savoir à quelle heure partir. <button class="lnk" data-action="m-reglages">Ajouter</button></p>';
+  else if (!job) h += '<p class="mt-q">' + icon('car', 16) + ' Où vas-tu aujourd\'hui ?</p><div class="mt-chips">' + jourChips() + '</div>';
+  else if (job.repos) h += '<p class="mt-sub">' + icon('car', 16) + ' Repos aujourd\'hui. <button class="lnk" data-action="m-jour-change">Changer</button></p>';
+  else {
+    const L = p.lieux.find(l => l.id === job.lieu);
+    h += '<p class="mt-q">' + icon('car', 16) + ' ' + esc(L ? L.nom : (job.lieuTxt || '?')) + (job.heure ? ' · prise de poste ' + esc(hhmmDisp(job.heure)) : '') + (job.src === 'memo' ? ' <span class="mt-src">planning</span>' : '') + ' <button class="lnk" data-action="m-jour-change">Changer</button></p>';
+    if (rt && rt.r){
+      h += '<p class="mt-big">' + rt.r.min + ' min' + (rt.r.usual != null && rt.r.min - rt.r.usual >= 3 ? ' <small class="mt-plus">+' + (rt.r.min - rt.r.usual) + ' min</small>' : '') + (rt.pars ? ' · <b>pars avant ' + esc(hDisp(rt.pars)) + '</b>' : '') + '</p>';
+      rt.r.jams.filter(x => x.min >= 2).slice(0, 2).forEach(x => { h += '<p class="mt-ev">' + icon('alert', 14) + ' ' + esc(cap(x.cat)) + ' : +' + x.min + ' min</p>'; });
+    } else if (rt && !rt.manque && !rt.surPlace && !rt.sansDepart && !MPget().tomtom) h += '<p class="mt-sub">Temps de trajet en direct : ajoute la clé TomTom (gratuite) dans les réglages, ou touche « Y aller ».</p>';
+    if (rt && rt.ev) rt.ev.slice(0, 3).forEach(e => { h += '<p class="mt-ev">' + icon('alert', 14) + ' ' + esc(bfPhrase(e)) + (e.d ? ' — ' + esc(e.d.slice(0, 110)) : '') + ' <span class="mt-src">Bison Futé</span></p>'; });
+    if (rt && rt.ev && !rt.ev.length && rt.r && !rt.r.jams.some(x => x.min >= 2)) h += '<p class="mt-ok">' + icon('check', 14) + ' Rien de signalé sur la route.</p>';
+    if (rt && rt.manque) h += '<p class="mt-sub">« ' + esc(rt.job.lieuTxt) + ' » n\'est pas dans tes lieux : ajoute-le dans les réglages.</p>';
+    if (L) h += '<div class="mt-chips">' + yAllerBtns(L) + '</div>';
+  }
+  h += '</div>';
+  if (S.watch) h += '<p class="mt-watch">' + icon('route', 15) + ' Je surveille la route vers ' + esc(S.watch.d.nom) + '. <button class="lnk" data-action="m-watch-stop">Arrêter</button></p>';
+  h += '<div class="mt-actions"><button class="btn primary" data-action="m-play">' + icon('play', 17) + ' Écouter mon point du matin</button>' +
+    '<button class="btn" data-action="m-iti">' + icon('route', 17) + ' Itinéraire</button>' +
+    (Voice.ok ? '<button class="btn' + (Libre.on ? ' on' : '') + '" data-action="m-libre" aria-pressed="' + Libre.on + '">' + icon('mic', 17) + (Libre.on ? ' Mains libres actif' : ' Mains libres') + '</button>' : '') + '</div>' +
+    '<p class="mt-foot">Météo : Météo-France (AROME, ARPEGE) via Open-Meteo · Trafic : ' + (p.tomtom ? 'TomTom et ' : '') + 'Bison Futé · ' + (wx ? 'mis à jour à ' + esc(hDisp(new Date(wx.at))) : '') + '</p>';
+  return h;
+}
+function jourChips(){
+  const p = MPget(), tr = p.lieux.filter(l => l.type === 'travail'), hs = p.heures.length ? p.heures : [''];
+  return tr.map(l => hs.map(hh => '<button class="chip" data-action="m-jour" data-l="' + esc(l.id) + '" data-h="' + esc(hh) + '">' + esc(l.nom) + (hh ? ' ' + esc(hhmmDisp(hh)) : '') + '</button>').join('')).join('') +
+    '<button class="chip" data-action="m-jour-repos">Repos</button>';
+}
+const yAllerBtns = L => '<a class="btn sm" href="https://www.google.com/maps/dir/?api=1&destination=' + L.lat + ',' + L.lon + '&travelmode=driving" target="_blank" rel="noopener noreferrer">' + icon('pin', 15) + ' Y aller (Maps)</a>' +
+  '<a class="btn sm ghost" href="https://waze.com/ul?ll=' + L.lat + ',' + L.lon + '&navigate=yes" target="_blank" rel="noopener noreferrer">Waze</a>';
+function matinRedraw(){ const el = $('#matin'); if (el) el.innerHTML = matinInner(); }
+let matinBusy = null;
+function matinMaj(force, ask){
+  if (matinBusy) return matinBusy;
+  matinBusy = (async () => {
+    try { await meteoMaj(force, ask); matinRedraw(); await routeDuJour(force, ask); } catch (e) {}
+    matinRedraw(); matinBusy = null;
+  })();
+  return matinBusy;
+}
+/* Écouter : la météo, puis la route, puis les informations (le flash). */
+async function matinEcoute(){
+  vbub('Je prépare ton point du matin…', false, 3000);
+  await matinMaj(true, true);
+  const M = S.matin || {}, ch = [];
+  if (M.wx) ch.push({ title:'Météo', text:M.wx.text + (M.wx.horsLigne ? ' C\'est la dernière prévision gardée, il n\'y a pas de réseau.' : '') });
+  const rp = routePhrases(M.rt);
+  const job = jourDuJour();
+  if (rp.length) ch.push({ title:'Ta route', text:rp.join(' ') });
+  else if (job && job.repos) ch.push({ title:'Ta route', text:'Repos aujourd\'hui, pas de trajet.' });
+  else if (MPget().lieux.some(l => l.type === 'travail')) ch.push({ title:'Ta route', text:'Je ne sais pas où tu travailles aujourd\'hui. Dis par exemple : aujourd\'hui Évreux 8 heures 45.' });
+  ch.push({ title:'Et maintenant', text:'Place aux informations.' });
+  if (!Player.synth){ startMode('flash'); return; }
+  S.deepFlow = false;
+  Player.load('matin', ch, 'Point du matin', null);
+  renderChapters(); renderTranscript(); Player.play();
+}
+
+/* ---------- Itinéraire à la demande, de là où tu es ---------- */
+function openIti(q){
+  const p = MPget();
+  showSheet('<div class="sheet-head"><div class="in pad"><h2 class="sheet-h">Itinéraire</h2><button class="iconbtn" data-action="close" aria-label="Fermer">' + icon('close') + '</button></div></div>' +
+    '<div class="pad sheet-body iti"><form class="iti-form" id="iti-form"><label class="sr" for="iti-q">Où vas-tu ?</label><input id="iti-q" type="text" placeholder="Où vas-tu ? (adresse, ville, lieu)" autocomplete="off" value="' + esc(q || '') + '">' +
+    '<button class="btn primary" type="submit">' + icon('route', 16) + ' Calculer</button></form>' +
+    (p.lieux.length ? '<div class="mt-chips">' + p.lieux.map(l => '<button class="chip" data-action="iti-go" data-q="' + esc(l.nom) + '">' + icon('pin', 14) + ' ' + esc(l.nom) + '</button>').join('') + '</div>' : '') +
+    (Voice.ok ? '<p class="muted small">Ou à la voix : « itinéraire vers la mairie de Vernon ».</p>' : '') +
+    '<div id="iti-out" aria-live="polite"></div></div>', 'Itinéraire');
+  if (q) itiCalc(q);
+}
+async function itiCalc(q, opt){
+  opt = opt || {};
+  const out = $('#iti-out'); const put = h => { const o = $('#iti-out'); if (o) o.innerHTML = h; };
+  if (!online()){ put('<p class="mt-sub">Pas de réseau : l\'itinéraire a besoin d\'internet. Tes lieux enregistrés restent utilisables avec le bouton Maps dès que tu captes.</p>'); if (opt.say) sayShort('Pas de réseau, je ne peux pas calculer l\'itinéraire.'); return null; }
+  put('<p class="mt-sub">Je cherche « ' + esc(q) + ' » et ta position…</p>');
+  const g = await geoPos(true);
+  const list = opt.dest ? [opt.dest] : await chercheLieu(q, g || LS.get('mds.pos', null));
+  if (!list.length){ put('<p class="mt-sub">Je ne trouve pas « ' + esc(q) + ' ». Essaie avec la ville, par exemple « mairie Vernon 27200 ».</p>'); if (opt.say) sayShort('Je ne trouve pas ' + q + '.'); return null; }
+  const d = list[0];
+  if (!g){ put('<p class="mt-sub">Je n\'ai pas ta position : autorise la localisation. Tu peux quand même lancer le guidage :</p><div class="mt-chips">' + yAllerBtns(d) + '</div>'); if (opt.say) sayShort('Je n\'ai pas ta position.'); return null; }
+  const res = await trajet(g, d);
+  const arrive = res.r && res.r.min != null ? new Date(Date.now() + res.r.min * 60000) : null;
+  const phr = ['Itinéraire vers ' + d.nom + '.'].concat(trajetPhrases(res), arrive ? ['Arrivée vers ' + hSay(arrive) + '.'] : []);
+  S.iti = { d:{ nom:d.nom, lat:d.lat, lon:d.lon }, res };
+  put('<div class="iti-res"><h3>' + esc(d.nom) + '</h3><p class="muted small">' + esc(d.label || '') + '</p>' +
+    (res.r ? '<p class="mt-big">' + res.r.min + ' min · ' + res.r.km + ' km' + (arrive ? ' · arrivée ' + esc(hDisp(arrive)) : '') + '</p>' : '') +
+    phr.slice(1).map(x => '<p>' + esc(x) + '</p>').join('') +
+    (list.length > 1 ? '<details class="iti-other"><summary>Ce n\'est pas le bon endroit ?</summary>' + list.slice(1, 5).map(x => '<button class="row" data-action="iti-pick" data-lat="' + x.lat + '" data-lon="' + x.lon + '" data-nom="' + esc(x.nom) + '"><span class="row-main"><span class="row-title">' + esc(x.nom) + '</span><span class="row-meta">' + esc(x.label || '') + '</span></span></button>').join('') + '</details>' : '') +
+    '<div class="mt-chips">' + yAllerBtns(d) + '<button class="btn sm" data-action="iti-watch">' + icon('route', 15) + ' Surveiller la route</button></div></div>');
+  if (opt.say){
+    sayShort(phr.join(' ') + ' Tu veux que je surveille la route ?', () => { askYes(() => watchStart(S.iti.d), null); });
+  }
+  return S.iti;
+}
+/* Surveillance : la route est revérifiée toutes les 5 minutes tant que l'appli est ouverte. */
+function watchStart(d){
+  watchStop(true);
+  S.watch = { d, last:null, until:Date.now() + 3 * 3600e3 };
+  const tick = async () => {
+    const w = S.watch; if (!w) return;
+    if (Date.now() > w.until){ watchStop(); return; }
+    if (document.visibilityState !== 'visible' || !online()) return;
+    const g = await geoPos(true); if (!g) return;
+    if (kmBetween(g, w.d) < 0.3){ sayShort('Tu es arrivé. J\'arrête la surveillance.'); watchStop(); return; }
+    const res = await trajet(g, w.d), prev = w.last;
+    w.last = { min: res.r ? res.r.min : null, ids: res.ev.map(e => e.id) };
+    if (prev){
+      const msgs = [];
+      if (prev.min != null && w.last.min != null && Math.abs(w.last.min - prev.min) >= 5) msgs.push(w.last.min > prev.min ? 'La route se charge : ' + w.last.min + ' minutes maintenant, ' + (w.last.min - prev.min) + ' de plus.' : 'Ça se dégage : ' + w.last.min + ' minutes maintenant.');
+      const nouv = res.ev.filter(e => !prev.ids.includes(e.id)); if (nouv.length) msgs.push('Nouveau sur ta route : ' + nouv.slice(0, 2).map(bfPhrase).join(' ; ') + '.');
+      if (msgs.length){ vbub(msgs.join(' '), false, 7000); sayShort(msgs.join(' ')); }
+    }
+    matinRedraw();
+  };
+  S.watch.timer = setInterval(tick, 5 * 60000); tick();
+  vbub('Je surveille la route vers ' + d.nom + ' (toutes les 5 minutes, appli ouverte).', false, 4000);
+  matinRedraw();
+}
+function watchStop(silent){ if (S.watch){ clearInterval(S.watch.timer); S.watch = null; if (!silent) vbub('Surveillance de la route arrêtée.', false, 2500); matinRedraw(); } }
+/* Question oui / non à la voix (ex. « Tu veux que je surveille la route ? »). */
+function askYes(yes, no){
+  S.yesNo = { yes, no, until:Date.now() + 20000 };
+  if (Libre.on) Libre.armed = Date.now() + 12000;
+  else if (Voice.ok) Voice.start('oui');
+}
+
+/* ---------- Réglages du point du matin ---------- */
+function openMatinReglages(){
+  const p = MPget();
+  const lieux = p.lieux.length ? '<ul class="rg-lieux">' + p.lieux.map(l => '<li><span><b>' + esc(l.nom) + '</b><small>' + esc((l.type === 'maison' ? 'Maison' : l.type === 'travail' ? 'Travail' : 'Autre') + (l.adr ? ' · ' + l.adr : '')) + '</small></span><button class="iconbtn" data-action="m-lieu-del" data-id="' + esc(l.id) + '" aria-label="Supprimer ' + esc(l.nom) + '">' + icon('close', 16) + '</button></li>').join('') + '</ul>' : '<p class="muted small">Aucun lieu enregistré.</p>';
+  showSheet('<div class="sheet-head"><div class="in pad"><h2 class="sheet-h">Réglages du matin</h2><button class="iconbtn" data-action="close" aria-label="Fermer">' + icon('close') + '</button></div></div>' +
+    '<div class="pad sheet-body rg">' +
+    '<section class="rg-sec"><h3>Météo</h3><label class="rg-tick"><input type="checkbox" data-m="geo"' + (p.geo ? ' checked' : '') + '><span>Météo de l\'endroit où se trouve le téléphone</span></label>' +
+      '<p class="muted small">Ville de secours (sans localisation) : <b>' + esc(p.ville ? p.ville.nom : 'aucune') + '</b></p>' +
+      '<form class="rg-form" data-form="ville"><input name="q" type="text" placeholder="Ville (ex. Louviers)" autocomplete="off"><button class="btn sm" type="submit">Choisir</button></form><div class="rg-res" id="rg-ville"></div></section>' +
+    '<section class="rg-sec"><h3>Mes lieux</h3>' + lieux +
+      '<form class="rg-form col" data-form="lieu"><input name="nom" type="text" placeholder="Nom (ex. Travail Évreux)" autocomplete="off"><input name="q" type="text" placeholder="Adresse ou ville" autocomplete="off">' +
+      '<div class="seg" role="group" aria-label="Type de lieu"><label><input type="radio" name="type" value="travail" checked> Travail</label><label><input type="radio" name="type" value="maison"> Maison</label><label><input type="radio" name="type" value="autre"> Autre</label></div>' +
+      '<button class="btn sm primary" type="submit">Ajouter</button></form><div class="rg-res" id="rg-lieu"></div>' +
+      '<p class="muted small">Tes lieux restent dans ce téléphone. Ils servent aux boutons du matin (« Évreux 8 h 45 ») et aux itinéraires à la voix.</p></section>' +
+    '<section class="rg-sec"><h3>Horaires et marge</h3><form class="rg-form" data-form="heures"><input name="h" type="text" value="' + esc(p.heures.join(', ')) + '" placeholder="08:15, 08:45" aria-label="Heures de prise de poste habituelles"><button class="btn sm" type="submit">Enregistrer</button></form>' +
+      '<p class="muted small">Heures de prise de poste habituelles, séparées par des virgules.</p>' +
+      '<label class="rg-line">Arriver en avance de <select data-m="marge">' + [0, 5, 10, 15, 20, 30].map(n => '<option value="' + n + '"' + (p.marge === n ? ' selected' : '') + '>' + n + ' min</option>').join('') + '</select></label>' +
+      '<label class="rg-tick"><input type="checkbox" data-m="memo"' + (p.memo ? ' checked' : '') + '><span>Lire mon planning de Memo-SSIAP (lieu et heure du jour). Lu dans ce téléphone, rien n\'est envoyé.</span></label></section>' +
+    '<section class="rg-sec"><h3>Trafic en direct (TomTom)</h3>' +
+      '<p class="small">Temps de trajet réel, bouchons et accidents sur toutes les routes. Gratuit pour un usage perso, sans carte bancaire : crée un compte sur <a href="https://developer.tomtom.com/" target="_blank" rel="noopener noreferrer">developer.tomtom.com</a>, puis copie ta clé (« API Key ») ici.</p>' +
+      '<form class="rg-form" data-form="tomtom"><input name="k" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="' + (p.tomtom ? 'Clé enregistrée sur ce téléphone' : 'Colle ta clé TomTom ici') + '"><button class="btn sm primary" type="submit">' + (p.tomtom ? 'Remplacer et tester' : 'Enregistrer et tester') + '</button></form>' +
+      (p.tomtom ? '<div class="mt-chips"><button class="btn sm ghost" data-action="m-tt-test">Tester la clé</button><button class="btn sm ghost" data-action="m-tt-del">Effacer la clé</button></div>' : '') +
+      '<p class="small" id="rg-tt" role="status"></p><p class="muted small">La clé reste dans ce téléphone. TomTom reçoit seulement le départ et l\'arrivée de tes trajets. Sans clé, Bison Futé signale déjà les coupures et travaux sur les routes nationales.</p></section>' +
+    '<section class="rg-sec"><h3>Voix</h3>' +
+      '<label class="rg-line">Reconnaissance de la voix <select data-m="moteur"><option value="auto"' + (p.moteur === 'auto' ? ' selected' : '') + '>Automatique</option><option value="google"' + (p.moteur === 'google' ? ' selected' : '') + '>Google (en ligne, la plus précise)</option><option value="local"' + (p.moteur === 'local' ? ' selected' : '') + '>Dans le téléphone (hors connexion, privée)</option></select></label>' +
+      '<div id="rg-vosk">' + voskBox() + '</div>' +
+      '<p class="muted small">Automatique : Google quand il y a du réseau, la voix hors connexion sinon (et pour le mode mains libres, si elle est téléchargée : pas de bip, rien n\'est envoyé).</p></section>' +
+    '</div>', 'Réglages du matin');
+}
+function voskBox(){
+  const ok = LS.get('mds.voskok', false);
+  return ok ? '<p class="small">' + icon('check', 14) + ' Voix hors connexion installée (environ 48 Mo dans le téléphone). <button class="lnk" data-action="m-vosk-del">Supprimer</button></p>'
+    : '<p class="small">Voix hors connexion : comprend tes commandes sans internet et sans rien envoyer. Un seul téléchargement d\'environ 48 Mo (de préférence en Wi-Fi).</p><button class="btn sm" data-action="m-vosk-get">' + icon('download', 15) + ' Télécharger la voix hors connexion</button><div class="pbar" id="vosk-pbar" hidden><i></i></div>';
+}
+async function reglageSubmit(f){
+  const kind = f.dataset.form, p = MPget(), val = n => (f.elements.namedItem(n) && f.elements.namedItem(n).value || '').trim();
+  if (kind === 'heures'){ p.heures = val('h').split(/[,;\s]+/).map(x => x.replace('h', ':').replace(/^(\d):/, '0$1:')).filter(x => /^\d{2}:\d{2}$/.test(x)).slice(0, 4); MPset(p); toast('Horaires enregistrés.'); matinRedraw(); return; }
+  if (kind === 'tomtom'){ const k = val('k').replace(/\s+/g, ''); if (!k) return; p.tomtom = k; MPset(p); f.reset(); await ttTest(); openMatinReglages(); return; }
+  const q = val('q'); if (!q) return;
+  const box = $(kind === 'ville' ? '#rg-ville' : '#rg-lieu'); if (box) box.innerHTML = '<p class="muted small">Recherche…</p>';
+  const list = await chercheLieu(q, LS.get('mds.pos', null));
+  if (!box) return;
+  if (!list.length){ box.innerHTML = '<p class="muted small">' + (online() ? 'Rien trouvé : précise la ville ou le code postal.' : 'Pas de réseau : la recherche a besoin d\'internet.') + '</p>'; return; }
+  S.rgPick = { kind, nom:kind === 'lieu' ? val('nom') : '', type:kind === 'lieu' ? ((f.querySelector('input[name=type]:checked') || {}).value || 'travail') : '', list };
+  box.innerHTML = list.slice(0, 5).map((x, i) => '<button class="row" data-action="m-pick" data-i="' + i + '"><span class="row-main"><span class="row-title">' + esc(x.nom) + '</span><span class="row-meta">' + esc(x.label || '') + '</span></span></button>').join('');
+}
+function reglagePick(i){
+  const P = S.rgPick; if (!P || !P.list[i]) return; const x = P.list[i], p = MPget();
+  if (P.kind === 'ville') p.ville = { nom:x.nom, lat:r2(x.lat), lon:r2(x.lon) };
+  else p.lieux.push({ id:'l' + Date.now().toString(36), nom:(P.nom || x.nom).slice(0, 40), adr:x.label || '', lat:r3(x.lat), lon:r3(x.lon), type:P.type || 'travail' });
+  MPset(p); S.rgPick = null; S.matin = S.matin || {}; S.matin.rt = null;
+  toast(P.kind === 'ville' ? 'Ville enregistrée.' : 'Lieu ajouté.'); openMatinReglages(); matinRedraw();
+}
+async function ttTest(){
+  const st = $('#rg-tt'); const say = m => { if (st) st.textContent = m; toast(m, 4000); };
+  if (!online()){ say('Pas de réseau : je testerai la clé plus tard.'); return; }
+  try { const r = await tomtomRoute({ lat:48.853, lon:2.349 }, { lat:48.861, lon:2.336 }); say(r ? 'La clé TomTom marche.' : 'Réponse inattendue de TomTom.'); }
+  catch (e) { say(e.status === 401 || e.status === 403 ? 'Clé refusée par TomTom : vérifie qu\'elle est complète.' : 'TomTom ne répond pas pour l\'instant.'); }
+}
+
+/* ---------- Voix hors connexion (Vosk, modèle français libre Apache 2.0, gardé dans le téléphone) ---------- */
+const VOSK_FILES = ['vendor/vosk.js', 'voix/vosk-fr.tar.gz'];
+const VK = { model:null, loading:null };
+async function voskDownload(){
+  const bar = () => $('#vosk-pbar'); const b0 = bar(); if (b0) b0.hidden = false;
+  const c = await caches.open('matinale-voix'); let fait = 0; const total = 48.1e6;
+  for (const u of VOSK_FILES){
+    const deja = await c.match(u); if (deja){ fait += u.endsWith('.gz') ? 42.2e6 : 5.8e6; continue; }
+    const r = await fetch(u, { cache:'no-store' }); if (!r.ok || !r.body) throw new Error('HTTP ' + r.status);
+    const rd = r.body.getReader(), parts = []; let n = 0;
+    for (;;){ const x = await rd.read(); if (x.done) break; parts.push(x.value); n += x.value.length; const b = bar(); if (b) b.firstChild.style.width = Math.min(100, Math.round((fait + n) / total * 100)) + '%'; }
+    await c.put(u, new Response(new Blob(parts), { headers:{ 'Content-Type': u.endsWith('.js') ? 'text/javascript' : 'application/gzip' } }));
+    fait += n;
+  }
+  LS.set('mds.voskok', true); Voice.ok = true;
+}
+async function voskLoad(){
+  if (VK.model) return VK.model;
+  if (VK.loading) return VK.loading;
+  VK.loading = (async () => {
+    const c = await caches.open('matinale-voix');
+    if (!window.Vosk){
+      const js = await c.match(VOSK_FILES[0]); if (!js) throw new Error('absent');
+      const u = URL.createObjectURL(await js.blob());
+      await new Promise((ok, ko) => { const s = document.createElement('script'); s.src = u; s.onload = ok; s.onerror = ko; document.head.appendChild(s); });
+    }
+    const m = await c.match(VOSK_FILES[1]); if (!m) throw new Error('absent');
+    VK.model = await window.Vosk.createModel(URL.createObjectURL(await m.blob()));
+    return VK.model;
+  })();
+  try { return await VK.loading; } finally { VK.loading = null; }
+}
+/* Écoute le micro avec la voix hors connexion ; rend une fonction pour arrêter. */
+async function voskEcoute(onText){
+  const model = await voskLoad();
+  const stream = await navigator.mediaDevices.getUserMedia({ audio:{ echoCancellation:true, noiseSuppression:true, autoGainControl:true, channelCount:1 }, video:false });
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const rec = new model.KaldiRecognizer(ctx.sampleRate);
+  rec.on('result', m => { const tx = m && m.result && m.result.text; if (tx && tx.trim()) onText(tx.trim()); });
+  const src = ctx.createMediaStreamSource(stream), node = ctx.createScriptProcessor(4096, 1, 1);
+  node.onaudioprocess = ev => { try { rec.acceptWaveform(ev.inputBuffer); } catch (e) {} };
+  src.connect(node); node.connect(ctx.destination);
+  return () => { try { node.disconnect(); src.disconnect(); } catch (e) {} try { stream.getTracks().forEach(tr => tr.stop()); } catch (e) {} try { ctx.close(); } catch (e) {} try { if (rec.remove) rec.remove(); } catch (e) {} };
+}
+/* Quel moteur ? 'google' (en ligne), 'vosk' (hors connexion) ou null. */
+function moteurVoix(libre){
+  const m = MPget().moteur, vr = !!LS.get('mds.voskok', false), g = !!SRec && online();
+  if (m === 'local') return vr ? 'vosk' : (g ? 'google' : null);
+  if (m === 'google') return g ? 'google' : (vr ? 'vosk' : null);
+  if (libre && vr) return 'vosk';
+  return g ? 'google' : (vr ? 'vosk' : null);
+}
+
+/* ---------- Mode mains libres : « Matinale, … » sans toucher le téléphone (appli ouverte, écran allumé) ---------- */
+const Libre = { on:false, eng:null, stop:null, rec:null, err:null, last:0, armed:0, mute:0, wake:null, idle:0 };
+const WAKE = /^(?:ok |okay |dis |he |eh |bonjour |allo )?(?:la |ma )?(?:matinale?s?|matina|matin al|ma tinale|martinale|matinee)\b ?(.*)$/;
+async function libreStart(){
+  if (Libre.on) return;
+  const eng = moteurVoix(true);
+  if (!eng){ vbub(online() ? 'La reconnaissance vocale n\'est pas disponible ici : ouvre la Matinale dans Chrome, ou télécharge la voix hors connexion dans les réglages.' : 'Pas de réseau : télécharge la voix hors connexion dans les réglages (une seule fois, en Wi-Fi).', false, 6000); return; }
+  Libre.on = true; Libre.eng = eng; Libre.last = Date.now(); Libre.armed = 0;
+  libreUI(); libreLock();
+  clearInterval(Libre.idle); Libre.idle = setInterval(libreVeille, 30000);
+  await libreMoteur();
+  if (!Libre.on) return;
+  vbub('Mains libres : dis « Matinale », puis ta demande.', false, 5000);
+  sayShort('Mode mains libres activé. Dis Matinale, puis ta demande.');
+}
+async function libreMoteur(){
+  if (!Libre.on || document.visibilityState !== 'visible') return;
+  if (Libre.eng === 'vosk'){
+    if (Libre.stop) return;
+    if (!VK.model) vbub('Chargement de la voix hors connexion…', true);
+    try { Libre.stop = await voskEcoute(t => libreEntendu([t])); vbub(''); }
+    catch (e) {
+      Libre.stop = null;
+      if (SRec && online()){ Libre.eng = 'google'; libreGoogle(); }
+      else libreArret(false, (e && e.name === 'NotAllowedError') ? 'Le micro est refusé : autorise-le dans les réglages du navigateur.' : 'La voix hors connexion ne démarre pas sur ce téléphone.');
+    }
+  } else libreGoogle();
+}
+function libreGoogle(){
+  if (!Libre.on || Libre.eng !== 'google' || Libre.rec || document.visibilityState !== 'visible') return;
+  let r; try { r = new SRec(); } catch (e) { libreArret(false, 'La reconnaissance vocale ne démarre pas.'); return; }
+  r.lang = 'fr-FR'; r.continuous = true; r.interimResults = false; r.maxAlternatives = 3;
+  r.onresult = e => { for (let i = e.resultIndex; i < e.results.length; i++){ const res = e.results[i]; if (res && res.isFinal) libreEntendu(Array.from(res).map(a => a.transcript)); } };
+  r.onerror = e => { Libre.err = e && e.error; };
+  r.onend = () => {
+    if (Libre.rec === r) Libre.rec = null;
+    const err = Libre.err; Libre.err = null;
+    if (!Libre.on || Libre.eng !== 'google') return;
+    if (err === 'not-allowed' || err === 'service-not-allowed'){ libreArret(false, 'Le micro est refusé : autorise-le dans les réglages du navigateur.'); return; }
+    if (err === 'network' || !online()){
+      if (LS.get('mds.voskok', false)){ Libre.eng = 'vosk'; libreMoteur(); vbub('Plus de réseau : je passe à la voix hors connexion.', false, 4000); }
+      else libreArret(false, 'Plus de réseau : le mode mains libres s\'arrête. Télécharge la voix hors connexion pour l\'utiliser sans réseau.');
+      return;
+    }
+    setTimeout(libreGoogle, err === 'no-speech' || !err ? 60 : 500);
+  };
+  try { r.start(); Libre.rec = r; } catch (e) { setTimeout(libreGoogle, 1000); }
+}
+function librePause(){ if (Libre.stop){ try { Libre.stop(); } catch (e) {} Libre.stop = null; } if (Libre.rec){ const r = Libre.rec; Libre.rec = null; try { r.abort(); } catch (e) {} } }
+function libreArret(silent, msg){
+  if (!Libre.on) return;
+  Libre.on = false; librePause(); clearInterval(Libre.idle);
+  try { if (Libre.wake) Libre.wake.release(); } catch (e) {} Libre.wake = null;
+  libreUI();
+  if (msg){ vbub(msg, false, 6000); sayShort(msg); } else if (!silent){ vbub('Mains libres arrêté.', false, 2500); }
+}
+async function libreLock(){ try { if ('wakeLock' in navigator && !Libre.wake && document.visibilityState === 'visible') Libre.wake = await navigator.wakeLock.request('screen'); if (Libre.wake) Libre.wake.addEventListener('release', () => { Libre.wake = null; }); } catch (e) { Libre.wake = null; } }
+function libreVeille(){ if (Libre.on && !Player.playing && !(Player.synth && Player.synth.speaking) && Date.now() - Libre.last > 10 * 60000) libreArret(false, 'Dix minutes sans demande : j\'arrête le mode mains libres.'); }
+function libreUI(){
+  const f = $('#mic-fab'); if (f){ f.classList.toggle('libre', Libre.on); f.setAttribute('aria-label', Libre.on ? 'Mains libres actif : touche pour l\'arrêter' : 'Commande vocale : touche, puis parle'); }
+  document.body.classList.toggle('libre-on', Libre.on);
+  $$('[data-action="m-libre"]').forEach(b => { b.classList.toggle('on', Libre.on); b.setAttribute('aria-pressed', String(Libre.on)); b.innerHTML = icon('mic', 17) + (Libre.on ? ' Mains libres actif' : ' Mains libres'); });
+}
+function libreEntendu(alts){
+  if (!Libre.on || Date.now() < Libre.mute) return;
+  const now = Date.now();
+  for (const raw of alts){
+    const s = cmdNorm(raw), m = WAKE.exec(s);
+    if (m){
+      const rest = (m[1] || '').trim();
+      if (/^des sciences/.test(rest)) return;   /* la voix de l'appli qui dit « la Matinale des sciences » */
+      Libre.last = now;
+      if (!rest){ Libre.armed = now + 8000; beep(); vbub('Je t\'écoute…', false, 7000); return; }
+      libreFaire(raw.replace(/^[\s\S]*?matin\w*\s*,?\s*/i, '') || rest); return;
+    }
+    if (Libre.armed > now){ Libre.armed = 0; Libre.last = now; libreFaire(raw); return; }
+  }
+}
+function libreFaire(raw){
+  const jouait = Player.playing;
+  let r = null; try { r = voiceCommand([raw], askOpen() ? 'ask' : 'libre'); } catch (e) { r = null; }
+  if (r && !r.fail){ vbub(r.msg, false, 3000); return; }
+  if (jouait) return;   /* sans doute la voix de l'appli elle-même : on ne dit rien */
+  vbub(r ? r.msg : 'Je n\'ai pas compris « ' + raw + ' ».', false, 4500);
+  sayShort('Je n\'ai pas compris. Redis ta demande.', () => { Libre.armed = Date.now() + 8000; });
+}
+/* Commandes vocales du matin (appelées par voiceCommand). Rend { msg, keep } ou null. */
+function matinCommande(s, raw){
+  if (S.yesNo && S.yesNo.until > Date.now()){
+    if (/ (oui|ouais|ok|okay|d accord|vas y|volontiers|bien sur|je veux bien|surveille) /.test(s)){ const f = S.yesNo.yes; S.yesNo = null; if (f) f(); return { msg:'D\'accord.', keep:true }; }
+    if (/ (non|pas besoin|c est bon|laisse) /.test(s)){ const f = S.yesNo.no; S.yesNo = null; if (f) f(); return { msg:'D\'accord.', keep:true }; }
+  }
+  if (/ (mains libres|main libre|mains libre) /.test(s)){ if (/ (arrete|stop|desactive|coupe|fin) /.test(s)){ libreArret(); return { msg:'Mains libres arrêté.', keep:true }; } libreStart(); return { msg:'Mains libres activé.', keep:true }; }
+  if (/ (arrete d ecouter|arrete de m ecouter|ne m ecoute plus) /.test(s)){ libreArret(); return { msg:'Mains libres arrêté.', keep:true }; }
+  if (/ point du matin | mon point /.test(s)){ matinEcoute(); return { msg:'Ton point du matin.', keep:true }; }
+  if (/ (arrete|stop|fin) (la )?surveillance /.test(s)){ watchStop(); return { msg:'Surveillance arrêtée.' }; }
+  if (/ surveille (la route|le trajet)? /.test(s)){ const d = (S.iti && S.iti.d) || (S.matin && S.matin.rt && S.matin.rt.L); if (d){ watchStart({ nom:d.nom, lat:d.lat, lon:d.lon }); return { msg:'Je surveille la route.', keep:true }; } }
+  if (/ reglages? /.test(s) && / (matin|meteo|trajet|voix) /.test(s)){ openMatinReglages(); return { msg:'Les réglages du matin.' }; }
+  if (/ repos /.test(s) && / (aujourd hui|je suis|c est|journee) /.test(s)){ fixeJour({ repos:true }); matinRedraw(); return { msg:'Repos aujourd\'hui : pas de trajet.' }; }
+  /* « aujourd'hui Évreux 8 h 45 », « aujourd'hui je travaille à Louviers à 8 heures 15 » */
+  if (/ aujourd hui /.test(s) || / je (travaille|bosse|commence|prends mon poste|vais) /.test(s)){
+    const L = MPget().lieux.find(l => l.type !== 'maison' && s.includes(' ' + cmdNorm(l.nom) + ' ')) || MPget().lieux.find(l => cmdNorm(l.nom).split(' ').some(w => w.length > 3 && s.includes(' ' + w + ' ')));
+    const h = heureDite(s);
+    if (L){ fixeJour({ lieu:L.id, heure:h || (MPget().heures[0] || '') }); matinMaj(true); return { msg:'Aujourd\'hui : ' + L.nom + (h ? ' à ' + hhmmDisp(h) : '') + '.', speak:true }; }
+  }
+  /* itinéraire vers … */
+  const mi = /(?:itineraire|trajet|route|aller|emmene moi|conduis moi|guide moi)\s+(?:vers|a|au|aux|pour|jusqu a|jusque|chez)\s+(.+)$/.exec(s);
+  if (mi){
+    let dest = raw.replace(/^[\s\S]*?\b(?:vers|à|a|au|aux|pour|jusqu['’ ]à|jusque|chez)\s+/i, '').trim() || mi[1];
+    if (!S.sheetOpen || !$('#iti-form')) openIti(); const inp = $('#iti-q'); if (inp) inp.value = dest;
+    itiCalc(dest, { say:true }); return { msg:'Itinéraire vers ' + dest + '…', keep:true };
+  }
+  if (/ (itineraire|trajet|route|trafic|circulation|bouchons?) /.test(s)){
+    routeDuJour(true).then(rt => { matinRedraw(); const ph = routePhrases(rt); sayShort(ph.length ? ph.join(' ') : 'Dis-moi où tu vas, par exemple : itinéraire vers Évreux.'); });
+    return { msg:'Je regarde la route…', keep:true };
+  }
+  if (/ (meteo|temps qu il fait|quel temps|parapluie|tenue|m habiller|habiller) /.test(s)){
+    meteoMaj(true, true).then(wx => { matinRedraw(); sayShort(wx ? wx.text : 'Je n\'ai pas la météo : autorise la localisation ou choisis une ville.'); });
+    return { msg:'La météo…', keep:true };
+  }
+  return null;
+}
+function heureDite(s){
+  let m = /(?:^| )(\d{1,2}) ?(?:h|heures?|:)? ?(\d{2})?(?= |$)/.exec(s.replace(/ heures? /g, ' h '));
+  const h = m ? +m[1] : null, mn = m && m[2] ? +m[2] : 0;
+  if (h != null && h < 24 && mn < 60 && (m[2] || / h /.test(s) || /heure/.test(s))) return pad2(h) + ':' + pad2(mn);
+  /* en lettres (voix hors connexion) : « huit heures quarante cinq » */
+  const U = { une:1, un:1, deux:2, trois:3, quatre:4, cinq:5, six:6, sept:7, huit:8, neuf:9, dix:10, onze:11, douze:12, treize:13, quatorze:14, quinze:15, seize:16, vingt:20, trente:30, quarante:40, cinquante:50, midi:12 };
+  const w = / (une|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|onze|douze|treize|quatorze|quinze|seize|midi) (?:heures?|h)?(?: (vingt|trente|quarante|cinquante|dix|quinze|cinq)(?: et)?(?: (un|deux|trois|quatre|cinq|six|sept|huit|neuf))?)? /.exec(' ' + s + ' ');
+  if (w){ const hh = U[w[1]], mm = (w[2] ? U[w[2]] : 0) + (w[3] ? U[w[3]] : 0); if (hh < 24 && mm < 60) return pad2(hh) + ':' + pad2(mm); }
+  return '';
+}
+
 /* ---------- Commande vocale ----------
    Le micro n'écoute que lorsqu'on touche le bouton, ou juste après la question de fin du flash.
    La reconnaissance vocale est celle du téléphone (sur Android, le service de Google, comme une dictée).
    Les phrases sont comprises ici même, sans IA : numéros, mots des titres et quelques commandes. */
 const SRec = (typeof window !== 'undefined') && (window.SpeechRecognition || window.webkitSpeechRecognition);
 const Voice = {
-  ok: !!SRec, rec:null, on:false, ctx:'cmd', resume:false, got:false, err:null,
-  start(ctx){
+  ok: !!SRec || !!LS.get('mds.voskok', false), rec:null, on:false, ctx:'cmd', resume:false, got:false, err:null, tries:0, vstop:null,
+  start(ctx, retry){
+    if (Libre.on){ if (!ctx && !retry) libreArret(); else if (ctx === 'ask' || ctx === 'oui') Libre.armed = Date.now() + 12000; return; }   /* le bouton micro arrête le mode mains libres ; sinon il écoute déjà */
     if (!this.ok){ openVoiceHelp(); return; }
     if (this.on){ this.stop(); return; }
+    if (!retry) this.tries = 0;
     this.ctx = ctx || (askOpen() ? 'ask' : 'cmd'); this.got = false; this.err = null;
-    this.resume = !!Player.playing;   /* l'écoute en cours est mise en pause pendant qu'on parle, puis reprend */
+    if (!retry) this.resume = !!Player.playing;   /* l'écoute en cours est mise en pause pendant qu'on parle, puis reprend */
     if (Player.playing) Player.pause();
     try { if (Player.synth && Player.synth.speaking) Player.synth.cancel(); } catch (e) {}
-    let r; try { r = new SRec(); } catch (e) { this.ok = false; openVoiceHelp(); return; }
+    const eng = moteurVoix(false);
+    if (!eng){ vbub(online() ? 'La reconnaissance vocale n\'est pas disponible dans ce navigateur.' : 'Pas de réseau : télécharge la voix hors connexion dans les réglages du matin (une seule fois).', false, 5000); if (this.resume){ this.resume = false; Player.play(); } return; }
+    if (eng === 'vosk'){
+      this.on = true; micUI(); vbub(VK.model ? 'Je t\'écoute…' : 'Chargement de la voix hors connexion…', true); beep();
+      const fini = () => { clearTimeout(this.vt); if (this.vstop){ try { this.vstop(); } catch (e) {} this.vstop = null; } this.on = false; micUI(); };
+      voskEcoute(tx => { if (this.got) return; this.got = true; fini(); this.handle([tx]); })
+        .then(stop => { if (this.got){ stop(); return; } this.vstop = stop; vbub('Je t\'écoute…', true); this.vt = setTimeout(() => { if (!this.got){ this.got = true; fini(); this.miss('no-speech'); } }, 9000); })
+        .catch(e => { this.got = true; fini(); this.miss(e && e.name === 'NotAllowedError' ? 'not-allowed' : 'vosk'); });
+      return;
+    }
+    let r; try { r = new SRec(); } catch (e) { this.ok = !!LS.get('mds.voskok', false); openVoiceHelp(); return; }
     r.lang = 'fr-FR'; r.interimResults = true; r.maxAlternatives = 5; r.continuous = false;
     r.onresult = e => {
       const res = e.results[e.results.length - 1]; if (!res || !res[0]) return;
@@ -2108,6 +2865,7 @@ const Voice = {
   stop(silent){
     const r = this.rec; this.rec = null; this.on = false; this.got = true;
     if (r){ try { r.abort(); } catch (e) {} }
+    clearTimeout(this.vt); if (this.vstop){ try { this.vstop(); } catch (e) {} this.vstop = null; }
     micUI(); if (!silent) vbub('');
     if (this.resume){ this.resume = false; Player.play(); }
   },
@@ -2115,7 +2873,12 @@ const Voice = {
     const m = (err === 'not-allowed' || err === 'service-not-allowed') ? 'Le micro est refusé. Autorise le micro pour la Matinale dans les réglages du navigateur (le cadenas à côté de l\'adresse, ou Paramètres, Applications).'
       : err === 'network' ? 'La reconnaissance vocale a besoin d\'internet. Tu peux toucher les sujets à la place.'
       : err === 'audio-capture' ? 'Aucun micro n\'est disponible.'
+      : err === 'vosk' ? 'La voix hors connexion ne démarre pas sur ce téléphone.'
       : 'Je n\'ai rien entendu. Touche le micro, attends le bip, puis parle.';
+    /* Après une question (« approfondir ? », « oui ou non ? ») : on réessaie tout seul, deux fois. */
+    if ((this.ctx === 'ask' || this.ctx === 'oui') && (err === 'no-speech' || !err) && this.tries < 2 && document.visibilityState === 'visible' && (this.ctx !== 'ask' || askOpen())){
+      this.tries++; vbub('Je n\'ai rien entendu, je réécoute…', true); setTimeout(() => this.start(this.ctx, true), 700); return;
+    }
     vbub(m, false, 5000);
     if (this.resume){ this.resume = false; Player.play(); }
   },
@@ -2153,12 +2916,13 @@ function beep(){
 }
 /* Une phrase courte dite par la voix du téléphone (ex. « Un autre sujet ? »), puis la suite. */
 function sayShort(text, then){
-  let done = false; const go = () => { if (done) return; done = true; if (then) then(); };
+  let done = false; const go = () => { if (done) return; done = true; Libre.mute = Date.now() + 700; if (then) then(); };
   if (!Player.synth){ go(); return; }
   try {
     const u = new SpeechSynthesisUtterance(text); const v = pickVoice(); if (v){ u.voice = v; u.lang = v.lang; } else u.lang = 'fr-FR';
     u.rate = S.prefs.rate || 1; u.onend = go; u.onerror = go; sayShort.u = u;
-    Player.synth.cancel(); Player.synth.speak(u); setTimeout(go, 9000);
+    Libre.mute = Date.now() + 60000;
+    Player.synth.cancel(); Player.synth.speak(u); setTimeout(go, Math.max(9000, String(text).length * 95));
   } catch (e) { go(); }
 }
 const NUMW = { 'dix sept':17, 'dix septieme':17, 'dix huit':18, 'dix huitieme':18, 'dix neuf':19, 'dix neuvieme':19, 'vingt et un':21, 'vingt deux':22, 'vingt trois':23, 'vingt quatre':24, 'vingt cinq':25,
@@ -2186,10 +2950,11 @@ function matchTitle(s, ed){
 /* Comprend une phrase et agit. Rend { msg, keep } (keep : ne pas relancer la lecture mise en pause), ou null. */
 function voiceCommand(alts, ctx){
   const ed = S.edition, max = ed ? ed.items.length : 0;
-  const wasPlaying = Voice.resume;   /* la lecture a été mise en pause le temps d'écouter */
+  const wasPlaying = Voice.resume || Player.playing;   /* la lecture a été mise en pause le temps d'écouter (ou continue, en mains libres) */
   for (const raw of alts){
     const s = ' ' + norm(raw).replace(/[’'`\-]/g, ' ').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim() + ' ';
     const has = re => re.test(s), n = spokenNum(s, max);
+    const mc = matinCommande(s, raw); if (mc) return mc;
     if (has(/ (aide|commandes?|que (peux|puis|dois) je dire|quoi dire) /)){ openVoiceHelp(); return { msg:'Voici ce que tu peux dire.', keep:true }; }
     if (!n && has(/ (non|c est bon|ca ira|pas besoin|ca va aller|rien|termine|fini|merci|non merci) /) && !has(/ (lis|ouvre|approfondi\w*|plus vite|moins vite) /)){
       if (ctx === 'ask' || askOpen()){ askNo(); return { msg:'D\'accord. Bonne journée !', keep:true }; }
@@ -2259,6 +3024,7 @@ function deep(key, keepSheet){
 function askNo(){ S.deepFlow = false; if (askOpen()) closeSheet(); }
 /* À la fin du flash (ou d'un sujet approfondi) : « Tu veux approfondir un sujet ? » */
 function onListenEnd(mode){
+  if (mode === 'matin'){ startMode('flash'); return; }
   if (mode === 'flash') askDeeper('flash');
   else if (mode === 'item' && S.deepFlow) askDeeper('again');
 }
@@ -2275,6 +3041,11 @@ function askDeeper(kind){
     '<button class="btn ad-no" data-action="ask-no">Non merci</button></div>';
   showSheet(html, again ? 'Un autre sujet ?' : 'Approfondir un sujet ?', askOpen());
   if (!Voice.ok) return;
+  if (Libre.on){   /* mains libres : on écoute la réponse sans le mot « Matinale » */
+    if (again) sayShort('Tu veux approfondir un autre sujet ? Dis son numéro, ou non merci.', () => { Libre.armed = Date.now() + 15000; beep(); });
+    else { Libre.armed = Date.now() + 15000; beep(); }
+    return;
+  }
   if (again) sayShort('Tu veux approfondir un autre sujet ? Dis son numéro, ou non merci.', () => { if (askOpen()) Voice.start('ask'); });
   else Voice.start('ask');
 }
@@ -2287,7 +3058,9 @@ function openVoiceHelp(){
       : '<p class="muted" style="margin:0">La commande vocale n\'est pas disponible dans ce navigateur. Ouvre la Matinale dans Chrome sur Android pour l\'utiliser ; les numéros et les boutons marchent partout.</p>') +
     '<h3>Choisir un sujet</h3><ul>' + li('Sujet 5', 'l\'ouvre et le lit en détail') + li('Lis-moi le 12') + li('Ouvre la fiche 3', 'l\'ouvre sans la lire') + li('Celui sur les trous noirs', 'un mot du titre suffit') + li('Approfondis', 'le sujet en cours, pendant le flash') + '</ul>' +
     '<h3>Pendant l\'écoute</h3><ul>' + li('Pause') + li('Reprends') + li('Plus vite') + li('Moins vite') + li('Vitesse normale') + li('Recule', '10 secondes') + li('Répète', 'le début du sujet') + li('Suivant') + li('Précédent') + li('Stop') + '</ul>' +
-    '<h3>Écouter, revenir</h3><ul>' + li('Le flash') + li('L\'édition complète') + li('Sommaire') + '</ul>' +
+    '<h3>Écouter, revenir</h3><ul>' + li('Le flash') + li('L\'édition complète') + li('Sommaire') + li('Point du matin', 'météo, route, puis les infos') + '</ul>' +
+    '<h3>Météo et route</h3><ul>' + li('Météo') + li('Trafic', 'la route du jour') + li('Aujourd\'hui Évreux 8 h 45', 'ton lieu et ton heure du jour') + li('Repos aujourd\'hui') + li('Itinéraire vers la mairie de Vernon', 'de là où tu es') + li('Surveille la route') + li('Arrête la surveillance') + '</ul>' +
+    '<h3>Sans les mains</h3><ul>' + li('Mains libres', 'ensuite, commence chaque demande par « Matinale »') + li('Matinale, sujet 2') + li('Matinale, pause') + li('Arrête d\'écouter') + '</ul>' +
     '<h3>Terminer</h3><ul>' + li('Non merci') + li('C\'est bon') + '</ul>' +
     '<p class="note">Le micro n\'écoute que quand tu touches le bouton ou juste après une question, quelques secondes, et seulement quand la Matinale est ouverte à l\'écran. ' +
     'La reconnaissance de la voix est celle du téléphone : sur Android, ta voix est envoyée au service de Google pour être comprise, comme une dictée de message ; elle a souvent besoin d\'internet. ' +
@@ -2478,6 +3251,24 @@ function onClick(e){
     case 'rate-pop': ratePop(); break;
     case 'skip': Player.skip(Number(a.dataset.d)); break;
     case 'mic': Voice.start(a.dataset.ctx); break;
+    case 'm-reglages': openMatinReglages(); break;
+    case 'm-geo': S.matin = S.matin || {}; S.matin.wxNeed = false; matinRedraw(); matinMaj(true, true); break;
+    case 'm-jour': fixeJour({ lieu:a.dataset.l, heure:a.dataset.h || '' }); matinRedraw(); matinMaj(true, true); break;
+    case 'm-jour-repos': fixeJour({ repos:true }); matinRedraw(); break;
+    case 'm-jour-change': fixeJour({ choix:true }); matinRedraw(); break;
+    case 'm-play': matinEcoute(); break;
+    case 'm-iti': openIti(); break;
+    case 'm-libre': if (Libre.on) libreArret(); else libreStart(); break;
+    case 'm-watch-stop': watchStop(); break;
+    case 'iti-go': { const inp = $('#iti-q'); if (inp) inp.value = a.dataset.q; itiCalc(a.dataset.q); break; }
+    case 'iti-pick': itiCalc(a.dataset.nom, { dest:{ nom:a.dataset.nom, lat:+a.dataset.lat, lon:+a.dataset.lon } }); break;
+    case 'iti-watch': if (S.iti) watchStart(S.iti.d); break;
+    case 'm-lieu-del': { const pp = MPget(); pp.lieux = pp.lieux.filter(l => l.id !== a.dataset.id); MPset(pp); S.matin = S.matin || {}; S.matin.rt = null; openMatinReglages(); matinRedraw(); break; }
+    case 'm-pick': reglagePick(Number(a.dataset.i)); break;
+    case 'm-tt-test': ttTest(); break;
+    case 'm-tt-del': { const pp = MPget(); pp.tomtom = ''; MPset(pp); toast('Clé TomTom effacée de ce téléphone.'); openMatinReglages(); break; }
+    case 'm-vosk-get': a.disabled = true; voskDownload().then(() => { const b = $('#rg-vosk'); if (b) b.innerHTML = voskBox(); const mf = $('#mic-fab'); if (mf) mf.hidden = false; toast('Voix hors connexion installée.'); }, () => { a.disabled = false; toast('Téléchargement interrompu : réessaie avec du réseau (Wi-Fi de préférence).', 4000); }); break;
+    case 'm-vosk-del': caches.delete('matinale-voix').then(() => { LS.set('mds.voskok', false); VK.model = null; Voice.ok = !!SRec; const b = $('#rg-vosk'); if (b) b.innerHTML = voskBox(); toast('Voix hors connexion supprimée.'); }); break;
     case 'voice-help': openVoiceHelp(); break;
     case 'deep': deep(a.dataset.key); break;
     case 'ask-no': askNo(); break;
@@ -2511,13 +3302,30 @@ function bindEvents(){
   $('#hdr-fav').innerHTML = icon('star', 19);
   $('#mini-next').innerHTML = icon('next', 20); $('#mini-stop').innerHTML = icon('close', 20); $('#mini-back').innerHTML = icon('back10', 22);
   const mf = $('#mic-fab'); if (mf){ mf.innerHTML = icon('mic', 28); mf.hidden = !Voice.ok; }
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.askPending) setTimeout(() => askDeeper(S.askPending), 400); else if (document.visibilityState === 'hidden' && Voice.on) Voice.stop(true); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible'){
+      if (S.askPending) setTimeout(() => askDeeper(S.askPending), 400);
+      if (Libre.on){ libreLock(); libreMoteur(); }
+      if (S.tab === 'aujourdhui' && S.status === 'ready') matinMaj(false);
+    } else { if (Voice.on) Voice.stop(true); if (Libre.on) librePause(); }
+  });
   document.addEventListener('input', e => { if (e.target && e.target.id === 'fq'){ S.frQuery = e.target.value; renderDir(); } if (e.target && e.target.id === 'nq'){ S.nq = e.target.value; renderNotionList(); } });
   document.addEventListener('click', onClick);
   /* Réglage de la vitesse : la valeur suit le doigt, elle s'applique au lâcher. Toucher ailleurs referme le réglage du mini-lecteur. */
   document.addEventListener('input', e => { if (e.target && e.target.matches && e.target.matches('[data-rate-range]')) setRate(Number(e.target.value), true); });
   document.addEventListener('change', e => { if (e.target && e.target.matches && e.target.matches('[data-rate-range]')) setRate(Number(e.target.value)); });
   document.addEventListener('click', e => { if (ratePopOpen() && !e.target.closest('#mini-pop, #mini-rate')) ratePop(false); }, true);
+  document.addEventListener('submit', e => {
+    const f = e.target;
+    if (f && f.dataset && f.dataset.form){ e.preventDefault(); reglageSubmit(f); return; }
+    if (f && f.id === 'iti-form'){ e.preventDefault(); const v = ($('#iti-q') || {}).value || ''; if (v.trim()) itiCalc(v.trim()); }
+  });
+  document.addEventListener('change', e => {
+    const t = e.target, k = t && t.dataset && t.dataset.m; if (!k) return;
+    const pp = MPget();
+    if (k === 'geo' || k === 'memo') pp[k] = !!t.checked; else if (k === 'marge') pp.marge = Number(t.value) || 0; else if (k === 'moteur') pp.moteur = t.value;
+    MPset(pp); S.matin = S.matin || {}; if (k !== 'moteur') { S.matin.rt = null; matinMaj(true); }
+  });
   document.addEventListener('submit', e => { if (e.target && e.target.id === 'ask-form'){ e.preventDefault(); const inp = $('#ask-input'); const v = inp ? inp.value.trim() : ''; if (v) ask(v); } });
   document.addEventListener('input', e => { if (e.target && e.target.id === 'q'){ S.query = e.target.value; renderFeed(); } });
   document.addEventListener('change', e => { if (e.target && e.target.id === 'voice-select'){ S.prefs.voiceURI = e.target.value || null; savePrefs(); Player.restartSentence(); } });
