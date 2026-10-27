@@ -28,17 +28,20 @@ jobs:
           } > services.txt 2>&1
           ls -la
       - name: Voix hors connexion (Vosk)
+        continue-on-error: true
         run: |
-          cd out
-          npm pack vosk-browser@latest >/dev/null 2>&1 && ls -la *.tgz && tar xzf vosk-browser-*.tgz && ls -la package package/dist 2>/dev/null | head -30 && cat package/package.json | head -40 > vosk-browser-package.txt && cp package/LICENSE* vosk-browser-LICENSE.txt 2>/dev/null; ls package/dist > vosk-dist.txt 2>&1
-          curl -sS -m 60 https://alphacephei.com/vosk/models > models.html && grep -i -A3 "small-fr" models.html | head -40 > models-fr.txt
-          curl -sSL -m 300 -o fr.zip https://alphacephei.com/vosk/models/vosk-model-small-fr-0.22.zip && ls -la fr.zip && unzip -q fr.zip && ls -R vosk-model-small-fr-0.22 | head -40 > model-tree.txt && du -sh vosk-model-small-fr-0.22 >> model-tree.txt
-          cat vosk-model-small-fr-0.22/README* > model-readme.txt 2>/dev/null || true
-          mv vosk-model-small-fr-0.22 model && tar czf vosk-fr.tar.gz model && ls -la vosk-fr.tar.gz >> model-tree.txt
-          mkdir -p ../keep && cp services.txt vosk-*.txt models-fr.txt model-*.txt vosk-fr.tar.gz ../keep/ 2>/dev/null; cp package/dist/vosk.js ../keep/ 2>/dev/null; head -c 300000 bf.xml > ../keep/bf-extrait.xml
-          ls -la ../keep
+          cd out; mkdir -p ../keep
+          { echo "== npm pack"; npm pack vosk-browser@latest 2>&1 | tail -3; ls -la *.tgz; } > ../keep/vosk-npm.txt 2>&1 || true
+          tar xzf vosk-browser-*.tgz 2>/dev/null && { cat package/package.json; ls -la package package/dist; } >> ../keep/vosk-npm.txt 2>&1 && cp package/dist/vosk.js ../keep/ 2>/dev/null; cp package/LICENSE* ../keep/vosk-browser-LICENSE.txt 2>/dev/null || true
+          { echo "== page des modèles"; curl -sS -m 60 -o models.html -w "%{http_code} %{size_download}\n" https://alphacephei.com/vosk/models; grep -i -B2 -A6 "small-fr" models.html | head -60; } > ../keep/models-fr.txt 2>&1 || true
+          { echo "== modèle"; curl -sSL -m 300 -o fr.zip -w "%{http_code} %{size_download}\n" https://alphacephei.com/vosk/models/vosk-model-small-fr-0.22.zip; unzip -q fr.zip && ls -R vosk-model-small-fr-0.22 | head -40 && du -sh vosk-model-small-fr-0.22 && cat vosk-model-small-fr-0.22/README* 2>/dev/null | head -40; } > ../keep/model-tree.txt 2>&1 || true
+          if [ -d vosk-model-small-fr-0.22 ]; then mv vosk-model-small-fr-0.22 model && tar czf ../keep/vosk-fr.tar.gz model && ls -la ../keep/vosk-fr.tar.gz >> ../keep/model-tree.txt; fi
+          cp services.txt ../keep/ ; head -c 300000 bf.xml > ../keep/bf-extrait.xml; ls -la ../keep
+
       - name: Écrire sur la branche diag
+        if: always()
         run: |
+          mkdir -p keep; cp out/services.txt keep/ 2>/dev/null || true
           cd keep
           git init -q && git checkout -q -b diag
           git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
