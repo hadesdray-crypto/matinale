@@ -51,8 +51,25 @@ def item_audio(it):
     return ' '.join([it['title'] + '.', it.get('dek', '')] + arr(body) + ['Niveau de preuve : ' + LEVELS[lvl(it)] + '.'])
 
 
+def pol_full_audio(it):
+    """Rubrique Politique & monde : les faits, puis les positions de chacun, puis la suite."""
+    body = it.get('body') if isinstance(it.get('body'), list) else ([it['body']] if it.get('body') else [])
+    parts = [it['title'] + '.', it.get('dek', '')] + (arr(it.get('detail')) or arr(body))
+    if it.get('why'):
+        parts.append('L\'enjeu : ' + it['why'])
+    if arr(it.get('sure')):
+        parts.append('Les faits : ' + ' '.join(arr(it['sure'])))
+    if arr(it.get('positions')):
+        parts.append('Les positions : ' + ' '.join(arr(it['positions'])))
+    if arr(it.get('next')):
+        parts.append('À suivre : ' + ' '.join(arr(it['next'])))
+    return ' '.join(str(x) for x in parts if x)
+
+
 def item_full_audio(it):
     """Texte complet d'une fiche, pour l'écoute d'un seul sujet (même texte que la page)."""
+    if it.get('pol'):
+        return pol_full_audio(it)
     body = it.get('body') if isinstance(it.get('body'), list) else ([it['body']] if it.get('body') else [])
     ev = it.get('evidence') or {}
     detail = arr(it.get('detail'))   # fiche détaillée : lue à la place du résumé, pour ne pas dire deux fois la même chose
@@ -124,10 +141,11 @@ FLASH_ASK = ("C'est la fin du flash. Tu veux approfondir un sujet ? Dis son num�
 
 def chapters_for(ed, mode):
     items = [dict(it) for it in arr(ed.get('items')) if isinstance(it, dict) and it.get('id') and it.get('title')]
-    for it in items:
-        if it.get('cat') not in CAT_IDS:
-            it['cat'] = 'tech'
-    items.sort(key=lambda it: CAT_IDS.index(it['cat']))  # tri stable, comme la page
+    if ed.get('section') != 'politique':   # sciences : rangées par catégorie, comme la page ; politique : l'ordre de l'édition
+        for it in items:
+            if it.get('cat') not in CAT_IDS:
+                it['cat'] = 'tech'
+        items.sort(key=lambda it: CAT_IDS.index(it['cat']))  # tri stable, comme la page
     pd = ed.get('podcast') or {}
     dt = long_date(ed.get('date'))
     ch = []
@@ -160,7 +178,7 @@ def synth(tts, voice, text, out_wav, threads=None):
         raise RuntimeError('synthèse impossible : ' + (r.stderr or r.stdout)[-400:])
 
 
-def build(ed, mode, tts, voice, out_dir, tmp):
+def build(ed, mode, tts, voice, out_dir, tmp, prefix='audio'):
     chs = chapters_for(ed, mode)
     wavs = [os.path.join(tmp, f'{mode}-{i:02d}.wav') for i in range(len(chs))]
     with cf.ThreadPoolExecutor(max_workers=WORKERS) as ex:   # les chapitres sont fabriqués en parallèle, puis mis bout à bout dans l'ordre
@@ -190,10 +208,10 @@ def build(ed, mode, tts, voice, out_dir, tmp):
     title = ('Le flash' if mode == 'flash' else 'Édition complète') + ' – Matinale des Sciences – ' + long_date(ed.get('date'))
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', full_wav, '-ac', '1', '-ar', '22050', '-codec:a', 'libmp3lame', '-b:a', '48k',
                     '-metadata', f'title={title}', '-metadata', 'artist=Matinale des Sciences', mp3], check=True)
-    return {'src': f'audio/{mode}.mp3', 'duration': round(t, 2), 'bytes': os.path.getsize(mp3), 'chapters': chs}
+    return {'src': f'{prefix}/{mode}.mp3', 'duration': round(t, 2), 'bytes': os.path.getsize(mp3), 'chapters': chs}
 
 
-def build_items(ed, tts, voice, out_dir, tmp):
+def build_items(ed, tts, voice, out_dir, tmp, prefix='audio'):
     """Un enregistrement par fiche (texte complet), dans out_dir/items/. Une fiche qui échoue est simplement ignorée."""
     items_dir = os.path.join(out_dir, 'items')
     os.makedirs(items_dir, exist_ok=True)
@@ -215,7 +233,7 @@ def build_items(ed, tts, voice, out_dir, tmp):
             mp3 = os.path.join(items_dir, day, iid + '.mp3')
             subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', wav, '-ac', '1', '-ar', '22050', '-codec:a', 'libmp3lame', '-b:a', '24k',
                             '-metadata', 'title=' + it['title'], '-metadata', 'artist=Matinale des Sciences', mp3], check=True)
-            res[str(it['id'])] = {'src': f'audio/items/{day}/{iid}.mp3', 'duration': round(dur, 2), 'bytes': os.path.getsize(mp3),
+            res[str(it['id'])] = {'src': f'{prefix}/items/{day}/{iid}.mp3', 'duration': round(dur, 2), 'bytes': os.path.getsize(mp3),
                                   'chapters': [{'key': it['id'], 'title': it['title'], 'text': text, 'start': 0, 'end': round(dur, 2)}]}
         except Exception as e:  # noqa: BLE001
             print('fiche ignorée', it.get('id'), type(e).__name__, str(e)[:120], file=sys.stderr)
@@ -231,6 +249,8 @@ def main():
     ap.add_argument('--tts', required=True)
     ap.add_argument('--voice', required=True)
     ap.add_argument('--out', required=True)
+    ap.add_argument('--prefix', default='audio', help="début des adresses dans audio.json (ex. audio/politique)")
+    ap.add_argument('--modes', default='flash,full', help='émissions à fabriquer (flash, full)')
     a = ap.parse_args()
     ed = json.load(open(a.edition, encoding='utf-8'))
     if isinstance(ed, dict) and 'items' not in ed:
@@ -242,11 +262,11 @@ def main():
     with tempfile.TemporaryDirectory() as tmp:
         res = {'date': ed.get('date'), 'voice': os.path.basename(os.path.normpath(a.voice)),
                'generatedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds')}
-        for mode in ('flash', 'full'):
-            res[mode] = build(ed, mode, a.tts, a.voice, a.out, tmp)
+        for mode in [m for m in a.modes.split(',') if m in ('flash', 'full')]:
+            res[mode] = build(ed, mode, a.tts, a.voice, a.out, tmp, a.prefix)
             print(mode, res[mode]['duration'], 's,', res[mode]['bytes'], 'octets,', len(res[mode]['chapters']), 'chapitres', file=sys.stderr)
         try:
-            res['items'] = build_items(ed, a.tts, a.voice, a.out, tmp)
+            res['items'] = build_items(ed, a.tts, a.voice, a.out, tmp, a.prefix)
             print('fiches', len(res['items']), file=sys.stderr)
         except Exception as e:  # noqa: BLE001
             print('enregistrements par fiche indisponibles', type(e).__name__, file=sys.stderr)

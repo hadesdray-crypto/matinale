@@ -6,3 +6,6 @@ __pycache__/
 *.tmp
 # Images libres de droits : refaites chaque matin avec l'édition.
 site/img/
+site/audio/politique/*.mp3
+site/audio/politique/items/
+site/audio/politique/audio.json

@@ -139,12 +139,12 @@ def _shorten(s, n):
     return s if len(s) <= n else s[:n].rsplit(' ', 1)[0] + '…'
 
 
-def write_details(batch, key, gemini_call, helpers, stats):
+def write_details(batch, key, gemini_call, helpers, stats, prompt=None):
     """batch : liste de (item, page). Remplit item['detail'] et item['keyPoints'] quand la vérification passe."""
     number_set, numbers_ok, sentences = helpers
     arts = [{'ref': f'd{i + 1}', 'source': it['_src']['source'], 'langue': it['_src']['lang'], 'titre': it['_src']['title'],
              'texte': _shorten(pg['text'], MAX_CHARS)} for i, (it, pg) in enumerate(batch)]
-    prompt = PROMPT.format(articles='\n'.join(json.dumps(a, ensure_ascii=False) for a in arts))
+    prompt = (prompt or PROMPT).format(articles='\n'.join(json.dumps(a, ensure_ascii=False) for a in arts))
     res, _model = gemini_call(prompt, key, light=True)
     if not isinstance(res, dict):
         return 0
@@ -208,7 +208,7 @@ def fetch_image(url, fetch, dest_dir, name):
     return None
 
 
-def enrich(items, key, fetch, gemini_call, helpers, log, stats, site_dir, today):
+def enrich(items, key, fetch, gemini_call, helpers, log, stats, site_dir, today, images=True, prompt=None):
     """Ajoute à chaque fiche : 'detail', 'keyPoints' et, si la source est libre de droits, 'image'."""
     todo = [it for it in items if it.get('_src') and not NO_FETCH.search(it['_src']['link'])]
 
@@ -226,11 +226,13 @@ def enrich(items, key, fetch, gemini_call, helpers, log, stats, site_dir, today)
     done = 0
     for i in range(0, len(ready), BATCH):
         try:
-            done += write_details(ready[i:i + BATCH], key, gemini_call, helpers, stats)
+            done += write_details(ready[i:i + BATCH], key, gemini_call, helpers, stats, prompt)
         except Exception as e:  # noqa: BLE001
             log(f'  · fiche détaillée : {type(e).__name__} {str(e)[:120]}')
     stats['details'] = done
     log(f'Fiches détaillées écrites : {done}.')
+    if not images:
+        return
     # Images libres de droits (NASA) : gardées pour la lecture sans réseau.
     img_dir = os.path.join(site_dir, 'img', today)
     pg_by_id = {id(it): pg for it, pg in zip(todo, pages)}
