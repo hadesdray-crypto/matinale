@@ -910,7 +910,7 @@ const S = {
   favs:[], read:new Set(), prefs:{ rate:1, voiceURI:null }, prefsReadOnly:false,
   sheetOpen:false, detailKey:null, lastFocus:null, askCtl:null,
   franco:null, frGroup:'all', frQuery:'', vidFilter:'all', fallback:false, audio:null,
-  sec: LS.get('mds.sec', 'sci') === 'pol' ? 'pol' : 'sci', pol:null
+  sec:'sci', pol:null
 };
 (function initLocal(){
   const lp = LS.get('mds.prefs', null);
@@ -976,7 +976,7 @@ function secSwitchHTML(){
   return '<div class="wrap"><div class="secsw" role="tablist" aria-label="Rubrique"><button role="tab" data-action="sec" data-s="sci" aria-selected="' + (S.sec !== 'pol') + '">' + icon('atom', 17) + ' Sciences</button>' +
     '<button role="tab" data-action="sec" data-s="pol" aria-selected="' + (S.sec === 'pol') + '">' + icon('flag', 17) + ' Politique & monde</button></div></div>';
 }
-function setSec(sec){ S.sec = sec === 'pol' ? 'pol' : 'sci'; LS.set('mds.sec', S.sec); if (S.tab !== 'aujourdhui') setTab('aujourdhui'); else { renderToday(); window.scrollTo(0, 0); } if (S.sec === 'pol' && !S.pol) loadPol(); }
+function setSec(sec){ S.sec = sec === 'pol' ? 'pol' : 'sci'; if (S.tab !== 'aujourdhui') setTab('aujourdhui'); else { renderToday(); window.scrollTo(0, 0); } if (S.sec === 'pol' && !S.pol) loadPol(); }
 function polCardHTML(it){
   return '<article class="card" data-key="' + esc(it.key) + '"><div class="card-body"><div class="meta">' + numB(itemNum(it), 'sm') + catTag(CAT[it.cat]) + (it.lieu ? '<span>' + esc(it.lieu) + '</span>' : '') + '<span>' + esc(dateLabel(it)) + '</span></div>' +
     '<h3 class="card-title"><button class="linklike" data-action="open" data-key="' + esc(it.key) + '">' + t(it.title) + '</button></h3><p class="dek">' + t(it.dek) + '</p>' +
@@ -2250,8 +2250,10 @@ function ratePop(open){
    Les lieux, les horaires, la clé et les réglages restent dans le téléphone (jamais sur GitHub). */
 const MATIN_LS = 'mds.matin';
 function MPget(){
-  const d = { geo:true, ville:null, lieux:[], heures:['08:15', '08:45'], marge:10, tomtom:'', memo:false, jour:null, moteur:'auto', infos:'pol,sci' };
-  const v = LS.get(MATIN_LS, null); return Object.assign(d, v && typeof v === 'object' ? v : {});
+  const d = { geo:true, ville:null, lieux:[], heures:['08:15', '08:45'], marge:10, tomtom:'', memo:false, jour:null, moteur:'auto', infos:'sci,ask', v:2 };
+  const v = LS.get(MATIN_LS, null), o = Object.assign(d, v && typeof v === 'object' ? v : {});
+  if (o.v !== 2){ o.infos = 'sci,ask'; o.v = 2; }   /* les sciences d'abord : la politique devient une option */
+  return o;
 }
 function MPset(p){ LS.set(MATIN_LS, p); }
 const pad2 = n => String(n).padStart(2, '0');
@@ -2445,9 +2447,16 @@ async function tomtomRoute(a, b){
     pts:[].concat(...(R.legs || []).map(l => (l.points || []).map(p => [p.latitude, p.longitude]))),
     jams:(R.sections || []).filter(x => x.sectionType === 'TRAFFIC').map(x => ({ cat:TT_CAT[x.simpleCategory] || 'ralentissement', min:Math.round((x.delayInSeconds || 0) / 60) })) };
 }
+async function osrmRoute(a, b){
+  const j = await fetchJSON('https://router.project-osrm.org/route/v1/driving/' + r3(a.lon) + ',' + r3(a.lat) + ';' + r3(b.lon) + ',' + r3(b.lat) + '?overview=simplified&geometries=geojson', 10000);
+  const R = j && j.routes && j.routes[0]; if (!R) return null;
+  return { min:Math.round(R.duration / 60), km:Math.round(R.distance / 100) / 10, usual:null, libre:Math.round(R.duration / 60), sansTrafic:true,
+    pts:((R.geometry && R.geometry.coordinates) || []).map(c => [c[1], c[0]]), jams:[] };
+}
 async function trajet(a, b){
   const res = { r:null, err:null, ev:[] };
   if (MPget().tomtom && online()){ try { res.r = await tomtomRoute(a, b); } catch (e) { res.err = (e.status === 401 || e.status === 403) ? 'cle' : 'reseau'; } }
+  if (!res.r && online()){ try { res.r = await osrmRoute(a, b); } catch (e) {} }   /* sans clé TomTom : distance et temps sans trafic */
   const bf = await bisonFute();
   res.ev = bfSurTrajet(bf, a, b, res.r && res.r.pts);
   res.at = Date.now();
@@ -2455,8 +2464,12 @@ async function trajet(a, b){
 }
 function trajetPhrases(res, opts){
   opts = opts || {}; const p = [], r = res.r;
-  if (r){
-    let s = 'Trajet : ' + r.min + ' minutes avec le trafic actuel';
+  if (r && r.sansTrafic){
+    p.push('Trajet : ' + Math.round(r.km) + ' kilomètres, environ ' + r.min + ' minutes sans compter le trafic.');
+    if (res.err === 'cle') p.push('La clé TomTom ne marche pas : vérifie-la dans les réglages.');
+    else if (!MPget().tomtom && !opts.court) p.push('Pour le trafic en direct, ajoute la clé TomTom dans les réglages.');
+  } else if (r){
+    let s = 'Trajet : ' + Math.round(r.km) + ' kilomètres, ' + r.min + ' minutes avec le trafic actuel';
     if (r.usual != null && r.min - r.usual >= 3) s += ', ' + (r.min - r.usual) + ' de plus que d\'habitude'; else if (r.usual != null && r.usual - r.min >= 3) s += ', un peu mieux que d\'habitude';
     p.push(s + '.');
     const j = r.jams.filter(x => x.min >= 2);
@@ -2524,7 +2537,7 @@ function routePhrases(rt){
   else if (rt.pars){
     const wx = S.matin && S.matin.wx, buf = wx && wx.buffer ? wx.buffer : 0;
     if (rt.pars.getTime() < Date.now()) out.push('Tu es un peu juste : en partant maintenant, arrivée vers ' + hSay(new Date(Date.now() + rt.r.min * 60000)) + '.');
-    else out.push('Pour être sur place ' + (p.marge || 0) + ' minutes avant' + (buf ? ', avec ' + buf + ' minutes de plus pour la météo' : '') + ', pars avant ' + hSay(rt.pars) + '.');
+    else out.push('Pour être sur place ' + (p.marge || 0) + ' minutes avant' + (buf ? ', avec ' + buf + ' minutes de plus pour la météo' : '') + ', pars avant ' + hSay(rt.pars) + (rt.r && rt.r.sansTrafic ? ', sans compter le trafic' : '') + '.');
   }
   return out;
 }
@@ -2554,9 +2567,10 @@ function matinInner(){
     const L = p.lieux.find(l => l.id === job.lieu);
     h += '<p class="mt-q">' + icon('car', 16) + ' ' + esc(L ? L.nom : (job.lieuTxt || '?')) + (job.heure ? ' · prise de poste ' + esc(hhmmDisp(job.heure)) : '') + (job.src === 'memo' ? ' <span class="mt-src">planning</span>' : '') + ' <button class="lnk" data-action="m-jour-change">Changer</button></p>';
     if (rt && rt.r){
-      h += '<p class="mt-big">' + rt.r.min + ' min' + (rt.r.usual != null && rt.r.min - rt.r.usual >= 3 ? ' <small class="mt-plus">+' + (rt.r.min - rt.r.usual) + ' min</small>' : '') + (rt.pars ? ' · <b>pars avant ' + esc(hDisp(rt.pars)) + '</b>' : '') + '</p>';
+      h += '<p class="mt-big">' + rt.r.min + ' min · ' + String(rt.r.km).replace('.', ',') + ' km' + (rt.r.sansTrafic ? ' <small class="mt-src">sans trafic</small>' : '') + (rt.r.usual != null && rt.r.min - rt.r.usual >= 3 ? ' <small class="mt-plus">+' + (rt.r.min - rt.r.usual) + ' min</small>' : '') + (rt.pars ? ' · <b>pars avant ' + esc(hDisp(rt.pars)) + '</b>' : '') + '</p>';
       rt.r.jams.filter(x => x.min >= 2).slice(0, 2).forEach(x => { h += '<p class="mt-ev">' + icon('alert', 14) + ' ' + esc(cap(x.cat)) + ' : +' + x.min + ' min</p>'; });
-    } else if (rt && !rt.manque && !rt.surPlace && !rt.sansDepart && !MPget().tomtom) h += '<p class="mt-sub">Temps de trajet en direct : ajoute la clé TomTom (gratuite) dans les réglages, ou touche « Y aller ».</p>';
+    }
+    if (rt && rt.r && rt.r.sansTrafic && !MPget().tomtom) h += '<p class="mt-sub">Trafic en direct : ajoute la clé TomTom (gratuite) dans les réglages, ou touche « Y aller ».</p>';
     if (rt && rt.ev) rt.ev.slice(0, 3).forEach(e => { h += '<p class="mt-ev">' + icon('alert', 14) + ' ' + esc(bfPhrase(e)) + (e.d ? ' — ' + esc(e.d.slice(0, 110)) : '') + ' <span class="mt-src">Bison Futé</span></p>'; });
     if (rt && rt.ev && !rt.ev.length && rt.r && !rt.r.jams.some(x => x.min >= 2)) h += '<p class="mt-ok">' + icon('check', 14) + ' Rien de signalé sur la route.</p>';
     if (rt && rt.manque) h += '<p class="mt-sub">« ' + esc(rt.job.lieuTxt) + ' » n\'est pas dans tes lieux : ajoute-le dans les réglages.</p>';
@@ -2564,10 +2578,10 @@ function matinInner(){
   }
   h += '</div>';
   if (S.watch) h += '<p class="mt-watch">' + icon('route', 15) + ' Je surveille la route vers ' + esc(S.watch.d.nom) + '. <button class="lnk" data-action="m-watch-stop">Arrêter</button></p>';
-  h += '<div class="mt-actions"><button class="btn primary" data-action="m-play">' + icon('play', 17) + ' Écouter mon point du matin</button>' +
+  h += '<div class="mt-actions"><button class="btn primary" data-action="m-play">' + icon('play', 17) + ' Écouter : météo, trafic, sciences</button>' +
     '<button class="btn" data-action="m-iti">' + icon('route', 17) + ' Itinéraire</button>' +
     (Voice.ok ? '<button class="btn' + (Libre.on ? ' on' : '') + '" data-action="m-libre" aria-pressed="' + Libre.on + '">' + icon('mic', 17) + (Libre.on ? ' Mains libres actif' : ' Mains libres') + '</button>' : '') + '</div>' +
-    '<p class="mt-foot">Météo : Météo-France (AROME, ARPEGE) via Open-Meteo · Trafic : ' + (p.tomtom ? 'TomTom et ' : '') + 'Bison Futé · ' + (wx ? 'mis à jour à ' + esc(hDisp(new Date(wx.at))) : '') + '</p>';
+    '<p class="mt-foot">Météo : Météo-France (AROME, ARPEGE) via Open-Meteo · Trafic : ' + (p.tomtom ? 'TomTom et ' : 'OSRM (sans trafic) et ') + 'Bison Futé · ' + (wx ? 'mis à jour à ' + esc(hDisp(new Date(wx.at))) : '') + '</p>';
   return h;
 }
 function jourChips(){
@@ -2590,20 +2604,66 @@ function matinMaj(force, ask){
 /* Écouter : la météo, puis la route, puis les informations (le flash). */
 async function matinEcoute(){
   vbub('Je prépare ton point du matin…', false, 3000);
-  await matinMaj(true, true);
-  const M = S.matin || {}, ch = [];
-  if (M.wx) ch.push({ title:'Météo', text:M.wx.text + (M.wx.horsLigne ? ' C\'est la dernière prévision gardée, il n\'y a pas de réseau.' : '') });
-  const rp = routePhrases(M.rt);
+  const inf = String(MPget().infos || 'sci,ask');
+  S.matinRun = true; S.matinAskPol = /ask/.test(inf);
+  S.matinSeq = inf.split(',').filter(x => x === 'pol' || x === 'sci');
+  await meteoMaj(true, true); matinRedraw();
+  const wx = S.matin && S.matin.wx;
+  if (!Player.synth){ matinRoute(); return; }
+  matinDire('matin-meteo', 'Météo', wx ? wx.text + (wx.horsLigne ? ' C\'est la dernière prévision gardée, il n\'y a pas de réseau.' : '') : 'Je n\'ai pas la météo pour l\'instant.');
+}
+function matinDire(mode, title, text){ S.deepFlow = false; Player.load(mode, [{ title, text }], 'Point du matin', null); renderChapters(); renderTranscript(); Player.play(); }
+const MATIN_SUITE = ' Place aux informations scientifiques.';
+async function matinRoute(){
   const job = jourDuJour();
-  if (rp.length) ch.push({ title:'Ta route', text:rp.join(' ') });
-  else if (job && job.repos) ch.push({ title:'Ta route', text:'Repos aujourd\'hui, pas de trajet.' });
-  else if (MPget().lieux.some(l => l.type === 'travail')) ch.push({ title:'Ta route', text:'Je ne sais pas où tu travailles aujourd\'hui. Dis par exemple : aujourd\'hui Évreux 8 heures 45.' });
-  ch.push({ title:'Et maintenant', text:'Place aux informations.' });
-  S.matinSeq = String(MPget().infos || 'pol,sci').split(',').filter(x => x === 'pol' || x === 'sci');
-  if (!Player.synth){ matinSuite(); return; }
-  S.deepFlow = false;
-  Player.load('matin', ch, 'Point du matin', null);
-  renderChapters(); renderTranscript(); Player.play();
+  if (job && job.repos){ matinDire('matin-route', 'Ta route', 'Repos aujourd\'hui, pas de trajet.' + MATIN_SUITE); return; }
+  if (job && (job.lieu || job.lieuTxt)){ await routeDuJour(true, true); matinRedraw(); matinDire('matin-route', 'Ta route', routePhrases(S.matin.rt).join(' ') + MATIN_SUITE); return; }
+  /* On ne sait pas où tu vas : on te le demande. « C'est bon » : on passe aux sciences. */
+  if (!Voice.ok || !Player.synth){ matinInfos(); return; }
+  S.awaitJour = { until:Date.now() + 45000 };
+  clearTimeout(S.jourT); S.jourT = setTimeout(() => { if (S.awaitJour){ S.awaitJour = null; if (Voice.on) Voice.stop(true); matinInfos(); } }, 45000);
+  vbub('Où vas-tu aujourd\'hui ? Dis par exemple « Évreux, 8 h 45 », ou « c\'est bon ».', false, 10000);
+  sayShort('Où vas-tu aujourd\'hui ? Dis par exemple : Évreux, 8 heures 45. Ou dis : c\'est bon, pour passer aux informations.', () => {
+    if (!S.awaitJour) return;
+    if (Libre.on){ Libre.armed = Date.now() + 15000; beep(); } else Voice.start('jour');
+  });
+}
+function matinInfos(){ clearTimeout(S.jourT); S.awaitJour = null; if (!matinSuite()) matinFin(); }
+/* Fin des sciences : la politique est une option, proposée à la voix. */
+function matinFin(){
+  if (!S.matinRun) return;
+  S.matinRun = false;
+  if (S.matinAskPol && S.pol && S.pol.ed){
+    S.matinAskPol = false;
+    vbub('Tu veux aussi l\'actualité politique et internationale ? Dis oui ou non.', false, 9000);
+    sayShort('Tu veux aussi l\'actualité politique et internationale ? Dis oui ou non.', () => askYes(() => startMode('pflash'), () => sayShort('D\'accord. Bonne journée !')));
+  }
+}
+const JOUR_MOTS = new Set(('aujourd hui je j vais travaille bosse suis serai commence a au aux vers pour sur ce matin prise de du poste heure heures h et la le les l d en ville donc euh alors bah ben mon travail boulot ' +
+  'une un deux trois quatre cinq six sept huit neuf dix onze douze treize quatorze quinze seize vingt trente quarante cinquante midi demi quart').split(' '));
+/* Réponse à « Où vas-tu aujourd'hui ? » : « Évreux, 8 h 45 », « je vais à Louviers », « repos », « c'est bon »… */
+function jourReponse(raw, s){
+  if (!S.awaitJour || S.awaitJour.until < Date.now()) return null;
+  if (/ (c est bon|passe|passer|rien|pas de trajet|suivant|les infos|informations|laisse tomber|non) /.test(s) && !/\d/.test(s)){
+    S.awaitJour = null; matinInfos(); return { msg:'On passe aux informations scientifiques.', keep:true };
+  }
+  if (/ repos /.test(s)){ S.awaitJour = null; clearTimeout(S.jourT); fixeJour({ repos:true }); matinDire('matin-route', 'Ta route', 'Repos aujourd\'hui.' + MATIN_SUITE); return { msg:'Repos aujourd\'hui.', keep:true }; }
+  const h = heureDite(s);
+  const lieu = String(raw).split(/\s+/).filter(w => { const n = cmdNorm(w); return n && !/^\d/.test(n) && !n.split(' ').every(x => JOUR_MOTS.has(x)); }).join(' ').replace(/^[,.;:\s]+|[,.;:\s]+$/g, '');
+  if (!lieu) return { msg:'Je n\'ai pas compris le lieu. Redis, par exemple : Évreux.', fail:true };
+  S.awaitJour = null; clearTimeout(S.jourT);
+  (async () => {
+    let L = lieuParNom(lieu);
+    if (!L){
+      const x = (await chercheLieu(lieu, LS.get('mds.pos', null)))[0];
+      if (x){ const pp = MPget(); L = { id:'l' + Date.now().toString(36), nom:cap(lieu).slice(0, 40), adr:x.label || '', lat:r3(x.lat), lon:r3(x.lon), type:'travail' }; pp.lieux.push(L); MPset(pp); }
+    }
+    if (!L){ matinDire('matin-route', 'Ta route', 'Je ne trouve pas ' + lieu + '.' + MATIN_SUITE); return; }
+    fixeJour({ lieu:L.id, heure:h || '' });
+    await routeDuJour(true, true); matinRedraw();
+    matinDire('matin-route', 'Ta route', routePhrases(S.matin.rt).join(' ') + MATIN_SUITE);
+  })();
+  return { msg:'Trajet vers ' + lieu + (h ? ' pour ' + hhmmDisp(h) : '') + '…', keep:true };
 }
 
 /* ---------- Itinéraire à la demande, de là où tu es ---------- */
@@ -2692,7 +2752,7 @@ function openMatinReglages(){
       '<label class="rg-line">Arriver en avance de <select data-m="marge">' + [0, 5, 10, 15, 20, 30].map(n => '<option value="' + n + '"' + (p.marge === n ? ' selected' : '') + '>' + n + ' min</option>').join('') + '</select></label>' +
       '<label class="rg-tick"><input type="checkbox" data-m="memo"' + (p.memo ? ' checked' : '') + '><span>Lire mon planning de Memo-SSIAP (lieu et heure du jour). Lu dans ce téléphone, rien n\'est envoyé.</span></label></section>' +
     '<section class="rg-sec"><h3>Informations du matin</h3><label class="rg-line">Après la météo et la route <select data-m="infos">' +
-      [['pol,sci', 'Politique & monde, puis Sciences'], ['sci,pol', 'Sciences, puis Politique & monde'], ['sci', 'Sciences seulement'], ['pol', 'Politique & monde seulement']].map(o => '<option value="' + o[0] + '"' + ((p.infos || 'pol,sci') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select></label></section>' +
+      [['sci,ask', 'Sciences, puis me demander pour la politique'], ['sci', 'Sciences seulement'], ['sci,pol', 'Sciences, puis Politique & monde'], ['pol,sci', 'Politique & monde, puis Sciences']].map(o => '<option value="' + o[0] + '"' + ((p.infos || 'sci,ask') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select></label></section>' +
     '<section class="rg-sec"><h3>Trafic en direct (TomTom)</h3>' +
       '<p class="small">Temps de trajet réel, bouchons et accidents sur toutes les routes. Gratuit pour un usage perso, sans carte bancaire : crée un compte sur <a href="https://developer.tomtom.com/" target="_blank" rel="noopener noreferrer">developer.tomtom.com</a>, puis copie ta clé (« API Key ») ici.</p>' +
       '<form class="rg-form" data-form="tomtom"><input name="k" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="' + (p.tomtom ? 'Clé enregistrée sur ce téléphone' : 'Colle ta clé TomTom ici') + '"><button class="btn sm primary" type="submit">' + (p.tomtom ? 'Remplacer et tester' : 'Enregistrer et tester') + '</button></form>' +
@@ -2929,9 +2989,13 @@ const SRec = (typeof window !== 'undefined') && (window.SpeechRecognition || win
 const Voice = {
   ok: !!SRec || !!LS.get('mds.voskok', false), rec:null, on:false, ctx:'cmd', resume:false, got:false, err:null, tries:0, vstop:null,
   start(ctx, retry){
-    if (Libre.on){ if (!ctx && !retry) libreArret(); else if (ctx === 'ask' || ctx === 'oui') Libre.armed = Date.now() + 12000; return; }   /* le bouton micro arrête le mode mains libres ; sinon il écoute déjà */
+    if (Libre.on){ if (!ctx && !retry) libreArret(); else if (ctx === 'ask' || ctx === 'oui' || ctx === 'jour') Libre.armed = Date.now() + 12000; return; }   /* le bouton micro arrête le mode mains libres ; sinon il écoute déjà */
     if (!this.ok){ openVoiceHelp(); return; }
-    if (this.on){ this.stop(); return; }
+    if (this.on){
+      if (ctx && this.got){ const r0 = this.rec; this.rec = null; this.on = false; clearTimeout(this.vt); if (this.vstop){ try { this.vstop(); } catch (e) {} this.vstop = null; } try { if (r0) r0.abort(); } catch (e) {} }   /* une question suit la réponse précédente : on relance l'écoute */
+      else { this.stop(); return; }
+    }
+    const sid = this.sid = (this.sid || 0) + 1;   /* une écoute à la fois : les signaux d'une écoute terminée sont ignorés */
     if (!retry) this.tries = 0;
     this.ctx = ctx || (askOpen() ? 'ask' : 'cmd'); this.got = false; this.err = null;
     if (!retry) this.resume = !!Player.playing;   /* l'écoute en cours est mise en pause pendant qu'on parle, puis reprend */
@@ -2942,20 +3006,21 @@ const Voice = {
     if (eng === 'vosk'){
       this.on = true; micUI(); vbub(VK.model ? 'Je t\'écoute…' : 'Chargement de la voix hors connexion…', true); beep();
       const fini = () => { clearTimeout(this.vt); if (this.vstop){ try { this.vstop(); } catch (e) {} this.vstop = null; } this.on = false; micUI(); };
-      voskEcoute(tx => { if (this.got) return; this.got = true; fini(); this.handle([tx]); })
-        .then(stop => { if (this.got){ stop(); return; } this.vstop = stop; vbub('Je t\'écoute…', true); this.vt = setTimeout(() => { if (!this.got){ this.got = true; fini(); this.miss('no-speech'); } }, 9000); })
-        .catch(e => { this.got = true; fini(); this.miss(e && e.name === 'NotAllowedError' ? 'not-allowed' : 'vosk'); });
+      voskEcoute(tx => { if (sid !== this.sid || this.got) return; this.got = true; fini(); this.handle([tx]); })
+        .then(stop => { if (sid !== this.sid || this.got){ stop(); return; } this.vstop = stop; vbub('Je t\'écoute…', true); this.vt = setTimeout(() => { if (sid === this.sid && !this.got){ this.got = true; fini(); this.miss('no-speech'); } }, 9000); })
+        .catch(e => { if (sid !== this.sid) return; this.got = true; fini(); this.miss(e && e.name === 'NotAllowedError' ? 'not-allowed' : 'vosk'); });
       return;
     }
     let r; try { r = new SRec(); } catch (e) { this.ok = !!LS.get('mds.voskok', false); openVoiceHelp(); return; }
     r.lang = 'fr-FR'; r.interimResults = true; r.maxAlternatives = 5; r.continuous = false;
     r.onresult = e => {
+      if (sid !== this.sid) return;
       const res = e.results[e.results.length - 1]; if (!res || !res[0]) return;
       vbub('« ' + res[0].transcript + ' »', true);
       if (res.isFinal && !this.got){ this.got = true; const alts = Array.from(res).map(a => a.transcript).filter(Boolean); try { r.stop(); } catch (er) {} this.handle(alts); }
     };
-    r.onerror = e => { this.err = (e && e.error) || 'erreur'; };
-    r.onend = () => { if (this.rec === r){ this.rec = null; this.on = false; micUI(); } if (!this.got){ this.got = true; this.miss(this.err); } };
+    r.onerror = e => { if (sid === this.sid) this.err = (e && e.error) || 'erreur'; };
+    r.onend = () => { if (sid !== this.sid) return; if (this.rec === r){ this.rec = null; this.on = false; micUI(); } if (!this.got){ this.got = true; this.miss(this.err); } };
     this.rec = r; this.on = true; micUI(); vbub('Je t\'écoute…', true);
     beep();
     setTimeout(() => { if (this.rec !== r) return; try { r.start(); } catch (e) { this.rec = null; this.on = false; micUI(); this.got = true; this.miss('start'); } }, 260);
@@ -2974,7 +3039,7 @@ const Voice = {
       : err === 'vosk' ? 'La voix hors connexion ne démarre pas sur ce téléphone.'
       : 'Je n\'ai rien entendu. Touche le micro, attends le bip, puis parle.';
     /* Après une question (« approfondir ? », « oui ou non ? ») : on réessaie tout seul, deux fois. */
-    if ((this.ctx === 'ask' || this.ctx === 'oui') && (err === 'no-speech' || !err) && this.tries < 2 && document.visibilityState === 'visible' && (this.ctx !== 'ask' || askOpen())){
+    if ((this.ctx === 'ask' || this.ctx === 'oui' || this.ctx === 'jour') && (err === 'no-speech' || !err) && this.tries < 2 && document.visibilityState === 'visible' && (this.ctx !== 'ask' || askOpen()) && (this.ctx !== 'jour' || S.awaitJour)){
       this.tries++; vbub('Je n\'ai rien entendu, je réécoute…', true); setTimeout(() => this.start(this.ctx, true), 700); return;
     }
     vbub(m, false, 5000);
@@ -3064,6 +3129,7 @@ function voiceCommand(alts, ctx){
     const s = ' ' + norm(raw).replace(/[’'`\-]/g, ' ').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim() + ' ';
     ed = ctxEd(s); max = ed ? ed.items.length : 0;
     const has = re => re.test(s), n = spokenNum(s, max);
+    const jr = jourReponse(raw, s); if (jr) return jr;
     const mc = matinCommande(s, raw); if (mc) return mc;
     if (has(/ (aide|commandes?|que (peux|puis|dois) je dire|quoi dire) /)){ openVoiceHelp(); return { msg:'Voici ce que tu peux dire.', keep:true }; }
     if (!n && has(/ (non|c est bon|ca ira|pas besoin|ca va aller|rien|termine|fini|merci|non merci) /) && !has(/ (lis|ouvre|approfondi\w*|plus vite|moins vite) /)){
@@ -3133,10 +3199,11 @@ function deep(key, keepSheet){
   S.deepFlow = true; S.deepEd = edOf(key); clearTimeout(S.askT);
   Player.label = 'Sujet ' + itemNum(it) + ' en détail'; updatePlayerUI();
 }
-function askNo(){ S.deepFlow = false; clearTimeout(S.askT); if (askOpen()) closeSheet(); if (S.matinSeq && S.matinSeq.length) matinSuite(); }
+function askNo(){ S.deepFlow = false; clearTimeout(S.askT); if (askOpen()) closeSheet(); if (S.matinRun){ if (!matinSuite()) matinFin(); } }
 /* À la fin du flash (ou d'un sujet approfondi) : « Tu veux approfondir un sujet ? » */
 function onListenEnd(mode){
-  if (mode === 'matin'){ matinSuite(); return; }
+  if (mode === 'matin-meteo'){ matinRoute(); return; }
+  if (mode === 'matin-route' || mode === 'matin'){ matinInfos(); return; }
   if (mode === 'flash') askDeeper('flash', S.edition);
   else if (mode === 'pflash') askDeeper('flash', S.pol && S.pol.ed);
   else if (mode === 'item' && S.deepFlow) askDeeper('again', S.deepEd);
@@ -3153,7 +3220,7 @@ function askDeeper(kind, ed){
   ed = ed || S.edition; if (!ed || !ed.items.length) return;
   if (document.visibilityState !== 'visible'){ S.askPending = kind; S.askPendingEd = ed; return; }   /* écran éteint : la question attend qu'on revienne */
   S.askPending = null; S.askEd = ed; S.nextSheetSec = ed.section === 'pol' ? 'pol' : '';
-  const suite = S.matinSeq && S.matinSeq.length;
+  const suite = !!S.matinRun, encore = !!(S.matinSeq && S.matinSeq.length);
   clearTimeout(S.askT);
   if (suite) S.askT = setTimeout(() => { if (askOpen() && !Voice.on) askNo(); }, 40000);   /* sans réponse, le point du matin continue */
   const again = kind === 'again';
@@ -3162,7 +3229,7 @@ function askDeeper(kind, ed){
     (Voice.ok ? '<button class="btn primary ad-mic" data-action="mic" data-ctx="ask" aria-pressed="false">' + icon('mic', 18) + ' Répondre à la voix</button>' : '') +
     '<ol class="som">' + ed.items.map((it, i) => '<li><button class="som-open" data-action="deep" data-key="' + esc(it.key) + '" aria-label="Approfondir le sujet ' + (i + 1) + ' : ' + esc(fr(it.title)) + '">' + numB(i + 1) +
       '<span class="som-t"><b>' + t(it.title) + '</b><small>' + esc(CAT[it.cat].short) + '</small></span><span class="go">' + icon('headphones', 20) + '</span></button></li>').join('') + '</ol>' +
-    '<button class="btn ad-no" data-action="ask-no">' + (suite ? 'Non merci, la suite' : 'Non merci') + '</button></div>';
+    '<button class="btn ad-no" data-action="ask-no">' + (encore ? 'Non merci, la suite' : 'Non merci') + '</button></div>';
   showSheet(html, again ? 'Un autre sujet ?' : 'Approfondir un sujet ?', askOpen());
   if (!Voice.ok) return;
   if (Libre.on){   /* mains libres : on écoute la réponse sans le mot « Matinale » */
@@ -3182,7 +3249,7 @@ function openVoiceHelp(){
       : '<p class="muted" style="margin:0">La commande vocale n\'est pas disponible dans ce navigateur. Ouvre la Matinale dans Chrome sur Android pour l\'utiliser ; les numéros et les boutons marchent partout.</p>') +
     '<h3>Choisir un sujet</h3><ul>' + li('Sujet 5', 'l\'ouvre et le lit en détail') + li('Lis-moi le 12') + li('Ouvre la fiche 3', 'l\'ouvre sans la lire') + li('Celui sur les trous noirs', 'un mot du titre suffit') + li('Approfondis', 'le sujet en cours, pendant le flash') + '</ul>' +
     '<h3>Pendant l\'écoute</h3><ul>' + li('Pause') + li('Reprends') + li('Plus vite') + li('Moins vite') + li('Vitesse normale') + li('Recule', '10 secondes') + li('Répète', 'le début du sujet') + li('Suivant') + li('Précédent') + li('Stop') + '</ul>' +
-    '<h3>Écouter, revenir</h3><ul>' + li('Le flash') + li('Flash politique', 'la rubrique Politique & monde') + li('Politique 3', 'le sujet 3 de Politique & monde') + li('Sciences', 'revenir à la rubrique Sciences') + li('L\'édition complète') + li('Sommaire') + li('Point du matin', 'météo, route, puis les infos') + '</ul>' +
+    '<h3>Écouter, revenir</h3><ul>' + li('Le flash') + li('Flash politique', 'la rubrique Politique & monde') + li('Politique 3', 'le sujet 3 de Politique & monde') + li('Sciences', 'revenir à la rubrique Sciences') + li('L\'édition complète') + li('Sommaire') + li('Point du matin', 'météo, trafic, puis les sciences') + li('C\'est bon', 'passer directement aux sciences') + '</ul>' +
     '<h3>Météo et route</h3><ul>' + li('Météo') + li('Trafic', 'la route du jour') + li('Aujourd\'hui Évreux 8 h 45', 'ton lieu et ton heure du jour') + li('Repos aujourd\'hui') + li('Itinéraire vers la mairie de Vernon', 'de là où tu es') + li('Surveille la route') + li('Arrête la surveillance') + '</ul>' +
     '<h3>Sans les mains</h3><ul>' + li('Mains libres', 'ensuite, commence chaque demande par « Matinale »') + li('Matinale, sujet 2') + li('Matinale, pause') + li('Arrête d\'écouter') + '</ul>' +
     '<h3>Terminer</h3><ul>' + li('Non merci') + li('C\'est bon') + '</ul>' +
