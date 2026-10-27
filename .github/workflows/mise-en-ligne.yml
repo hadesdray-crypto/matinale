@@ -150,6 +150,9 @@ jobs:
           print(f'{ok} fichiers repris sur {len([w for w in wanted if w])}.')
           PY
 
+      - name: Numéro de version de l'appli (le même que la liste des nouveautés)
+        run: python3 scripts/version_appli.py
+
       - uses: actions/upload-pages-artifact@v4
         with:
           path: site

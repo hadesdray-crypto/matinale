@@ -1,0 +1,36 @@
+[
+  {
+    "v": 3,
+    "date": "2026-10-27",
+    "titre": "Point du matin plus simple, mode douche",
+    "points": [
+      "Après la météo : « Tu as un trajet ce matin ? ». Réponds oui ou non, puis dis où tu vas, par exemple « Évreux ».",
+      "Le trajet part de là où tu es. Tu peux choisir un autre point de départ dans les réglages.",
+      "La route : « normale, sauf imprévu », ou le problème et les minutes en plus.",
+      "Mode douche : un bouton, puis tout se fait à la voix, en très gros sur l'écran. Il s'arrête tout seul à la fin.",
+      "La météo et le trajet sont lus au même rythme que les informations.",
+      "Les mises à jour s'annoncent : tu choisis « Mettre à jour » ou « Plus tard »."
+    ]
+  },
+  {
+    "v": 2,
+    "date": "2026-10-27",
+    "titre": "Météo, trafic et Politique & monde",
+    "points": [
+      "La météo de Météo-France, avec un conseil de tenue.",
+      "Le trafic de Bison Futé, et de TomTom si tu ajoutes la clé.",
+      "La rubrique Politique & monde (France et international), proposée après les sciences.",
+      "Mains libres : « Matinale, … », et une voix qui marche sans Internet."
+    ]
+  },
+  {
+    "v": 1,
+    "date": "2026-10-26",
+    "titre": "Lecteur et voix",
+    "points": [
+      "Vitesse de lecture réglable, pause et retour de 10 secondes.",
+      "Le bouton Retour du téléphone marche comme dans une appli.",
+      "Les sujets sont numérotés : dis « sujet 5 » pour l'approfondir."
+    ]
+  }
+]

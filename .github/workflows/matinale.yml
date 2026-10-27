@@ -55,6 +55,9 @@ jobs:
           MATINALE_FORCE: ${{ github.event_name == 'workflow_dispatch' && '1' || '' }}
         run: bash scripts/run.sh
 
+      - name: Numéro de version de l'appli (le même que la liste des nouveautés)
+        run: python3 scripts/version_appli.py
+
       - uses: actions/upload-pages-artifact@v4
         with:
           path: site
