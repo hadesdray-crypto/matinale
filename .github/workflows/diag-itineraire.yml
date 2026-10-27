@@ -13,9 +13,11 @@ jobs:
           O="Origin: https://hadesdray-crypto.github.io"
           {
           echo "== getcapabilities"; curl -sS -m 30 "https://data.geopf.fr/navigation/getcapabilities" | python3 -c "import json,sys;d=json.load(sys.stdin);[print(r.get('id'), [o.get('id') for o in (r.get('availableOperations') or [])][:4]) for r in d.get('resources',[])]; print(json.dumps(d.get('operations',[{}])[0])[:600])"
-          for R in bdtopo-valhalla bdtopo-pgr; do
-            U="https://data.geopf.fr/navigation/itineraire?resource=$R&start=1.165,49.216&end=1.151,49.024&profile=car&optimization=fastest&getSteps=false&getBbox=false&distanceUnit=kilometer&timeUnit=minute&geometryFormat=geojson&crs=EPSG:4326"
-            echo "== $R"; curl -sS -m 30 -D - -o r.json -H "$O" "$U" | grep -iE '^(HTTP|access-control-allow-origin)'; python3 -c "import json;d=json.load(open('r.json'));print('distance',d.get('distance'),d.get('distanceUnit'),'durée',d.get('duration'),d.get('timeUnit'),'points',len((d.get('geometry') or {}).get('coordinates') or []), str(d)[:200] if not d.get('distance') else '')"
+          for U in "https://data.geopf.fr/navigation/itineraire?resource=bdtopo-osrm&profile=car&optimization=fastest&start=2.337306,48.849319&end=2.367776,48.852891&intermediates=&constraints=&geometryFormat=geojson&getSteps=false&getBbox=false&crs=EPSG:4326&timeUnit=minute&distanceUnit=kilometer" \
+                   "https://data.geopf.fr/navigation/itineraire?resource=bdtopo-valhalla&profile=car&optimization=fastest&start=1.165,49.216&end=1.151,49.024&geometryFormat=geojson&crs=EPSG:4326&timeUnit=minute&distanceUnit=kilometer" \
+                   "https://data.geopf.fr/navigation/itineraire?resource=bdtopo-pgr&profile=car&optimization=fastest&start=1.165,49.216&end=1.151,49.024&geometryFormat=geojson&crs=EPSG:4326&timeUnit=minute&distanceUnit=kilometer" \
+                   "https://router.project-osrm.org/route/v1/driving/1.165,49.216;1.151,49.024?overview=simplified&geometries=geojson"; do
+            echo "== $U" | cut -c1-110; curl -sS -m 30 -D - -o r.json -H "$O" "$U" | grep -iE '^(HTTP|access-control-allow-origin)'; head -c 300 r.json; echo
           done
           } > keep/itineraire.txt 2>&1
           cat keep/itineraire.txt
