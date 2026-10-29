@@ -1,34 +1,15 @@
 Liens de « Comprendre » : 56 valides sur 56.
 Lecture de 42 sources (avec Gemini)…
 Sources lues : 42 ; muettes : 0 []
-Articles retenus après tri : 469
+Articles retenus après tri : 445
 Vidéos francophones récentes : 0
-  · Gemini gemini-flash-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-Fiches détaillées : 12 pages lisibles sur 17 fiches.
-  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting property name enclosed in double quotes: line 32 column 5 (char 4567)
-Fiches détaillées écrites : 12.
-/home/runner/.local/lib/python3.12/site-packages/PIL/Image.py:3593: DecompressionBombWarning: Image size (90317000 pixels) exceeds limit of 89478485 pixels, could be decompression bomb DOS attack.
-  warnings.warn(
-  · Commons : HTTPError HTTP Error 503: Service Unavailable
-  · Openverse : TimeoutError The read operation timed out
-  · Commons : HTTPError HTTP Error 503: Service Unavailable
+Fiches détaillées : 13 pages lisibles sur 20 fiches.
+  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting ',' delimiter: line 1 column 3628 (char 3627)
+  · Gemini gemini-3.5-flash-lite : JSONDecodeError Expecting ',' delimiter: line 1 column 8933 (char 8932)
+  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting property name enclosed in double quotes: line 1 column 8019 (char 8018)
+Fiches détaillées écrites : 10.
   · Openverse : TimeoutError The read operation timed out
   · Openverse : TimeoutError The read operation timed out
-Illustrations libres de droits : 12 sur 17 fiches (12 image(s) écartée(s) par le contrôle de Gemini).
-Édition n° 10 du 2026-10-28 : 17 fiches, mode Gemini (gemini-flash-lite-latest), 0 vidéos francophones.
-Demandes à l'IA : gemini-flash-latest 1, gemini-3.8-flash 1, gemini-flash-lite-latest 31, gemini-3.5-flash-lite 1
+Illustrations libres de droits : 17 sur 20 fiches (7 image(s) écartée(s) par le contrôle de Gemini).
+Édition n° 11 du 2026-10-29 : 20 fiches, mode Gemini (gemini-flash-latest), 0 vidéos francophones.
+Demandes à l'IA : gemini-flash-latest 1, gemini-flash-lite-latest 31, gemini-3.5-flash-lite 2

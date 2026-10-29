@@ -1,41 +1,8 @@
 Politique & monde : lecture de 20 sources (avec Gemini)…
-Sources lues : 20 ; muettes : 0 [] ; articles : 308
-  · Gemini gemini-flash-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting property name enclosed in double quotes: line 47 column 7 (char 2252)
-  · Gemini gemini-3.5-flash-lite : JSONDecodeError Expecting property name enclosed in double quotes: line 33 column 7 (char 2498)
-Gemini n'a pas répondu : nouvel essai dans 40 secondes.
-  · Gemini gemini-flash-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-Fiches détaillées : 7 pages lisibles sur 10 fiches.
-Fiches détaillées écrites : 7.
-Politique & monde n° 2 du 2026-10-28 : 10 sujets (6 France, 4 monde), mode Gemini (gemini-flash-lite-latest), fiches détaillées : 7.
-Demandes à l'IA (politique) : gemini-flash-latest 2, gemini-3.8-flash 2, gemini-flash-lite-latest 5, gemini-3.5-flash-lite 1
+Sources lues : 20 ; muettes : 0 [] ; articles : 328
+  · Gemini gemini-flash-latest : TimeoutError The read operation timed out
+Fiches détaillées : 6 pages lisibles sur 10 fiches.
+  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting ',' delimiter: line 1 column 6278 (char 6277)
+Fiches détaillées écrites : 6.
+Politique & monde n° 3 du 2026-10-29 : 10 sujets (5 France, 5 monde), mode Gemini (gemini-3.8-flash), fiches détaillées : 6.
+Demandes à l'IA (politique) : gemini-flash-latest 1, gemini-3.8-flash 1, gemini-flash-lite-latest 2, gemini-3.5-flash-lite 1
