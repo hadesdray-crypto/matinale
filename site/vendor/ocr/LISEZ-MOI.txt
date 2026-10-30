@@ -1,0 +1,5 @@
+Lecture de la carte grise dans le téléphone (la photo n'est ni gardée ni envoyée).
+- tesseract.min.js, worker.min.js : tesseract.js 5.1.1, licence Apache 2.0 (voir tesseract-LICENSE.md).
+  https://github.com/naptha/tesseract.js
+- tesseract-core-simd-lstm.wasm.js : tesseract.js-core 5.1.1 (moteur Tesseract OCR), licence Apache 2.0.
+- fra.traineddata.gz : données françaises de Tesseract (tessdata, 4.0.0 best_int), licence Apache 2.0.
