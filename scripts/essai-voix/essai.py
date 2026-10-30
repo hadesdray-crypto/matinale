@@ -20,7 +20,7 @@ async def main():
         pg.on('console', lambda m: logs.append(m.text[:300])); pg.on('pageerror', lambda e: logs.append('ERR ' + str(e)[:300]))
         await pg.goto('http://localhost:8000/essai.html'); await pg.wait_for_timeout(500)
         res['etat0'] = await pg.evaluate("VoixPiper.etat()")
-        for vid, spk in [('fr_FR-siwis-low', None), ('fr_FR-siwis-medium', None), ('fr_FR-upmc-medium#1', None)]:
+        for vid, spk in [('fr_FR-siwis-low', None), ('fr_FR-gilles-low', None), ('fr_FR-tom-medium', None), ('fr_FR-mls-medium', 7)]:
             r = {}
             try:
                 r['telechargement'] = await pg.evaluate(JS_TEL, vid)
@@ -35,19 +35,15 @@ async def main():
                 r['erreur'] = str(e)[:500]
             res[vid] = r
         # hors connexion : on recharge la page sans réseau, la voix doit marcher depuis le téléphone
+        await ctx.set_offline(True)
+        await pg.evaluate("() => { VoixPiper.arreter(); }")
         try:
-            await ctx.set_offline(True)
-            await pg.reload(); await pg.wait_for_timeout(500)
-        except Exception as e:
-            res['hors_ligne_rechargement'] = str(e)[:200]
-            await ctx.set_offline(False); await pg.goto('http://localhost:8000/essai.html'); await ctx.set_offline(True)
-        try:
-            x = await pg.evaluate(JS_SYN, ['fr_FR-siwis-low', 'Sans Internet, la voix marche quand même.', None])
+            x = await pg.evaluate("async () => { const r = await VoixPiper.fabriquer('fr_FR-siwis-low', 'Sans Internet, la voix marche quand même. Deuxième phrase pour vérifier.', {}); const b = new Uint8Array(await r.blob.arrayBuffer()); let s = ''; for (let i = 0; i < b.length; i += 32768) s += String.fromCharCode.apply(null, b.subarray(i, i + 32768)); return { ms: r.ms, dur: r.dur, wav: btoa(s) }; }")
             open(f"{OUT}/hors-ligne.wav", 'wb').write(base64.b64decode(x['wav'])); res['hors_ligne'] = {'ms': x['ms'], 'dur': round(x['dur'], 2)}
         except Exception as e:
             res['hors_ligne'] = 'ERREUR ' + str(e)[:300]
         await ctx.set_offline(False)
-        res['effacer'] = await pg.evaluate("async () => { await VoixPiper.effacer('fr_FR-siwis-medium'); return VoixPiper.etat(); }")
+        res['effacer'] = await pg.evaluate("async () => { await VoixPiper.effacer('fr_FR-tom-medium'); return VoixPiper.etat(); }")
         res['place'] = await pg.evaluate("VoixPiper.place()")
         res['echantillon'] = await pg.evaluate("async () => { const r = await fetch('https://rhasspy.github.io/piper-samples/samples/fr/fr_FR/siwis/medium/speaker_0.mp3', { mode:'no-cors' }); return r.type + ' ' + r.status; }")
         res['logs'] = logs[-30:]

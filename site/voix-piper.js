@@ -17,11 +17,15 @@
   const ouvrir = () => caches.open(CACHE);
   const fichiers = v => ({ model: HF + v.onnx, config: HF + v.onnx + '.json' });
 
+  /* La liste des voix : en ligne, sinon la copie gardée avec les voix (pour marcher sans Internet). */
   async function lireCatalogue(){
     if (catalogue) return catalogue;
-    const r = await fetch('voix-catalogue.json', { cache:'no-cache' });
-    if (!r.ok) throw new Error('catalogue');
-    catalogue = (await r.json()).voix || [];
+    const u = new URL('voix-catalogue.json', document.baseURI).href;
+    let j = null;
+    try { const r = await fetch(u, { cache:'no-cache' }); if (r.ok){ j = await r.clone().json(); if (cacheOK()) ouvrir().then(c => c.put(u, r)).catch(() => {}); } } catch (e) {}
+    if (!j && cacheOK()){ try { const r = await (await ouvrir()).match(u); if (r) j = await r.json(); } catch (e) {} }
+    if (!j) throw new Error('Liste des voix indisponible');
+    catalogue = j.voix || [];
     return catalogue;
   }
   async function present(url){ try { const c = await ouvrir(); return !!(await c.match(url)); } catch (e) { return false; } }
@@ -155,5 +159,5 @@
     return { ratio: r.ms / 1000 / Math.max(0.1, r.dur), ms: r.ms, dur: r.dur };
   }
   function exemple(v){ return v && v.ech ? ECHANT + v.ech : ''; }
-  window.VoixPiper = { lireCatalogue, etat, telecharger, effacer, effacerMoteur, effacerTout, place, preparer, fabriquer, dire, stop, tester, exemple, moteurPresent, MOTEUR_MO, audio };
+  window.VoixPiper = { arreter: arreterWorker, lireCatalogue, etat, telecharger, effacer, effacerMoteur, effacerTout, place, preparer, fabriquer, dire, stop, tester, exemple, moteurPresent, MOTEUR_MO, audio };
 })();

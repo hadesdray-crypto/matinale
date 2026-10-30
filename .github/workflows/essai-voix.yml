@@ -37,15 +37,14 @@ jobs:
           from vosk import Model, KaldiRecognizer
           m = Model('vosk-model-small-fr-0.22')
           for f in sorted(glob.glob('keep/*.wav')):
-              subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', f, '-ar', '16000', '-ac', '1', '/tmp/x.wav'])
-              w = wave.open('/tmp/x.wav'); r = KaldiRecognizer(m, 16000)
+              w = wave.open(f); r = KaldiRecognizer(m, w.getframerate())
               while True:
                   d = w.readframes(4000)
                   if not d: break
                   r.AcceptWaveform(d)
               print(f.split('/')[-1], '→', json.loads(r.FinalResult()).get('text'))
           PY
-          cat keep/reecoute.txt; echo "::notice title=Reecoute::$(tr '\n' ' ' < keep/reecoute.txt | head -c 3000)"
+          cat keep/reecoute.txt; echo "::notice title=Reecoute::$(grep '→' keep/reecoute.txt | tr '\n' ' ' | head -c 3000)"
       - name: Écrire sur la branche diag
         if: always()
         run: |

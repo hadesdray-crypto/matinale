@@ -33,14 +33,31 @@ async function phonModule(){
   });
   return phon.mod;
 }
+/* Les sons de chaque phrase, puis leurs numéros d'après la table de la voix (chaque voix a la sienne). */
+function versIds(ph){
+  const M = cfg.phoneme_id_map || {}, P = (M._ || [0])[0], ids = [];
+  const pousse = k => { const v = M[k]; if (v) { ids.push(...v); return true; } return false; };
+  pousse('^'); ids.push(P);
+  for (const c of ph){ if (pousse(c)) ids.push(P); }
+  pousse('$');
+  return ids;
+}
+function phrasesDe(j){
+  if (Array.isArray(j.phonemes) && cfg.phoneme_id_map){
+    const a = j.phonemes;
+    const groupes = a.length && Array.isArray(a[0]) ? a : [a];
+    return groupes.map(g => versIds(g.flatMap(x => Array.from(String(x))))).filter(x => x.length > 3);
+  }
+  return j.phoneme_ids && j.phoneme_ids.length ? [j.phoneme_ids] : [];
+}
 async function phonemes(text){
   for (let essai = 0; essai < 2; essai++){
     const m = await phonModule(); phonOut = [];
     try {
-      m.callMain(['-l', (cfg.espeak && cfg.espeak.voice) || 'fr', '--input', JSON.stringify([{ text }]), '--espeak_data', '/espeak-ng-data']);
+      m.callMain(['-l', (cfg.espeak && cfg.espeak.voice) || 'fr', '--input', JSON.stringify([{ text }]), '--espeak_data', '/espeak-ng-data', '--allow_missing_phonemes']);
       const out = phonOut; phonOut = null;
-      const ids = []; out.forEach(l => { try { const j = JSON.parse(l); if (j && j.phoneme_ids) ids.push(...j.phoneme_ids); } catch (e) {} });
-      if (ids.length) return ids;
+      const res = []; out.forEach(l => { try { const j = JSON.parse(l); if (j) res.push(...phrasesDe(j)); } catch (e) {} });
+      if (res.length) return res;
     } catch (e) { phonOut = null; }
     phon.mod = null;   /* le module ne repart pas : on en recrée un */
   }
@@ -58,18 +75,23 @@ async function charger(m){
 async function dire(m){
   if (!sess || cur !== m.id) await charger(m);
   const t0 = performance.now();
-  const ids = await phonemes(m.text);
+  const phr = await phonemes(m.text), rate = (cfg.audio && cfg.audio.sample_rate) || 22050;
   const big = a => BigInt64Array.from(a.map(x => BigInt(x)));
-  const inf = cfg.inference || {};
-  const feeds = {
-    input: new ort.Tensor('int64', big(ids), [1, ids.length]),
-    input_lengths: new ort.Tensor('int64', big([ids.length]), [1]),
-    scales: new ort.Tensor('float32', Float32Array.from([inf.noise_scale != null ? inf.noise_scale : 0.667, (inf.length_scale || 1) * (m.lent || 1), inf.noise_w != null ? inf.noise_w : 0.8]), [3])
-  };
-  if ((cfg.num_speakers || 0) > 1) feeds.sid = new ort.Tensor('int64', big([m.speaker || 0]), [1]);
-  const out = await sess.run(feeds);
-  const pcm = new Float32Array(out.output.data);
-  return { pcm, rate: (cfg.audio && cfg.audio.sample_rate) || 22050, ms: Math.round(performance.now() - t0) };
+  const inf = cfg.inference || {}, parts = [];
+  for (const ids of phr){
+    const feeds = {
+      input: new ort.Tensor('int64', big(ids), [1, ids.length]),
+      input_lengths: new ort.Tensor('int64', big([ids.length]), [1]),
+      scales: new ort.Tensor('float32', Float32Array.from([inf.noise_scale != null ? inf.noise_scale : 0.667, (inf.length_scale || 1) * (m.lent || 1), inf.noise_w != null ? inf.noise_w : 0.8]), [3])
+    };
+    if ((cfg.num_speakers || 0) > 1) feeds.sid = new ort.Tensor('int64', big([m.speaker || 0]), [1]);
+    const out = await sess.run(feeds);
+    if (parts.length) parts.push(new Float32Array(Math.round(rate * 0.18)));   /* petite pause entre deux phrases */
+    parts.push(out.output.data);
+  }
+  const n = parts.reduce((a, p) => a + p.length, 0), pcm = new Float32Array(n); let o = 0;
+  parts.forEach(p => { pcm.set(p, o); o += p.length; });
+  return { pcm, rate, ms: Math.round(performance.now() - t0) };
 }
 self.onmessage = async e => {
   const m = e.data || {};
