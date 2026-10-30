@@ -1,5 +1,16 @@
 [
   {
+    "v": 7,
+    "date": "2026-10-30",
+    "titre": "Liens vérifiés chaque matin",
+    "points": [
+      "Chaque lien vers un site extérieur a un bouton « Copier le lien » à coller dans ton navigateur.",
+      "Chaque matin, le serveur vérifie les liens et les services de l'appli. Un lien qui ne marche plus est remplacé par un lien vérifié, ou masqué.",
+      "Options → Application → État de l'appli : édition faite par l'IA gratuite ou non, services et liens qui marchent.",
+      "Une panne qui dure est signalée automatiquement (message GitHub par e-mail)."
+    ]
+  },
+  {
     "v": 6,
     "date": "2026-10-30",
     "titre": "La carte grise en photo",

@@ -12,6 +12,9 @@ echo "::group::Politique & monde"
 mkdir -p site/data/politique
 python3 scripts/politique.py --site site > >(tee site/data/politique/build-log.txt) 2>&1 || echo "::warning::Rubrique Politique & monde non mise à jour : la précédente reste en ligne."
 echo "::endgroup::"
+echo "::group::Liens et services de l'appli (vérification du matin)"
+timeout 300 python3 scripts/liens.py --site site || echo "::warning::Vérification des liens non faite aujourd'hui."
+echo "::endgroup::"
 # La clé Gemini ne sert qu'à l'édition : les outils audio téléchargés ensuite ne la voient pas.
 unset GEMINI_API_KEY
 

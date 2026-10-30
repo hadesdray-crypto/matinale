@@ -26,6 +26,7 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  issues: write
 
 concurrency:
   group: matinale
@@ -149,6 +150,12 @@ jobs:
           ok = sum(1 for rel in wanted if isinstance(rel, str) and rel.startswith(('audio/items/', 'audio/politique/items/', 'img/')) and '..' not in rel and get(rel))
           print(f'{ok} fichiers repris sur {len([w for w in wanted if w])}.')
           PY
+
+      - name: Liens et services de l'appli (vérification, signalement si panne)
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: timeout 300 python3 scripts/liens.py --site site
 
       - name: Numéro de version de l'appli (le même que la liste des nouveautés)
         run: python3 scripts/version_appli.py

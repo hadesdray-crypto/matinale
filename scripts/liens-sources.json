@@ -1,0 +1,28 @@
+{
+  "liens": [
+    {"id": "argus", "groupe": "vehicule", "nom": "L'argus", "url": "https://www.largus.fr/cote/immatriculation/", "desc": "Marque, modèle et version, avec la plaque.",
+     "but": "trouver gratuitement la marque et le modèle d'une voiture française à partir de sa plaque d'immatriculation",
+     "alternatives": [{"nom": "Mister Auto", "url": "https://www.mister-auto.com/", "desc": "Modèle et motorisation : recherche par plaque."},
+                      {"nom": "Norauto", "url": "https://www.norauto.fr/", "desc": "Modèle et motorisation : recherche par plaque."}]},
+    {"id": "oscaro", "groupe": "vehicule", "nom": "Oscaro", "url": "https://www.oscaro.com/", "desc": "Modèle et motorisation : « Sélectionnez votre véhicule », puis la plaque.",
+     "but": "trouver gratuitement la motorisation d'une voiture française à partir de sa plaque d'immatriculation",
+     "alternatives": [{"nom": "Autodoc", "url": "https://www.auto-doc.fr/", "desc": "Modèle et motorisation : recherche par plaque."},
+                      {"nom": "Carter-Cash", "url": "https://www.carter-cash.com/", "desc": "Modèle et motorisation : recherche par plaque."}]},
+    {"id": "histovec", "groupe": "vehicule", "nom": "HistoVec (site officiel de l'État)", "url": "https://histovec.interieur.gouv.fr/histovec/proprietaire", "desc": "Le rapport officiel de ton véhicule, avec ta carte grise.",
+     "but": "obtenir le rapport officiel et gratuit de l'État sur son propre véhicule (HistoVec)", "alternatives": [{"nom": "HistoVec", "url": "https://histovec.interieur.gouv.fr/", "desc": "Le rapport officiel de ton véhicule."}]},
+    {"id": "evdb", "groupe": "vehicule", "nom": "EV Database (électriques)", "url": "https://ev-database.org/", "desc": "Batterie utile et consommation réelle des voitures électriques.",
+     "but": "connaître la capacité utile de la batterie et la consommation réelle d'une voiture électrique", "alternatives": []},
+    {"id": "tomtom", "groupe": "tomtom", "nom": "TomTom pour les développeurs", "url": "https://developer.tomtom.com/", "desc": "Créer ta clé TomTom gratuite (trafic en direct).",
+     "but": "créer une clé gratuite pour l'API de trafic et d'itinéraire TomTom", "alternatives": []}
+  ],
+  "services": [
+    {"id": "meteo", "nom": "Météo (Open-Meteo, modèles Météo-France)", "url": "https://api.open-meteo.com/v1/forecast?latitude=49.2&longitude=1.17&current=temperature_2m&models=meteofrance_seamless"},
+    {"id": "adresses", "nom": "Recherche d'adresses (Géoplateforme IGN)", "url": "https://data.geopf.fr/geocodage/search?q=Louviers&limit=1"},
+    {"id": "itineraire", "nom": "Itinéraire sans clé (OSRM)", "url": "https://router.project-osrm.org/route/v1/driving/1.165,49.216;1.151,49.024?overview=false"},
+    {"id": "carburants", "nom": "Prix des carburants (données de l'État)", "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?limit=1"},
+    {"id": "bornes", "nom": "Bornes de recharge (OpenStreetMap)", "url": "https://overpass-api.de/api/status"},
+    {"id": "voix", "nom": "Voix à télécharger (Piper)", "url": "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/voices.json"},
+    {"id": "exemples", "nom": "Exemples des voix", "url": "https://rhasspy.github.io/piper-samples/samples/fr/fr_FR/siwis/medium/speaker_0.mp3"},
+    {"id": "trafic", "nom": "Trafic Bison Futé (relevé toutes les 20 minutes)", "url": "https://raw.githubusercontent.com/hadesdray-crypto/matinale/trafic/trafic.json", "frais_heures": 30}
+  ]
+}

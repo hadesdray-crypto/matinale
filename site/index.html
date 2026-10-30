@@ -571,6 +571,10 @@ html[data-tsize="1"]{--ts:1.12} html[data-tsize="2"]{--ts:1.26} html[data-tsize=
 .vh-photo{justify-self:start;cursor:pointer}
 .vh-liens{display:grid;gap:8px;margin-top:8px}
 .vh-liens .row{text-decoration:none}
+.vh-lien{display:grid;gap:6px}
+.vh-lien .btn{justify-self:start}
+.lien-url{display:block;margin-top:2px;font-family:var(--mono);font-size:11.5px;color:var(--ink-3);word-break:break-all}
+.etat-l{margin:6px 0;padding:0;list-style:none;display:grid;gap:6px;font-size:14px;line-height:1.4}
 .vh-in.vh-lu{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 .vh-l[hidden]{display:none}
 /* Styles visuels */
@@ -2918,7 +2922,7 @@ function openMatinReglages(){
     '<section class="rg-sec"><h3>Informations du matin</h3><label class="rg-line">Après la météo et le trajet <select data-m="infos">' +
       [['sci,ask', 'Sciences, puis me demander pour la politique'], ['sci', 'Sciences seulement'], ['sci,pol', 'Sciences, puis Politique & monde'], ['pol,sci', 'Politique & monde, puis Sciences']].map(o => '<option value="' + o[0] + '"' + ((p.infos || 'sci,ask') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select></label></section>' +
     '<section class="rg-sec"><h3>Trafic en direct (TomTom)</h3>' +
-      '<p class="small">Temps de trajet réel, bouchons et accidents sur toutes les routes. Gratuit pour un usage perso, sans carte bancaire : crée un compte sur <a href="https://developer.tomtom.com/" target="_blank" rel="noopener noreferrer">developer.tomtom.com</a>, puis copie ta clé (« API Key ») ici.</p>' +
+      '<p class="small">Temps de trajet réel, bouchons et accidents sur toutes les routes. Gratuit pour un usage perso, sans carte bancaire : crée un compte sur <a href="https://developer.tomtom.com/" target="_blank" rel="noopener noreferrer">developer.tomtom.com</a>, puis copie ta clé (« API Key ») ici.</p><p><button class="btn sm ghost" data-action="copy" data-text="https://developer.tomtom.com/">' + icon('copy', 15) + ' Copier le lien de TomTom</button></p>' +
       '<form class="rg-form" data-form="tomtom"><input name="k" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="' + (p.tomtom ? 'Clé enregistrée sur ce téléphone' : 'Colle ta clé TomTom ici') + '"><button class="btn sm primary" type="submit">' + (p.tomtom ? 'Remplacer et tester' : 'Enregistrer et tester') + '</button></form>' +
       (p.tomtom ? '<div class="mt-chips"><button class="btn sm ghost" data-action="m-tt-test">Tester la clé</button><button class="btn sm ghost" data-action="m-tt-del">Effacer la clé</button></div>' : '') +
       '<p class="small" id="rg-tt" role="status"></p><p class="muted small">La clé reste dans ce téléphone. TomTom reçoit seulement le départ et l\'arrivée de tes trajets. Sans clé, Bison Futé signale déjà les coupures et travaux sur les routes nationales.</p></section>' +
@@ -3919,8 +3923,20 @@ function openMicro(){
 function openAppli(){
   showOpt(sheetHead('Application') + '<div class="pad sheet-body rg"><section class="rg-sec"><h3>La Matinale</h3><p class="rg-line">Version ' + APP_V + '</p>' +
     '<div class="mt-chips"><button class="btn sm" data-action="maj-check">' + icon('refresh', 15) + ' Rechercher une mise à jour</button><button class="btn sm ghost" data-action="maj-histo">Nouveautés</button></div></section>' +
+    '<section class="rg-sec"><h3>État de l\'appli</h3><div id="ap-etat"><p class="muted small">Chargement…</p></div></section>' +
     '<section class="rg-sec"><h3>Ce qui est gardé dans le téléphone</h3><p class="small" id="ap-place">…</p><p class="muted small">Tes réglages, tes lieux, ta clé TomTom, les voix et les éditions gardées restent dans ce téléphone.</p></section></div>', 'Application');
   placeTexte().then(t => { const e = $('#ap-place'); if (e) e.textContent = t; });
+  S.liensEtatP = null; chargerLiensEtat().then(E => { const b = $('#ap-etat'); if (b) b.innerHTML = etatHTML(E); });
+}
+/* Ce que le serveur a vérifié ce matin : l'IA gratuite, les services et les liens. */
+function etatHTML(E){
+  if (!E) return '<p class="small">' + (online() ? 'La vérification du matin n\'est pas encore disponible.' : 'Pas de réseau : l\'état sera affiché quand tu captes.') + '</p>';
+  const ok = t => '<span class="bdg off">' + icon('check', 12) + ' ' + t + '</span>', ko = t => '<span class="bdg net">' + icon('alert', 12) + ' ' + t + '</span>';
+  const at = new Date(E.at), L = [];
+  ['sciences', 'politique'].forEach(k => { const x = (E.ia || {})[k]; if (x && x.date) L.push('<li>' + (x.ia ? ok('IA gratuite') : ko('sans IA')) + ' Édition ' + (k === 'sciences' ? 'Sciences' : 'Politique & monde') + ' du ' + esc(shortDateNoYear(x.date)) + (x.ia ? '' : ' : faite en mode secours') + '</li>'); });
+  (E.services || []).forEach(x => L.push('<li>' + (x.etat === 'ok' ? ok('marche') : ko(x.etat === 'ancien' ? 'en retard' : 'en panne')) + ' ' + esc(x.nom) + (x.detail ? ' (' + esc(x.detail) + ')' : '') + '</li>'));
+  (E.liens || []).forEach(x => L.push('<li>' + (x.etat === 'panne' ? ko('en panne') : x.etat === 'remplace' ? ko('remplacé') : ok('marche')) + ' Lien : ' + esc(x.nom) + (x.etat === 'remplace' && x.origine ? ' (au lieu de ' + esc(x.origine.nom) + ')' : '') + (x.etat === 'panne' && x.depuis ? ' depuis le ' + esc(shortDateNoYear(x.depuis)) + ', masqué' : '') + '</li>'));
+  return '<p class="small">Vérifié par le serveur le ' + esc(at.toLocaleDateString('fr-FR', { day:'numeric', month:'long' })) + ' à ' + esc(hDisp(at)) + '. Ce qui tombe en panne est signalé, et un lien mort est remplacé par un lien vérifié.</p><ul class="etat-l">' + L.join('') + '</ul>';
 }
 async function placeTexte(){
   try { const e = await navigator.storage.estimate(); return 'Utilisé par l\'appli : ' + moTxt(e.usage || 0) + '. Encore libre : ' + moTxt(Math.max(0, (e.quota || 0) - (e.usage || 0))) + '.'; } catch (e) { return 'Espace : inconnu sur ce téléphone.'; }
@@ -3971,6 +3987,7 @@ function openVehicules(replace){
     '</div>', 'Mon véhicule', replace);
 }
 function openVehForm(id){
+  chargerLiensEtat().then(() => { const b = $('#vh-liens'); if (b) b.innerHTML = liensGroupe('vehicule').map(lienHTML).join(''); });
   const V = vehs(), v = V.liste.find(x => x.id === id) || { id:'', nom:'', plaque:'', type:'voiture', energie:'essence', carbu:'', conso:'', batterie:'' };
   const nrj = vehNrj(v), el = nrj.moteur === 'electric';
   showOpt(sheetHead(v.id ? 'Modifier le véhicule' : 'Ajouter un véhicule') + '<div class="pad sheet-body rg">' +
@@ -3978,8 +3995,8 @@ function openVehForm(id){
       '<p class="small">Prends-la en photo, à plat et bien éclairée : l\'appli la lit dans ton téléphone et remplit les cases. La photo n\'est ni gardée ni envoyée.</p>' +
       '<label class="btn primary vh-photo">' + icon('camera', 16) + ' Photo de la carte grise<input type="file" accept="image/*" data-cgphoto hidden></label>' +
       '<div class="pbar" id="cg-bar" hidden><i></i></div><p class="vx-st" id="cg-st" role="status"></p>' +
-      '<details><summary>Ou chercher avec ta plaque (sites extérieurs)</summary><p class="small">Tu tapes ta plaque toi-même sur l\'un de ces sites, puis tu reviens remplir les cases. Ils ne font pas partie de l\'appli : ils reçoivent ce que tu y tapes.</p><div class="vh-liens">' +
-        VH_LIENS.map(l => '<a class="row" href="' + l[1] + '" target="_blank" rel="noopener noreferrer"><span class="row-main"><span class="row-title">' + esc(l[0]) + '</span><span class="row-meta">' + esc(l[2]) + '</span></span>' + icon('ext', 16) + '</a>').join('') +
+      '<details><summary>Ou chercher avec ta plaque (sites extérieurs)</summary><p class="small">Tu tapes ta plaque toi-même sur l\'un de ces sites, puis tu reviens remplir les cases. « Copier le lien » te permet de le coller dans ton navigateur. Ces sites ne font pas partie de l\'appli : ils reçoivent ce que tu y tapes. Les liens sont vérifiés chaque matin.</p><div class="vh-liens" id="vh-liens">' +
+        liensGroupe('vehicule').map(lienHTML).join('') +
       '</div></details></div>' +
     '<form class="rg-form col vh-form" data-form="veh" data-id="' + esc(v.id) + '">' +
     '<label class="vh-l"><span>Nom</span><input class="vh-in" name="nom" type="text" maxlength="30" placeholder="Ex. Clio, la voiture du boulot" value="' + esc(v.nom || '') + '"></label>' +
@@ -4000,6 +4017,24 @@ const VH_LIENS = [
   ['HistoVec (site officiel de l\'État)', 'https://histovec.interieur.gouv.fr/histovec/proprietaire', 'Le rapport officiel de ton véhicule, avec ta carte grise.'],
   ['EV Database (électriques)', 'https://ev-database.org/', 'Batterie utile et consommation réelle des voitures électriques.']
 ];
+/* Les liens vérifiés chaque matin par le serveur (remplacés s'ils sont en panne) ; sinon la liste intégrée. */
+S.liensEtat = null;
+function chargerLiensEtat(){
+  if (S.liensEtatP) return S.liensEtatP;
+  S.liensEtatP = fetch('data/liens.json', { cache:'no-cache' }).then(r => r.ok ? r.json() : null).then(j => { S.liensEtat = j && Array.isArray(j.liens) ? j : null; return S.liensEtat; }).catch(() => null);
+  setTimeout(() => { S.liensEtatP = null; }, 10 * 60000);
+  return S.liensEtatP;
+}
+function liensGroupe(g){
+  const E = S.liensEtat;
+  if (E) return E.liens.filter(l => l.groupe === g && l.etat !== 'panne');
+  return g === 'vehicule' ? VH_LIENS.map(l => ({ nom:l[0], url:l[1], desc:l[2] })) : [];
+}
+function lienHTML(l){
+  return '<div class="vh-lien"><a class="row" href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer"><span class="row-main"><span class="row-title">' + esc(l.nom) + '</span><span class="row-meta">' + esc(l.desc || '') +
+    (l.etat === 'remplace' ? ' (nouveau lien' + (l.auto ? ', trouvé automatiquement' : '') + ' : l\'ancien ne marchait plus)' : '') + '</span><span class="lien-url">' + esc(l.url.replace(/^https:\/\//, '')) + '</span></span>' + icon('ext', 16) + '</a>' +
+    '<button class="btn sm ghost" data-action="copy" data-text="' + esc(l.url) + '">' + icon('copy', 15) + ' Copier le lien</button></div>';
+}
 /* ---------- Lecture de la carte grise dans le téléphone (tesseract.js). La photo n'est ni gardée ni envoyée. ---------- */
 function chargerScript(src){
   return new Promise((ok, ko) => {
@@ -4358,7 +4393,7 @@ function vxEcoutePiper(id){
    L'édition du jour arrive toute seule. Une nouvelle version de l'appli, elle, s'annonce :
    « Nouvelle mise à jour ! » avec ce qui change → « Mettre à jour » ou « Plus tard » → « Mise à jour terminée ! ».
    Jamais pendant une lecture, une question ou le mode douche : elle attend la fin. */
-const APP_V = 6;
+const APP_V = 7;
 const Maj = { v:0, list:null, plusTard:0, t:0, last:0 };
 const majListe = l => arr(l).filter(e => e && Number(e.v) > 0 && Array.isArray(e.points));
 function majOccupe(){ return Player.playing || S.matinRun || Douche.on || !!S.awaitTrajet || (Voice.on && !Libre.on) || askOpen(); }
