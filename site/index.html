@@ -557,6 +557,15 @@ html[data-tsize="1"]{--ts:1.12} html[data-tsize="2"]{--ts:1.26} html[data-tsize=
 .rg details{margin:8px 0;font-size:14.5px;line-height:1.5}
 .rg summary{cursor:pointer;font-family:var(--display);font-weight:700;color:var(--accent-ink);padding:6px 0}
 .rg ol{margin:6px 0;padding-left:22px}
+/* Mon véhicule */
+.vh-form{display:grid;gap:12px}
+.vh-l{display:grid;gap:6px;margin:0;font-family:var(--display);font-weight:600;font-size:14.5px}
+.vh-in{height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--rule);background:var(--card);color:var(--ink);font-size:16px;font-family:inherit;font-weight:400}
+.vh-bloc{display:grid;gap:6px;margin:10px 0;padding:10px 12px;border-radius:12px;background:var(--accent-soft)}
+.vh-bloc p{margin:0}
+.vh-t{font-family:var(--display);font-weight:700;font-size:15px}
+.vh-bloc .ic{display:inline-block;vertical-align:-3px;margin-right:4px}
+.vh-l[hidden]{display:none}
 /* Styles visuels */
 .st-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:8px}
 .st-tile{display:grid;gap:4px;align-content:start;padding:8px;border-radius:16px;border:2px solid var(--rule);background:var(--card);color:var(--ink);text-align:left;cursor:pointer}
@@ -2580,14 +2589,28 @@ function bfSurTrajet(bf, a, b, pts){
 }
 const bfPhrase = e => cap(e.t) + (e.r ? ' sur la ' + e.r : '') + (e.v ? ' vers ' + e.v : '');
 const TT_CAT = { JAM:'bouchon', ROAD_WORK:'travaux', ROAD_CLOSURE:'route fermée', OTHER:'ralentissement' };
+/* Paramètres TomTom du véhicule choisi : type, moteur, consommation selon la vitesse (et batterie si électrique). */
+function ttVehicule(){
+  const v = vehActif(); if (!v) return '&travelMode=car';
+  const el = vehElec(v), c = vehConso(v), T = VTYPES[v.type] || VTYPES.voiture;
+  const f = el ? [[30, .75], [50, .8], [80, .95], [110, 1.2], [130, 1.45]] : [[30, .95], [50, .85], [80, .9], [110, 1.08], [130, 1.3]];
+  let q = '&travelMode=' + T.tt + '&vehicleEngineType=' + (el ? 'electric' : 'combustion');
+  const courbe = f.map(x => x[0] + ',' + (Math.round(c * x[1] * 10) / 10)).join(':');
+  if (el){ const bat = Number(v.batterie) || 50; q += '&constantSpeedConsumptionInkWhPerHundredkm=' + courbe + '&currentChargeInkWh=' + (Math.round(bat * vehCharge()) / 100) + '&maxChargeInkWh=' + bat + '&auxiliaryPowerInkW=1.5'; }
+  else q += '&constantSpeedConsumptionInLitersPerHundredkm=' + courbe;
+  return q;
+}
 async function tomtomRoute(a, b){
   const k = MPget().tomtom; if (!k) return null;
-  const u = 'https://api.tomtom.com/routing/1/calculateRoute/' + r3(a.lat) + ',' + r3(a.lon) + ':' + r3(b.lat) + ',' + r3(b.lon) + '/json?key=' + encodeURIComponent(k) +
-    '&traffic=true&travelMode=car&routeType=fastest&departAt=now&sectionType=traffic&computeTravelTimeFor=all';
-  const j = await fetchJSON(u, 15000);
+  const base = 'https://api.tomtom.com/routing/1/calculateRoute/' + r3(a.lat) + ',' + r3(a.lon) + ':' + r3(b.lat) + ',' + r3(b.lon) + '/json?key=' + encodeURIComponent(k) +
+    '&traffic=true&routeType=fastest&departAt=now&sectionType=traffic&computeTravelTimeFor=all';
+  let j;
+  try { j = await fetchJSON(base + ttVehicule(), 15000); }
+  catch (e) { if (e.status === 400) j = await fetchJSON(base + '&travelMode=car', 15000); else throw e; }   /* réglages du véhicule refusés : calcul simple */
   const R = j.routes && j.routes[0]; if (!R) return null;
   const s = R.summary || {}, m = x => typeof x === 'number' ? Math.round(x / 60) : null;
   return { min:m(s.travelTimeInSeconds), usual:m(s.historicTrafficTravelTimeInSeconds), libre:m(s.noTrafficTravelTimeInSeconds), km:Math.round((s.lengthInMeters || 0) / 100) / 10,
+    fuelL: typeof s.fuelConsumptionInLiters === 'number' ? s.fuelConsumptionInLiters : null, kwh: typeof s.batteryConsumptionInkWh === 'number' ? s.batteryConsumptionInkWh : null,
     pts:[].concat(...(R.legs || []).map(l => (l.points || []).map(p => [p.latitude, p.longitude]))),
     jams:(R.sections || []).filter(x => x.sectionType === 'TRAFFIC').map(x => ({ cat:TT_CAT[x.simpleCategory] || 'ralentissement', min:Math.round((x.delayInSeconds || 0) / 60) })) };
 }
@@ -2604,6 +2627,7 @@ async function trajet(a, b){
   const bf = await bisonFute();
   res.ev = bfSurTrajet(bf, a, b, res.r && res.r.pts);
   res.at = Date.now();
+  res.veh = vehResume(res.r);
   return res;
 }
 /* État de la route : y a-t-il quelque chose qui change le temps de trajet habituel ? */
@@ -2655,7 +2679,7 @@ async function trajetVers(d, ask){
   let t;
   if (!a) t = { d, sansDepart:true, at:Date.now(), ev:[] };
   else if (kmBetween(a, d) < 0.4) t = { d, surPlace:true, at:Date.now(), ev:[] };
-  else t = Object.assign({ d:{ nom:d.nom, lat:d.lat, lon:d.lon }, at:Date.now() }, await trajet(a, d));
+  else { t = Object.assign({ d:{ nom:d.nom, lat:d.lat, lon:d.lon }, at:Date.now() }, await trajet(a, d)); vehComplete(t).then(() => { if (S.matin && S.matin.tr === t) matinRedraw(); }); }
   S.matin.tr = t; LS.set('mds.trajet', { d:{ nom:d.nom, lat:d.lat, lon:d.lon }, at:t.at });
   return t;
 }
@@ -2663,7 +2687,7 @@ function trajetStatut(t){
   if (!t) return [];
   if (t.sansDepart) return ['Je ne connais pas ta position : active la localisation, ou choisis un point de départ dans les réglages.'];
   if (t.surPlace) return ['Tu es déjà à ' + t.d.nom + '.'];
-  const ph = ['Vers ' + t.d.nom + '.'].concat(trajetPhrases(t)), wx = S.matin && S.matin.wx;
+  const ph = ['Vers ' + t.d.nom + '.'].concat(trajetPhrases(t), vehPhrases(t)), wx = S.matin && S.matin.wx;
   if (wx && wx.buffer) ph.push('Avec la météo, compte ' + wx.buffer + ' minutes de plus.');
   return ph;
 }
@@ -2704,6 +2728,7 @@ function matinInner(){
     if (tr.r) h += '<p class="mt-big">' + tr.r.min + ' min' + (tr.r.sansTrafic ? ' <small class="mt-src">hors trafic</small>' : '') + '</p>';
     if (tr.r && !tr.r.sansTrafic) tr.r.jams.filter(x => x.min >= 2).slice(0, 2).forEach(x => { h += '<p class="mt-ev">' + icon('alert', 14) + ' ' + esc(cap(x.cat)) + ' : +' + x.min + ' min</p>'; });
     (tr.ev || []).slice(0, 3).forEach(e => { h += '<p class="mt-ev">' + icon('alert', 14) + ' ' + esc(bfPhrase(e)) + (e.d ? ' — ' + esc(e.d.slice(0, 110)) : '') + ' <span class="mt-src">Bison Futé</span></p>'; });
+    if (tr.veh) h += vehBlocHTML(tr, false);
     if (tr.r && tr.r.sansTrafic && !p.tomtom) h += '<p class="mt-sub">Trafic en direct : ajoute la clé TomTom (gratuite) dans les réglages.</p>';
   }
   h += '<div class="mt-chips">' + (tr && tr.d ? yAllerBtns(tr.d) + '<button class="btn sm ghost" data-action="m-tr-maj">' + icon('refresh', 15) + ' Revérifier</button>' : '') + '<button class="btn sm" data-action="m-iti">' + icon('route', 15) + ' Nouveau trajet</button></div>';
@@ -2825,11 +2850,12 @@ async function itiCalc(q, opt){
   S.iti = { d:{ nom:d.nom, lat:d.lat, lon:d.lon }, res };
   put('<div class="iti-res"><h3>' + esc(d.nom) + '</h3><p class="muted small">' + esc(d.label || '') + '</p>' +
     (res.r ? '<p class="mt-big">' + res.r.min + ' min · ' + res.r.km + ' km' + (arrive ? ' · arrivée ' + esc(hDisp(arrive)) : '') + '</p>' : '') +
-    phr.slice(1).map(x => '<p>' + esc(x) + '</p>').join('') +
+    phr.slice(1).map(x => '<p>' + esc(x) + '</p>').join('') + '<div id="iti-veh">' + vehBlocHTML(res, true) + '</div>' +
     (list.length > 1 ? '<details class="iti-other"><summary>Ce n\'est pas le bon endroit ?</summary>' + list.slice(1, 5).map(x => '<button class="row" data-action="iti-pick" data-lat="' + x.lat + '" data-lon="' + x.lon + '" data-nom="' + esc(x.nom) + '"><span class="row-main"><span class="row-title">' + esc(x.nom) + '</span><span class="row-meta">' + esc(x.label || '') + '</span></span></button>').join('') + '</details>' : '') +
     '<div class="mt-chips">' + yAllerBtns(d) + '<button class="btn sm" data-action="iti-watch">' + icon('route', 15) + ' Surveiller la route</button></div></div>');
+  if (res.veh) vehComplete(res).then(() => { const b = $('#iti-veh'); if (b && S.iti && S.iti.res === res) b.innerHTML = vehBlocHTML(res, true); matinRedraw(); });
   if (opt.say){
-    sayShort(phr.join(' ') + ' Tu veux que je surveille la route ?', () => { askYes(() => watchStart(S.iti.d), null); });
+    sayShort(phr.concat(vehPhrases(res)).join(' ') + ' Tu veux que je surveille la route ?', () => { askYes(() => watchStart(S.iti.d), null); });
   }
   return S.iti;
 }
@@ -3107,6 +3133,9 @@ function matinCommande(s, raw){
   if (/ (ouvre |affiche )?(les )?options /.test(s) && !/ trajet /.test(s)){ openOptions(); return { msg:'Options.', keep:true }; }
   if (/ (change(r)? de voix|choisi[rs]? (une|la|ma) voix|les voix|autre voix) /.test(s)){ openVoix(); return { msg:'Les voix.', keep:true }; }
   if (/ (change(r)? de style|style visuel|change(r)? (les )?couleurs?) /.test(s)){ openStyle(); return { msg:'Les styles.', keep:true }; }
+  { const mb = s.match(/ (?:batterie|charge) (?:est |a |à |de )*(\d{1,3}) /); if (mb && vehActif() && vehElec(vehActif())){ const x = Math.min(100, Number(mb[1])); LS.set('mds.charge', { pct:x, at:Date.now() }); vehRecalc(); return { msg:'Batterie : ' + x + ' %.', speak:true }; } }
+  if (/ (mon vehicule|mes vehicules|change(r)? de (vehicule|voiture)) /.test(s)){ openVehicules(); return { msg:'Mon véhicule.', keep:true }; }
+  { const V = vehs(); if (V.liste.length > 1 && / (je prends|on prend|prends|avec) /.test(s)){ const v = V.liste.find(x => cmdNorm(x.nom) && s.includes(' ' + cmdNorm(x.nom) + ' ')); if (v){ V.actif = v.id; vehsSet(V); vehRecalc(true); return { msg:'Trajets avec ' + v.nom + '.', speak:true }; } } }
   if (/ douche /.test(s)){ if (/ (arrete|stop|quitte|quitter|fin|coupe|sors) /.test(s)){ doucheStop(); return { msg:'Mode douche arrêté.', keep:true }; } doucheStart(); return { msg:'Mode douche.', keep:true }; }
   if (Douche.on && / (quitte|quitter|termine|c est fini|j ai fini) /.test(s)){ doucheStop(); return { msg:'Mode douche arrêté.', keep:true }; }
   /* itinéraire vers … */
@@ -3645,6 +3674,11 @@ function onClick(e){
     case 'opt-voix': openVoix(); break;
     case 'opt-style': openStyle(); break;
     case 'opt-micro': openMicro(); break;
+    case 'opt-veh': openVehicules(); break;
+    case 'veh-edit': openVehForm(a.dataset.id); break;
+    case 'veh-back': sheetBack(); break;
+    case 'veh-use': { const V = vehs(); V.actif = a.dataset.id || ''; vehsSet(V); toast(V.actif ? 'Véhicule choisi pour les trajets.' : 'Plus de véhicule pour les trajets.'); openVehicules(true); matinMaj(true); break; }
+    case 'veh-del': { if (!a.dataset.ok){ a.dataset.ok = '1'; a.textContent = 'Confirmer l\'effacement'; break; } const V = vehs(); V.liste = V.liste.filter(x => x.id !== a.dataset.id); if (V.actif === a.dataset.id) V.actif = V.liste[0] ? V.liste[0].id : ''; vehsSet(V); toast('Véhicule effacé.'); openVehicules(true); matinRedraw(); break; }
     case 'opt-app': openAppli(); break;
     case 'opt-fav': closeSheet(); setTab('favoris'); break;
     case 'flux': setSec(a.dataset.f); break;
@@ -3719,6 +3753,7 @@ function bindEvents(){
   document.addEventListener('click', e => { if (ratePopOpen() && !e.target.closest('#mini-pop, #mini-rate')) ratePop(false); }, true);
   document.addEventListener('submit', e => {
     const f = e.target;
+    if (f && f.dataset && f.dataset.form === 'veh'){ e.preventDefault(); vehSubmit(f); return; }
     if (f && f.dataset && f.dataset.form){ e.preventDefault(); reglageSubmit(f); return; }
     if (f && f.id === 'iti-form'){ e.preventDefault(); const v = ($('#iti-q') || {}).value || ''; if (v.trim()) itiCalc(v.trim()); }
   });
@@ -3734,6 +3769,11 @@ function bindEvents(){
   document.addEventListener('change', e => {
     const t = e.target; if (!t || !t.matches) return;
     if (t.matches('[data-vxtout]')){ S.vxTout = t.checked; vxTel(); }
+    if (t.matches('[data-vehnrj]')){ const f = t.form, el = ENERGIES[t.value].moteur === 'electric'; $$('.vh-elec', f).forEach(x => { x.hidden = !el; }); $$('.vh-comb', f).forEach(x => { x.hidden = el; }); const u = $('.vh-u', f); if (u) u.textContent = el ? 'kWh' : 'litres'; const c = f.elements.namedItem('conso'); if (c) c.placeholder = ENERGIES[t.value].conso; const cb = f.elements.namedItem('carbu'); if (cb && ENERGIES[t.value].carbu) cb.value = ENERGIES[t.value].carbu; }
+    if (t.matches('[data-vehmod]') && t.value !== ''){ const m = VE_MODELES[Number(t.value)], f = t.form; if (m){ f.elements.namedItem('batterie').value = m[1]; f.elements.namedItem('conso').value = m[2]; const n = f.elements.namedItem('nom'); if (n && !n.value) n.value = m[0].replace(/\s*\(.*$/, ''); } }
+    if (t.matches('[data-vprix]')){ const x = Number(String(t.value).replace(',', '.')); if (x > 0){ LS.set('mds.prixkwh', x); toast('Prix du kWh enregistré.'); } }
+    if (t.matches('[data-vcharge]')){ const x = Math.max(0, Math.min(100, Math.round(Number(t.value)))); if (!isNaN(x)){ LS.set('mds.charge', { pct:x, at:Date.now() }); vehRecalc(); } }
+    if (t.matches('[data-vehsel]')){ const V = vehs(); V.actif = t.value; vehsSet(V); vehRecalc(true); }
     if (t.matches('[data-vxspk]')){ const id = t.dataset.vxspk, n = Number(t.value) | 0; LS.set('mds.voix.spk.' + id, n); if (S.vx.k === 'piper' && S.vx.id === id){ S.vx.spk = n; vxSave(); } vxEcoutePiper(id); }
   });
   document.addEventListener('change', e => { if (e.target && e.target.id === 'voice-select'){ S.prefs.voiceURI = e.target.value || null; savePrefs(); Player.restartSentence(); } });
@@ -3835,6 +3875,7 @@ function openOptions(){
   showOpt(sheetHead('Options') + '<div class="pad sheet-body rg"><ul class="rows">' +
     row('opt-voix', 'headphones', 'Voix', 'Utilisée : ' + esc(vxNom()) + '. Écouter, choisir, télécharger, effacer.') +
     row('opt-style', 'palette', 'Style visuel', esc(st.nom) + (st.sombre ? '' : ' · ' + ({ light:'clair', dark:'sombre' }[th] || 'clair ou sombre selon le téléphone')) + '. ' + STYLES.length + ' styles au choix.') +
+    row('opt-veh', 'car', 'Mon véhicule', vehActif() ? esc(vehActif().nom) + ' · ' + esc(vehNrj(vehActif()).nom) + '. Coût du trajet, station la moins chère, batterie.' : 'Ajoute ta voiture : itinéraire adapté, coût, station la moins chère, batterie.') +
     row('m-reglages', 'sun', 'Point du matin', 'Météo, lieux, point de départ, trafic, informations du matin.') +
     row('opt-micro', 'mic', 'Micro', 'Comprendre ta voix : en ligne, ou sans Internet.') +
     row('opt-fav', 'star', 'Mes favoris', 'Les découvertes que tu as gardées.') +
@@ -3876,6 +3917,147 @@ async function placeTexte(){
   try { const e = await navigator.storage.estimate(); return 'Utilisé par l\'appli : ' + moTxt(e.usage || 0) + '. Encore libre : ' + moTxt(Math.max(0, (e.quota || 0) - (e.usage || 0))) + '.'; } catch (e) { return 'Espace : inconnu sur ce téléphone.'; }
 }
 const moTxt = n => n >= 1e9 ? (Math.round(n / 1e8) / 10).toString().replace('.', ',') + ' Go' : Math.max(0, Math.round(n / 1e6)) + ' Mo';
+
+/* ---------- Mon véhicule : il sert au calcul de l'itinéraire, du coût, de la station la moins chère et de l'autonomie ----------
+   Tout reste dans le téléphone (plaque comprise). Les prix des carburants viennent des données publiques de l'État
+   (prix-carburants, mis à jour par les stations), les bornes de recharge d'OpenStreetMap. Aucune IA. */
+const ENERGIES = {
+  essence:{ nom:'Essence', cg:'ES', moteur:'combustion', conso:6.5, carbu:'e10' },
+  diesel:{ nom:'Diesel (gazole)', cg:'GO', moteur:'combustion', conso:5.5, carbu:'gazole' },
+  hybride:{ nom:'Hybride non rechargeable', cg:'EH', moteur:'combustion', conso:4.8, carbu:'e10' },
+  hybride_rech:{ nom:'Hybride rechargeable', cg:'EE', moteur:'combustion', conso:3, carbu:'e10' },
+  electrique:{ nom:'Électrique', cg:'EL', moteur:'electric', conso:17 },
+  gpl:{ nom:'GPL', cg:'GP, EG', moteur:'combustion', conso:8.5, carbu:'gplc' },
+  e85:{ nom:'Superéthanol E85', cg:'FE', moteur:'combustion', conso:8.5, carbu:'e85' }
+};
+const CARBUS = { e10:'SP95-E10', sp95:'SP95', sp98:'SP98', gazole:'Gazole', e85:'E85', gplc:'GPL' };
+const VTYPES = { voiture:{ nom:'Voiture', tt:'car' }, utilitaire:{ nom:'Utilitaire', tt:'van' }, moto:{ nom:'Moto ou scooter', tt:'motorcycle' } };
+/* Quelques électriques courantes : batterie utile et consommation moyenne (valeurs approchées, modifiables). */
+const VE_MODELES = [['Renault 5 E-Tech (52 kWh)', 52, 15.5], ['Renault Zoé (52 kWh)', 52, 17], ['Renault Mégane E-Tech (60 kWh)', 60, 17], ['Peugeot e-208 (50 kWh)', 46, 15.5], ['Citroën ë-C3 (44 kWh)', 44, 16],
+  ['Dacia Spring (27 kWh)', 27, 13.5], ['Fiat 500e (42 kWh)', 37, 14.5], ['MG4 (64 kWh)', 61, 17], ['Tesla Model 3 Propulsion', 57, 14], ['Tesla Model Y Propulsion', 57, 15.5], ['Volkswagen ID.3 (58 kWh)', 58, 16], ['Kia Niro EV (64 kWh)', 64, 16]];
+function vehs(){ const v = LS.get('mds.vehicules', null); return v && Array.isArray(v.liste) ? v : { actif:'', liste:[] }; }
+function vehsSet(v){ LS.set('mds.vehicules', v); }
+function vehActif(){ const V = vehs(); return V.liste.find(x => x.id === V.actif) || null; }
+const vehNrj = v => ENERGIES[v && v.energie] || ENERGIES.essence;
+const vehElec = v => vehNrj(v).moteur === 'electric';
+const vehConso = v => Number(v && v.conso) > 0 ? Number(v.conso) : vehNrj(v).conso;
+function vehCharge(){ const c = LS.get('mds.charge', null); return c && c.pct >= 0 ? c.pct : 80; }
+function vehPrixKwh(){ const x = Number(LS.get('mds.prixkwh', 0.25)); return x > 0 ? x : 0.25; }
+const virg = (x, d) => (Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d).replace('.', ',');
+function vehDesc(v){ return vehNrj(v).nom + ' · ' + virg(vehConso(v), 1) + (vehElec(v) ? ' kWh' : ' L') + '/100 km' + (vehElec(v) && v.batterie ? ' · batterie ' + v.batterie + ' kWh' : ''); }
+function openVehicules(replace){
+  const V = vehs();
+  showOpt(sheetHead('Mon véhicule') + '<div class="pad sheet-body rg">' +
+    '<section class="rg-sec"><h3>Mes véhicules</h3>' + (V.liste.length ? '<ul class="vx-list">' + V.liste.map(v => {
+      const on = v.id === V.actif;
+      return '<li class="vx-item' + (on ? ' on' : '') + '"><p class="vx-n">' + esc(v.nom || 'Mon véhicule') + (v.plaque ? '<span class="vx-g">' + esc(v.plaque) + '</span>' : '') + '</p><p class="vx-m">' + esc((VTYPES[v.type] || VTYPES.voiture).nom + ' · ' + vehDesc(v)) + '</p><div class="mt-chips">' +
+        (on ? '<span class="bdg cur">' + icon('check', 12) + ' Utilisé pour les trajets</span>' : '<button class="btn sm primary" data-action="veh-use" data-id="' + esc(v.id) + '">Utiliser</button>') +
+        '<button class="btn sm" data-action="veh-edit" data-id="' + esc(v.id) + '">Modifier</button><button class="btn sm ghost" data-action="veh-del" data-id="' + esc(v.id) + '">Effacer</button></div></li>';
+    }).join('') + '</ul>' + (V.actif ? '<button class="btn sm ghost" data-action="veh-use" data-id="">Aucun véhicule pour les trajets</button>' : '') : '<p class="small">Aucun véhicule pour l\'instant.</p>') +
+    '<p><button class="btn primary" data-action="veh-edit" data-id="">' + icon('car', 17) + ' Ajouter un véhicule</button></p></section>' +
+    '<section class="rg-sec"><h3>Ce que l\'appli en fait</h3><ul class="maj-l"><li>L\'itinéraire est calculé pour ce véhicule (voiture, utilitaire ou moto, avec la clé TomTom).</li><li>Le carburant ou l\'électricité du trajet, et son coût.</li><li>Thermique : la station la moins chère sur ta route (prix officiels du jour).</li><li>Électrique : la batterie qui restera à l\'arrivée, et les bornes sur la route si besoin.</li></ul></section>' +
+    '<section class="rg-sec"><h3>Électricité</h3><label class="rg-line">Prix du kWh quand tu recharges <input class="vh-in" style="width:96px" type="number" step="0.01" min="0" data-vprix value="' + vehPrixKwh() + '"> €</label>' +
+      '<label class="rg-line">Batterie en ce moment <input class="vh-in" style="width:80px" type="number" min="0" max="100" data-vcharge value="' + vehCharge() + '"> %</label><p class="muted small">Tu peux aussi le dire : « Matinale, batterie à 60 ».</p></section>' +
+    '<section class="rg-sec"><h3>Et la plaque ?</h3><p class="small">Elle reste dans ton téléphone et sert seulement à reconnaître tes véhicules. Le fichier des cartes grises n\'est pas public : retrouver un véhicule par sa plaque passe par des services payants, qui reçoivent ta plaque. Je ne l\'ai donc pas branché. Avec ta carte grise, le remplissage prend une minute (case <b>P.3</b> pour l\'énergie).</p></section>' +
+    '</div>', 'Mon véhicule', replace);
+}
+function openVehForm(id){
+  const V = vehs(), v = V.liste.find(x => x.id === id) || { id:'', nom:'', plaque:'', type:'voiture', energie:'essence', carbu:'', conso:'', batterie:'' };
+  const nrj = vehNrj(v), el = nrj.moteur === 'electric';
+  showOpt(sheetHead(v.id ? 'Modifier le véhicule' : 'Ajouter un véhicule') + '<div class="pad sheet-body rg"><form class="rg-form col vh-form" data-form="veh" data-id="' + esc(v.id) + '">' +
+    '<label class="vh-l"><span>Nom</span><input class="vh-in" name="nom" type="text" maxlength="30" placeholder="Ex. Clio, la voiture du boulot" value="' + esc(v.nom || '') + '"></label>' +
+    '<label class="vh-l"><span>Plaque (facultatif)</span><input class="vh-in" name="plaque" type="text" maxlength="12" autocapitalize="characters" autocomplete="off" placeholder="AB-123-CD" value="' + esc(v.plaque || '') + '"></label>' +
+    '<p class="vh-l">Type</p><div class="seg" role="radiogroup" aria-label="Type">' + Object.keys(VTYPES).map(k => '<label><input type="radio" name="type" value="' + k + '"' + ((v.type || 'voiture') === k ? ' checked' : '') + '> ' + VTYPES[k].nom + '</label>').join('') + '</div>' +
+    '<label class="vh-l"><span>Énergie <span class="muted small">(case P.3 de la carte grise)</span></span><select class="vh-in" name="energie" data-vehnrj>' + Object.keys(ENERGIES).map(k => '<option value="' + k + '"' + (v.energie === k ? ' selected' : '') + '>' + ENERGIES[k].nom + ' (' + ENERGIES[k].cg + ')</option>').join('') + '</select></label>' +
+    '<label class="vh-l vh-comb"' + (el ? ' hidden' : '') + '><span>Carburant à la pompe</span><select class="vh-in" name="carbu">' + Object.keys(CARBUS).map(k => '<option value="' + k + '"' + ((v.carbu || nrj.carbu) === k ? ' selected' : '') + '>' + CARBUS[k] + '</option>').join('') + '</select></label>' +
+    '<label class="vh-l vh-elec"' + (el ? '' : ' hidden') + '><span>Modèle (pour remplir les cases)</span><select class="vh-in" data-vehmod><option value="">Choisir…</option>' + VE_MODELES.map((m, i) => '<option value="' + i + '">' + esc(m[0]) + '</option>').join('') + '</select></label>' +
+    '<label class="vh-l vh-elec"' + (el ? '' : ' hidden') + '><span>Batterie utile (kWh)</span><input class="vh-in" name="batterie" type="number" step="0.1" min="5" max="200" placeholder="50" value="' + esc(v.batterie || '') + '"></label>' +
+    '<label class="vh-l"><span>Consommation moyenne (<span class="vh-u">' + (el ? 'kWh' : 'litres') + '</span> aux 100 km)</span><input class="vh-in" name="conso" type="number" step="0.1" min="0.5" max="80" placeholder="' + nrj.conso + '" value="' + esc(v.conso || '') + '"></label>' +
+    '<p class="muted small">Pas sûr ? Laisse vide : une valeur moyenne est utilisée. Ton ordinateur de bord l\'affiche souvent.</p>' +
+    '<div class="mt-chips"><button class="btn primary" type="submit">' + icon('check', 16) + ' Enregistrer</button><button class="btn ghost" type="button" data-action="veh-back">Annuler</button></div></form></div>', 'Véhicule');
+}
+function vehSubmit(f){
+  const V = vehs(), val = n => (f.elements.namedItem(n) && f.elements.namedItem(n).value || '').trim();
+  const typ = (f.querySelector('input[name=type]:checked') || {}).value || 'voiture', nrj = val('energie') || 'essence';
+  const v = { id: f.dataset.id || 'v' + Date.now().toString(36), nom: val('nom') || (VTYPES[typ] || VTYPES.voiture).nom, plaque: val('plaque').toUpperCase().replace(/\s+/g, '-').slice(0, 12), type: typ, energie: nrj,
+    carbu: ENERGIES[nrj].moteur === 'electric' ? '' : (val('carbu') || ENERGIES[nrj].carbu), conso: Number(val('conso').replace(',', '.')) || '', batterie: ENERGIES[nrj].moteur === 'electric' ? (Number(val('batterie').replace(',', '.')) || '') : '' };
+  const i = V.liste.findIndex(x => x.id === v.id); if (i >= 0) V.liste[i] = v; else V.liste.push(v);
+  if (!V.actif) V.actif = v.id;
+  vehsSet(V); toast('« ' + v.nom + ' » enregistré.'); matinRedraw();
+  sheetBack(); openVehicules(true);
+}
+function vehCarbuNom(v){ return CARBUS[v.carbu || vehNrj(v).carbu] || 'carburant'; }
+/* Distance (km) d'un point à la route (liste de [lat, lon]). */
+function distRoute(q, pts){
+  let m = Infinity; const st = Math.max(1, Math.ceil(pts.length / 600));
+  for (let i = 0; i < pts.length - 1; i += st){ const j = Math.min(i + st, pts.length - 1); const d = kmToSeg(q, { lat:pts[i][0], lon:pts[i][1] }, { lat:pts[j][0], lon:pts[j][1] }); if (d < m) m = d; }
+  return m;
+}
+function boiteRoute(pts, marge){ let s = 90, w = 180, n = -90, e = -180; pts.forEach(p => { s = Math.min(s, p[0]); n = Math.max(n, p[0]); w = Math.min(w, p[1]); e = Math.max(e, p[1]); }); return [s - marge, w - marge, n + marge, e + marge].map(x => Math.round(x * 1000) / 1000); }
+/* Stations de la route, de la moins chère à la plus chère (prix de moins de 8 jours). */
+async function stationsSurRoute(carbu, pts){
+  if (!pts || pts.length < 2 || !online()) return null;
+  const b = boiteRoute(pts, 0.02), f = carbu + '_prix', m = carbu + '_maj';
+  const u = 'https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?where=' +
+    encodeURIComponent('in_bbox(geom,' + b.join(',') + ') and ' + f + ' is not null') + '&select=' + encodeURIComponent('id,adresse,ville,geom,' + f + ',' + m) + '&order_by=' + f + '&limit=100';
+  const j = await fetchJSON(u, 12000), lim = Date.now() - 8 * 86400e3;
+  return (j.results || []).filter(x => x.geom && x[f] && (!x[m] || Date.parse(x[m]) > lim))
+    .map(x => ({ nom: cap(String(x.adresse || '').toLowerCase()), ville: x.ville || '', lat: x.geom.lat, lon: x.geom.lon, prix: x[f], maj: x[m] }))
+    .filter(x => distRoute(x, pts) <= 1.5).sort((a, b2) => a.prix - b2.prix);
+}
+/* Bornes de recharge près de la route (OpenStreetMap). */
+async function bornesSurRoute(pts){
+  if (!pts || pts.length < 2 || !online()) return null;
+  const b = boiteRoute(pts, 0.02), q = '[out:json][timeout:25];node["amenity"="charging_station"](' + b.join(',') + ');out 300;';
+  const j = await fetchJSON('https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(q), 28000);
+  const kw = t => { let m = 0; Object.keys(t).forEach(k => { if (/output|maxpower/.test(k)){ const x = parseFloat(String(t[k]).replace(',', '.')); if (x > m) m = /kw/i.test(t[k]) || x < 400 ? x : x / 1000; } }); return m || null; };
+  return (j.elements || []).filter(x => x.tags).map(x => ({ nom: x.tags.name || x.tags.operator || x.tags.network || 'Borne de recharge', lat:x.lat, lon:x.lon, kw: kw(x.tags), d: 0 }))
+    .map(x => (x.d = distRoute(x, pts), x)).filter(x => x.d <= 2).sort((a, b2) => (b2.kw || 0) - (a.kw || 0)).slice(0, 8);
+}
+/* Le véhicule sur un trajet : quantité, coût, batterie à l'arrivée. */
+function vehResume(r){
+  const v = vehActif(); if (!v || !r || !r.km) return null;
+  const el = vehElec(v), c = vehConso(v);
+  const q = el ? (r.kwh != null ? r.kwh : r.km * c / 100) : (r.fuelL != null ? r.fuelL : r.km * c / 100);
+  const o = { v, el, q: Math.max(0.1, Math.round(q * 10) / 10), unite: el ? 'kWh' : 'L' };
+  if (el){ const bat = Number(v.batterie) || 50; o.depart = vehCharge(); o.arrivee = Math.round(o.depart - q / bat * 100); o.alerte = o.arrivee < 15; o.prix = vehPrixKwh(); o.cout = o.q * o.prix; }
+  return o;
+}
+async function vehComplete(res){
+  const o = res && res.veh; if (!o || !res.r) return res;
+  try {
+    if (!o.el){ const st = await stationsSurRoute(o.v.carbu || vehNrj(o.v).carbu, res.r.pts); if (st && st.length){ o.stations = st.slice(0, 3); o.prix = st[0].prix; o.cout = o.q * o.prix; } }
+    else if (o.alerte){ o.bornes = await bornesSurRoute(res.r.pts); }
+  } catch (e) {}
+  return res;
+}
+const dateCourte = d => { const x = new Date(d); return isNaN(x) ? '' : x.toLocaleDateString('fr-FR', { day:'numeric', month:'short' }); };
+function vehBlocHTML(res, full){
+  const o = res && res.veh;
+  if (!o) return full && !vehActif() ? '<p class="muted small">' + icon('car', 14) + ' Ajoute ton véhicule (Options → Mon véhicule) : coût du trajet, station la moins chère ou batterie à l\'arrivée.</p>' : '';
+  let h = '<div class="vh-bloc"><p class="vh-t">' + icon('car', 15) + ' ' + esc(o.v.nom) + ' : environ ' + virg(o.q, 1) + ' ' + o.unite + (o.cout ? ' · ' + virg(o.cout, 2) + ' €' : '') + '</p>';
+  if (o.el) h += '<p class="mt-state ' + (o.alerte ? 'ko' : 'ok') + '">' + icon(o.alerte ? 'alert' : 'check', 15) + ' Batterie : ' + o.depart + ' % au départ, environ ' + Math.max(0, o.arrivee) + ' % à l\'arrivée' + (o.alerte ? '. Recharge conseillée.' : '') + '</p>';
+  if (full && o.el) h += '<label class="rg-line small">Batterie en ce moment <input class="vh-in" style="width:76px" type="number" min="0" max="100" data-vcharge value="' + o.depart + '"> %</label>';
+  if (o.stations && o.stations.length){
+    const s0 = o.stations[0];
+    h += '<p class="small">' + icon('pin', 14) + ' Le moins cher sur ta route : <b>' + esc(vehCarbuNom(o.v)) + ' à ' + virg(s0.prix, 3) + ' €</b>, ' + esc(s0.nom) + ', ' + esc(s0.ville) + (s0.maj ? ' <span class="mt-src">prix du ' + esc(dateCourte(s0.maj)) + '</span>' : '') + '</p>';
+    if (full) h += '<div class="mt-chips">' + o.stations.map((x, i) => '<a class="btn sm' + (i ? ' ghost' : '') + '" href="' + mapsLien(x) + '" target="_blank" rel="noopener noreferrer">' + icon('pin', 14) + ' ' + esc(x.ville || x.nom) + ' · ' + virg(x.prix, 3) + ' €</a>').join('') + '</div>';
+  }
+  if (o.bornes) h += o.bornes.length ? '<p class="small">' + icon('pin', 14) + ' Bornes près de ta route :</p><div class="mt-chips">' + o.bornes.slice(0, full ? 6 : 2).map(x => '<a class="btn sm ghost" href="' + mapsLien(x) + '" target="_blank" rel="noopener noreferrer">' + esc(x.nom.slice(0, 28)) + (x.kw ? ' · ' + Math.round(x.kw) + ' kW' : '') + '</a>').join('') + '</div>' : '<p class="small">Je ne trouve pas de borne tout près de la route.</p>';
+  if (full && vehs().liste.length > 1) h += '<label class="rg-line small">Véhicule <select class="vh-in" data-vehsel>' + vehs().liste.map(x => '<option value="' + esc(x.id) + '"' + (x.id === o.v.id ? ' selected' : '') + '>' + esc(x.nom) + '</option>').join('') + '</select></label>';
+  return h + '</div>';
+}
+const mapsLien = x => 'https://www.google.com/maps/dir/?api=1&destination=' + x.lat + ',' + x.lon;
+/* Batterie ou véhicule changé : on refait les calculs du trajet affiché (sans redemander la route). */
+function vehRecalc(route){
+  const go = res => { if (!res || !res.r) return; res.veh = vehResume(res.r); return vehComplete(res); };
+  if (S.iti && S.iti.res){ if (route) itiCalc(S.iti.d.nom, { dest:S.iti.d }); else Promise.resolve(go(S.iti.res)).then(() => { const b = $('#iti-veh'); if (b) b.innerHTML = vehBlocHTML(S.iti.res, true); }); }
+  if (S.matin && S.matin.tr) Promise.resolve(go(S.matin.tr)).then(matinRedraw);
+}
+function vehPhrases(res){
+  const o = res && res.veh; if (!o || !o.el) return [];
+  return o.alerte ? ['Attention batterie : il te resterait environ ' + Math.max(0, o.arrivee) + ' % à l\'arrivée. Recharge conseillée.'] : [];
+}
 
 /* ---------- Voix : voix du téléphone, voix téléchargées (Piper), enregistrement des infos ---------- */
 const LANGUES = { fr:'Français', en:'Anglais', de:'Allemand', es:'Espagnol', it:'Italien', nl:'Néerlandais', pt:'Portugais', ru:'Russe', pl:'Polonais', ar:'Arabe', zh:'Chinois', tr:'Turc', uk:'Ukrainien', sv:'Suédois', da:'Danois', no:'Norvégien', fi:'Finnois', el:'Grec', cs:'Tchèque', hu:'Hongrois', ro:'Roumain', ca:'Catalan', vi:'Vietnamien', fa:'Persan', is:'Islandais', ka:'Géorgien', kk:'Kazakh', lb:'Luxembourgeois', ne:'Népalais', sk:'Slovaque', sl:'Slovène', sr:'Serbe', sw:'Swahili', cy:'Gallois', hi:'Hindi', ml:'Malayalam', lv:'Letton' };
@@ -4071,7 +4253,7 @@ function vxEcoutePiper(id){
    L'édition du jour arrive toute seule. Une nouvelle version de l'appli, elle, s'annonce :
    « Nouvelle mise à jour ! » avec ce qui change → « Mettre à jour » ou « Plus tard » → « Mise à jour terminée ! ».
    Jamais pendant une lecture, une question ou le mode douche : elle attend la fin. */
-const APP_V = 4;
+const APP_V = 5;
 const Maj = { v:0, list:null, plusTard:0, t:0, last:0 };
 const majListe = l => arr(l).filter(e => e && Number(e.v) > 0 && Array.isArray(e.points));
 function majOccupe(){ return Player.playing || S.matinRun || Douche.on || !!S.awaitTrajet || (Voice.on && !Libre.on) || askOpen(); }

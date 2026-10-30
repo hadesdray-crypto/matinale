@@ -1,5 +1,16 @@
 [
   {
+    "v": 5,
+    "date": "2026-10-30",
+    "titre": "Mon véhicule",
+    "points": [
+      "Options → Mon véhicule : enregistre ta voiture, un utilitaire ou une moto (essence, diesel, électrique, hybride, GPL, E85), et choisis celui que tu prends.",
+      "L'itinéraire est calculé pour ce véhicule, avec le carburant ou l'électricité du trajet et son coût.",
+      "Thermique : la station la moins chère sur ta route, avec les prix officiels du jour.",
+      "Électrique : la batterie qui restera à l'arrivée, et les bornes sur la route si elle est trop basse. Dis « Matinale, batterie à 60 » pour la mettre à jour."
+    ]
+  },
+  {
     "v": 4,
     "date": "2026-10-30",
     "titre": "Options, voix et styles",
