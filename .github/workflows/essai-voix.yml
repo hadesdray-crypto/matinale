@@ -1,0 +1,54 @@
+# Essai réel des voix téléchargeables : téléchargement, synthèse, hors connexion, puis la reconnaissance
+# vocale réécoute ce qui a été dit (pour vérifier que c'est compréhensible). Lancé à la main.
+name: Essai des voix
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [".github/workflows/essai-voix.yml", "scripts/essai-voix/**"]
+permissions:
+  contents: write
+jobs:
+  essai:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - name: Outils
+        run: |
+          pip install -q playwright vosk
+          python -m playwright install --with-deps chromium > /dev/null
+      - name: Essai dans le navigateur
+        continue-on-error: true
+        run: |
+          mkdir -p keep && cp scripts/essai-voix/essai.html site/
+          (cd site && python3 -m http.server 8000 > /dev/null 2>&1 &) ; sleep 1
+          timeout 900 python3 scripts/essai-voix/essai.py "$PWD/keep"
+          cat keep/resultats.json | head -c 6000
+      - name: Réécoute par la reconnaissance vocale
+        continue-on-error: true
+        run: |
+          set +e
+          curl -sSL -m 300 -o m.zip https://alphacephei.com/vosk/models/vosk-model-small-fr-0.22.zip && unzip -q m.zip
+          python3 - <<'PY' > keep/reecoute.txt 2>&1
+          import glob, json, subprocess, wave
+          from vosk import Model, KaldiRecognizer
+          m = Model('vosk-model-small-fr-0.22')
+          for f in sorted(glob.glob('keep/*.wav')):
+              subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', f, '-ar', '16000', '-ac', '1', '/tmp/x.wav'])
+              w = wave.open('/tmp/x.wav'); r = KaldiRecognizer(m, 16000)
+              while True:
+                  d = w.readframes(4000)
+                  if not d: break
+                  r.AcceptWaveform(d)
+              print(f.split('/')[-1], '→', json.loads(r.FinalResult()).get('text'))
+          PY
+          cat keep/reecoute.txt
+      - name: Écrire sur la branche diag
+        if: always()
+        run: |
+          cd keep && rm -f *.wav.tmp
+          git init -q && git checkout -q -b diag
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -q -m "Essai des voix"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" diag
