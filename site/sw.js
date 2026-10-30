@@ -17,7 +17,7 @@ const POLICES = [
   'spectral-latin-400-normal', 'spectral-latin-600-normal', 'spectral-latin-700-normal', 'spectral-latin-400-italic',
   'dm-mono-latin-400-normal', 'dm-mono-latin-500-normal'
 ].map(n => './fonts/' + n + '.woff2');
-const FICHIERS = ['./manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png', './icons/apple-touch-icon.png'].concat(POLICES);
+const FICHIERS = ['./voix-piper.js', './voix-catalogue.json', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png', './icons/apple-touch-icon.png'].concat(POLICES);
 const ATTENTE_PAGE = 2500;        // au-delà (en millisecondes), on ouvre la copie du téléphone
 const ATTENTE_DONNEES = 3000;
 const ATTENTE_RESEAU_LENT = 700;  // quand le réseau vient de traîner, on n'attend presque plus

@@ -1,5 +1,17 @@
 [
   {
+    "v": 4,
+    "date": "2026-10-30",
+    "titre": "Options, voix et styles",
+    "points": [
+      "En haut : un bouton « Options », et deux boutons pour passer des Sciences (en bleu) à la Politique (en rouge).",
+      "Voix : écoute, choisis, télécharge et efface des voix. Chacune dit si elle marche sans Internet.",
+      "Des voix de grande qualité à télécharger (Siwis, Tom, Jessica, Pierre…), qui lisent même en mode avion.",
+      "Pour les infos du jour : l'enregistrement, ou la voix que tu as choisie.",
+      "Six styles visuels au choix : Matin bleu, Journal, Nuit noire, Néon, Grande lisibilité, Pastel. Clair ou sombre."
+    ]
+  },
+  {
     "v": 3,
     "date": "2026-10-27",
     "titre": "Point du matin plus simple, mode douche",

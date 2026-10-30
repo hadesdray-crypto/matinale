@@ -1,0 +1,15 @@
+Moteur des voix téléchargeables de la Matinale (synthèse vocale dans le téléphone, sans Internet)
+
+- ort.wasm.min.js, ort-wasm-simd.wasm : ONNX Runtime Web 1.18.0 (Microsoft), licence MIT.
+  https://github.com/microsoft/onnxruntime
+- piper_phonemize.js / .wasm / .data : piper-phonemize compilé pour le navigateur
+  (paquet @diffusionstudio/piper-wasm 1.0.0), licence MIT, avec espeak-ng et ses données
+  de prononciation, licence GPL-3.0. Sources :
+  https://github.com/rhasspy/piper-phonemize
+  https://github.com/espeak-ng/espeak-ng
+  https://github.com/wide-video/piper-wasm
+- piper-worker.js : écrit pour la Matinale.
+
+Les voix elles-mêmes ne sont pas ici : elles se téléchargent à la demande depuis
+https://huggingface.co/rhasspy/piper-voices (projet Piper). Chaque voix a sa licence,
+indiquée dans l'appli (CC BY 4.0, CC BY-SA 4.0, CC0, AGPL-3.0…).

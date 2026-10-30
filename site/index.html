@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>(function(){var r=document.documentElement;r.dataset.style="classique";r.dataset.flux="sci";try{var g=function(k){var v=localStorage.getItem(k);return v==null?null:JSON.parse(v)};var s=g("mds.style"),t=g("mds.theme");if(/^(classique|journal|nuit|neon|contraste|doux)$/.test(s||""))r.dataset.style=s;if(t==="light"||t==="dark")r.dataset.theme=t}catch(e){}})();</script>
 <meta name="theme-color" content="#123A70" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E2A54" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
@@ -493,6 +494,84 @@ html[data-tsize="1"]{--ts:1.12} html[data-tsize="2"]{--ts:1.26} html[data-tsize=
 .pol-list{margin:0;padding-left:20px;display:grid;gap:6px;font-size:16px;line-height:1.55}
 .pol-note{margin-top:16px}
 .ad-sec{display:block;font-family:var(--mono);font-weight:500;font-size:12px;color:var(--accent-ink)}
+:root[data-style="classique"]{--paper:#F2F5F9;--card:#FFFFFF;--ink:#0E1A2C;--ink-2:#425069;--ink-3:#5A6780;--rule:#D7DEE8;--scrim:rgba(9,18,32,.5);--shadow:0 1px 2px rgba(14,26,44,.06),0 10px 28px rgba(14,26,44,.10);--l4:#1D6E46;--l4-soft:#DFF0E6;--l3:#136870;--l3-soft:#DCEFF0;--l2:#955500;--l2-soft:#FAEDD4;--l1:#6A47A3;--l1-soft:#ECE5F7;--l0:#4A5568;--l0-soft:#E8ECF2;--warn:#8F3A1C;--warn-soft:#FAE8E0;color-scheme:light;--accent:#1B4A8A;--accent-ink:#163F78;--accent-soft:#E2EAF6;--on-accent:#FFFFFF;--band:#123A70;--band-2:#1D4C8B;--band-ink:#F3F7FD;--band-ink-2:#BED1EE;--screen:#0D2240;--screen-2:#1C3F72;--screen-ink:#F2F6FC;--screen-ink-2:#A9BFDF;}
+:root[data-style="classique"][data-flux="pol"],:root[data-style="classique"] [data-sec="pol"]{--accent:#A61E2E;--accent-ink:#8C1A27;--accent-soft:#F9E3E6;--on-accent:#FFFFFF;--band:#7A1622;--band-2:#9C2232;--band-ink:#FDF3F5;--band-ink-2:#F0C4CB;--screen:#4A0E16;--screen-2:#7A1A26;--screen-ink:#FDF0F2;--screen-ink-2:#EDB8C0;}
+:root[data-style="classique"] [data-sec="sci"]{--accent:#1B4A8A;--accent-ink:#163F78;--accent-soft:#E2EAF6;--on-accent:#FFFFFF;--band:#123A70;--band-2:#1D4C8B;--band-ink:#F3F7FD;--band-ink-2:#BED1EE;--screen:#0D2240;--screen-2:#1C3F72;--screen-ink:#F2F6FC;--screen-ink-2:#A9BFDF;}
+@media (prefers-color-scheme:dark){:root[data-style="classique"]:not([data-theme="light"]){--paper:#09121F;--card:#0F1B2D;--ink:#E6ECF5;--ink-2:#AAB7CB;--ink-3:#8794AB;--rule:#213149;--scrim:rgba(0,0,0,.62);--shadow:0 1px 2px rgba(0,0,0,.45),0 12px 32px rgba(0,0,0,.42);--l4:#63C995;--l4-soft:#10301F;--l3:#58C3CB;--l3-soft:#0E2E32;--l2:#F2AA45;--l2-soft:#33240D;--l1:#B79BEB;--l1-soft:#261B3C;--l0:#B4BFD0;--l0-soft:#1B2638;--warn:#F2957A;--warn-soft:#3A1D13;color-scheme:dark;--accent:#86B6F2;--accent-ink:#A3C7F6;--accent-soft:#15294A;--on-accent:#08121F;--band:#0E2A54;--band-2:#1A3E74;--band-ink:#EEF4FC;--band-ink-2:#A9C2E8;--screen:#061428;--screen-2:#153360;--screen-ink:#EEF3FB;--screen-ink-2:#9DB4D8;}:root[data-style="classique"]:not([data-theme="light"])[data-flux="pol"],:root[data-style="classique"]:not([data-theme="light"]) [data-sec="pol"]{--accent:#F5919E;--accent-ink:#F7AEB8;--accent-soft:#3B1720;--on-accent:#1A0709;--band:#4A1520;--band-2:#66202D;--band-ink:#FCEFF2;--band-ink-2:#E7B3BE;--screen:#2A0A10;--screen-2:#4E1520;--screen-ink:#FCEFF2;--screen-ink-2:#E2A7B2;}:root[data-style="classique"]:not([data-theme="light"]) [data-sec="sci"]{--accent:#86B6F2;--accent-ink:#A3C7F6;--accent-soft:#15294A;--on-accent:#08121F;--band:#0E2A54;--band-2:#1A3E74;--band-ink:#EEF4FC;--band-ink-2:#A9C2E8;--screen:#061428;--screen-2:#153360;--screen-ink:#EEF3FB;--screen-ink-2:#9DB4D8;}}
+:root[data-style="classique"][data-theme="dark"]{--paper:#09121F;--card:#0F1B2D;--ink:#E6ECF5;--ink-2:#AAB7CB;--ink-3:#8794AB;--rule:#213149;--scrim:rgba(0,0,0,.62);--shadow:0 1px 2px rgba(0,0,0,.45),0 12px 32px rgba(0,0,0,.42);--l4:#63C995;--l4-soft:#10301F;--l3:#58C3CB;--l3-soft:#0E2E32;--l2:#F2AA45;--l2-soft:#33240D;--l1:#B79BEB;--l1-soft:#261B3C;--l0:#B4BFD0;--l0-soft:#1B2638;--warn:#F2957A;--warn-soft:#3A1D13;color-scheme:dark;--accent:#86B6F2;--accent-ink:#A3C7F6;--accent-soft:#15294A;--on-accent:#08121F;--band:#0E2A54;--band-2:#1A3E74;--band-ink:#EEF4FC;--band-ink-2:#A9C2E8;--screen:#061428;--screen-2:#153360;--screen-ink:#EEF3FB;--screen-ink-2:#9DB4D8;}:root[data-style="classique"][data-theme="dark"][data-flux="pol"],:root[data-style="classique"][data-theme="dark"] [data-sec="pol"]{--accent:#F5919E;--accent-ink:#F7AEB8;--accent-soft:#3B1720;--on-accent:#1A0709;--band:#4A1520;--band-2:#66202D;--band-ink:#FCEFF2;--band-ink-2:#E7B3BE;--screen:#2A0A10;--screen-2:#4E1520;--screen-ink:#FCEFF2;--screen-ink-2:#E2A7B2;}:root[data-style="classique"][data-theme="dark"] [data-sec="sci"]{--accent:#86B6F2;--accent-ink:#A3C7F6;--accent-soft:#15294A;--on-accent:#08121F;--band:#0E2A54;--band-2:#1A3E74;--band-ink:#EEF4FC;--band-ink-2:#A9C2E8;--screen:#061428;--screen-2:#153360;--screen-ink:#EEF3FB;--screen-ink-2:#9DB4D8;}
+:root[data-style="journal"]{--paper:#F3EEE3;--card:#FBF8F1;--ink:#1D1A15;--ink-2:#4A443A;--ink-3:#6B6457;--rule:#DCD3C2;--scrim:rgba(30,25,15,.5);--shadow:0 1px 2px rgba(40,30,15,.08),0 8px 22px rgba(40,30,15,.08);--display:"Spectral",Georgia,serif;--l4:#1D6E46;--l4-soft:#DFF0E6;--l3:#136870;--l3-soft:#DCEFF0;--l2:#955500;--l2-soft:#FAEDD4;--l1:#6A47A3;--l1-soft:#ECE5F7;--l0:#4A5568;--l0-soft:#E8ECF2;--warn:#8F3A1C;--warn-soft:#FAE8E0;color-scheme:light;--accent:#1F4E8C;--accent-ink:#173E70;--accent-soft:#E3E8F0;--on-accent:#FFFFFF;--band:#1D3354;--band-2:#2A4870;--band-ink:#F7F3EA;--band-ink-2:#C9D3E2;--screen:#1D3354;--screen-2:#2E4C77;--screen-ink:#F7F3EA;--screen-ink-2:#C9D3E2;}
+:root[data-style="journal"][data-flux="pol"],:root[data-style="journal"] [data-sec="pol"]{--accent:#A61B1B;--accent-ink:#8A1616;--accent-soft:#F6E0DA;--on-accent:#FFFFFF;--band:#6E1414;--band-2:#8A1E1E;--band-ink:#FBF2EC;--band-ink-2:#EBC2B8;--screen:#5A1010;--screen-2:#86201C;--screen-ink:#FBF2EC;--screen-ink-2:#EBC2B8;}
+:root[data-style="journal"] [data-sec="sci"]{--accent:#1F4E8C;--accent-ink:#173E70;--accent-soft:#E3E8F0;--on-accent:#FFFFFF;--band:#1D3354;--band-2:#2A4870;--band-ink:#F7F3EA;--band-ink-2:#C9D3E2;--screen:#1D3354;--screen-2:#2E4C77;--screen-ink:#F7F3EA;--screen-ink-2:#C9D3E2;}
+@media (prefers-color-scheme:dark){:root[data-style="journal"]:not([data-theme="light"]){--paper:#17140F;--card:#211D16;--ink:#EDE6D8;--ink-2:#BDB3A2;--ink-3:#9A907F;--rule:#3A342A;--scrim:rgba(0,0,0,.62);--shadow:0 1px 2px rgba(0,0,0,.45),0 12px 32px rgba(0,0,0,.42);--display:"Spectral",Georgia,serif;--l4:#63C995;--l4-soft:#10301F;--l3:#58C3CB;--l3-soft:#0E2E32;--l2:#F2AA45;--l2-soft:#33240D;--l1:#B79BEB;--l1-soft:#261B3C;--l0:#B4BFD0;--l0-soft:#1B2638;--warn:#F2957A;--warn-soft:#3A1D13;color-scheme:dark;--accent:#8FB3E6;--accent-ink:#A9C5EE;--accent-soft:#1C2A3E;--on-accent:#0E1522;--band:#1C2C45;--band-2:#27405F;--band-ink:#F2EEE6;--band-ink-2:#B6C6DE;--screen:#131E30;--screen-2:#22385A;--screen-ink:#F2EEE6;--screen-ink-2:#AFC0DA;}:root[data-style="journal"]:not([data-theme="light"])[data-flux="pol"],:root[data-style="journal"]:not([data-theme="light"]) [data-sec="pol"]{--accent:#F08A7E;--accent-ink:#F4A79D;--accent-soft:#3A1A15;--on-accent:#1A0907;--band:#4A1712;--band-2:#63211A;--band-ink:#FBEFEA;--band-ink-2:#E6B0A6;--screen:#2E0E0A;--screen-2:#521A14;--screen-ink:#FBEFEA;--screen-ink-2:#E2A99F;}:root[data-style="journal"]:not([data-theme="light"]) [data-sec="sci"]{--accent:#8FB3E6;--accent-ink:#A9C5EE;--accent-soft:#1C2A3E;--on-accent:#0E1522;--band:#1C2C45;--band-2:#27405F;--band-ink:#F2EEE6;--band-ink-2:#B6C6DE;--screen:#131E30;--screen-2:#22385A;--screen-ink:#F2EEE6;--screen-ink-2:#AFC0DA;}}
+:root[data-style="journal"][data-theme="dark"]{--paper:#17140F;--card:#211D16;--ink:#EDE6D8;--ink-2:#BDB3A2;--ink-3:#9A907F;--rule:#3A342A;--scrim:rgba(0,0,0,.62);--shadow:0 1px 2px rgba(0,0,0,.45),0 12px 32px rgba(0,0,0,.42);--display:"Spectral",Georgia,serif;--l4:#63C995;--l4-soft:#10301F;--l3:#58C3CB;--l3-soft:#0E2E32;--l2:#F2AA45;--l2-soft:#33240D;--l1:#B79BEB;--l1-soft:#261B3C;--l0:#B4BFD0;--l0-soft:#1B2638;--warn:#F2957A;--warn-soft:#3A1D13;color-scheme:dark;--accent:#8FB3E6;--accent-ink:#A9C5EE;--accent-soft:#1C2A3E;--on-accent:#0E1522;--band:#1C2C45;--band-2:#27405F;--band-ink:#F2EEE6;--band-ink-2:#B6C6DE;--screen:#131E30;--screen-2:#22385A;--screen-ink:#F2EEE6;--screen-ink-2:#AFC0DA;}:root[data-style="journal"][data-theme="dark"][data-flux="pol"],:root[data-style="journal"][data-theme="dark"] [data-sec="pol"]{--accent:#F08A7E;--accent-ink:#F4A79D;--accent-soft:#3A1A15;--on-accent:#1A0907;--band:#4A1712;--band-2:#63211A;--band-ink:#FBEFEA;--band-ink-2:#E6B0A6;--screen:#2E0E0A;--screen-2:#521A14;--screen-ink:#FBEFEA;--screen-ink-2:#E2A99F;}:root[data-style="journal"][data-theme="dark"] [data-sec="sci"]{--accent:#8FB3E6;--accent-ink:#A9C5EE;--accent-soft:#1C2A3E;--on-accent:#0E1522;--band:#1C2C45;--band-2:#27405F;--band-ink:#F2EEE6;--band-ink-2:#B6C6DE;--screen:#131E30;--screen-2:#22385A;--screen-ink:#F2EEE6;--screen-ink-2:#AFC0DA;}
+:root[data-style="nuit"]{--paper:#000000;--card:#0E0E12;--ink:#ECECF1;--ink-2:#A9A9B8;--ink-3:#8B8BA0;--rule:#24242E;--scrim:rgba(0,0,0,.72);--shadow:0 0 0 1px #1C1C24;--l4:#63C995;--l4-soft:#10301F;--l3:#58C3CB;--l3-soft:#0E2E32;--l2:#F2AA45;--l2-soft:#33240D;--l1:#B79BEB;--l1-soft:#261B3C;--l0:#B4BFD0;--l0-soft:#1B2638;--warn:#F2957A;--warn-soft:#3A1D13;color-scheme:dark;--accent:#5AA9FF;--accent-ink:#84BFFF;--accent-soft:#0B1C33;--on-accent:#00101F;--band:#0A1A30;--band-2:#12294A;--band-ink:#EAF3FF;--band-ink-2:#9EC3EE;--screen:#050D1A;--screen-2:#0F2442;--screen-ink:#EAF3FF;--screen-ink-2:#8FB2DD;}
+:root[data-style="nuit"][data-flux="pol"],:root[data-style="nuit"] [data-sec="pol"]{--accent:#FF6B6B;--accent-ink:#FF8E8E;--accent-soft:#330F12;--on-accent:#1F0002;--band:#2E0A0E;--band-2:#4A1218;--band-ink:#FFECEE;--band-ink-2:#F0A5AD;--screen:#1C0508;--screen-2:#3E0F15;--screen-ink:#FFECEE;--screen-ink-2:#E89AA3;}
+:root[data-style="nuit"] [data-sec="sci"]{--accent:#5AA9FF;--accent-ink:#84BFFF;--accent-soft:#0B1C33;--on-accent:#00101F;--band:#0A1A30;--band-2:#12294A;--band-ink:#EAF3FF;--band-ink-2:#9EC3EE;--screen:#050D1A;--screen-2:#0F2442;--screen-ink:#EAF3FF;--screen-ink-2:#8FB2DD;}
+:root[data-style="neon"]{--paper:#0A0A1F;--card:#12122E;--ink:#E8E8FF;--ink-2:#A8A8D6;--ink-3:#8C8CC0;--rule:#272750;--scrim:rgba(5,5,20,.72);--shadow:0 0 0 1px rgba(120,120,255,.14),0 10px 30px rgba(0,0,0,.5);--l4:#63C995;--l4-soft:#10301F;--l3:#58C3CB;--l3-soft:#0E2E32;--l2:#F2AA45;--l2-soft:#33240D;--l1:#B79BEB;--l1-soft:#261B3C;--l0:#B4BFD0;--l0-soft:#1B2638;--warn:#F2957A;--warn-soft:#3A1D13;color-scheme:dark;--accent:#22D3EE;--accent-ink:#67E8F9;--accent-soft:#0B2A3A;--on-accent:#021016;--band:#0C1F3D;--band-2:#143A70;--band-ink:#E0FBFF;--band-ink-2:#8FDDF0;--screen:#0B1433;--screen-2:#1A2A6B;--screen-ink:#E0FBFF;--screen-ink-2:#8FDDF0;}
+:root[data-style="neon"][data-flux="pol"],:root[data-style="neon"] [data-sec="pol"]{--accent:#FF4757;--accent-ink:#FF7A85;--accent-soft:#3A0B14;--on-accent:#1A0004;--band:#3A0B1A;--band-2:#5C1228;--band-ink:#FFE6EA;--band-ink-2:#FF9EAB;--screen:#2A0614;--screen-2:#561030;--screen-ink:#FFE6EA;--screen-ink-2:#FF9EAB;}
+:root[data-style="neon"] [data-sec="sci"]{--accent:#22D3EE;--accent-ink:#67E8F9;--accent-soft:#0B2A3A;--on-accent:#021016;--band:#0C1F3D;--band-2:#143A70;--band-ink:#E0FBFF;--band-ink-2:#8FDDF0;--screen:#0B1433;--screen-2:#1A2A6B;--screen-ink:#E0FBFF;--screen-ink-2:#8FDDF0;}
+:root[data-style="contraste"]{--paper:#FFFFFF;--card:#FFFFFF;--ink:#000000;--ink-2:#1A1A1A;--ink-3:#333333;--rule:#7A7A7A;--scrim:rgba(0,0,0,.6);--shadow:0 0 0 1px #7A7A7A;--display:system-ui,"Segoe UI",Roboto,sans-serif;--serif:system-ui,"Segoe UI",Roboto,sans-serif;--l4:#1D6E46;--l4-soft:#DFF0E6;--l3:#136870;--l3-soft:#DCEFF0;--l2:#955500;--l2-soft:#FAEDD4;--l1:#6A47A3;--l1-soft:#ECE5F7;--l0:#4A5568;--l0-soft:#E8ECF2;--warn:#8F3A1C;--warn-soft:#FAE8E0;color-scheme:light;--accent:#0033CC;--accent-ink:#002699;--accent-soft:#E0E8FF;--on-accent:#FFFFFF;--band:#001F7A;--band-2:#0033CC;--band-ink:#FFFFFF;--band-ink-2:#FFFFFF;--screen:#001F7A;--screen-2:#0033CC;--screen-ink:#FFFFFF;--screen-ink-2:#FFFFFF;}
+:root[data-style="contraste"][data-flux="pol"],:root[data-style="contraste"] [data-sec="pol"]{--accent:#C40000;--accent-ink:#990000;--accent-soft:#FFE5E5;--on-accent:#FFFFFF;--band:#8A0000;--band-2:#C40000;--band-ink:#FFFFFF;--band-ink-2:#FFFFFF;--screen:#8A0000;--screen-2:#C40000;--screen-ink:#FFFFFF;--screen-ink-2:#FFFFFF;}
+:root[data-style="contraste"] [data-sec="sci"]{--accent:#0033CC;--accent-ink:#002699;--accent-soft:#E0E8FF;--on-accent:#FFFFFF;--band:#001F7A;--band-2:#0033CC;--band-ink:#FFFFFF;--band-ink-2:#FFFFFF;--screen:#001F7A;--screen-2:#0033CC;--screen-ink:#FFFFFF;--screen-ink-2:#FFFFFF;}
+@media (prefers-color-scheme:dark){:root[data-style="contraste"]:not([data-theme="light"]){--paper:#000000;--card:#000000;--ink:#FFFFFF;--ink-2:#F0F0F0;--ink-3:#D6D6D6;--rule:#9A9A9A;--scrim:rgba(0,0,0,.75);--shadow:0 0 0 1px #9A9A9A;--display:system-ui,"Segoe UI",Roboto,sans-serif;--serif:system-ui,"Segoe UI",Roboto,sans-serif;--l4:#63C995;--l4-soft:#10301F;--l3:#58C3CB;--l3-soft:#0E2E32;--l2:#F2AA45;--l2-soft:#33240D;--l1:#B79BEB;--l1-soft:#261B3C;--l0:#B4BFD0;--l0-soft:#1B2638;--warn:#F2957A;--warn-soft:#3A1D13;color-scheme:dark;--accent:#8CB8FF;--accent-ink:#B3D0FF;--accent-soft:#0A1A40;--on-accent:#000000;--band:#0A1A40;--band-2:#16306E;--band-ink:#FFFFFF;--band-ink-2:#FFFFFF;--screen:#0A1A40;--screen-2:#16306E;--screen-ink:#FFFFFF;--screen-ink-2:#FFFFFF;}:root[data-style="contraste"]:not([data-theme="light"])[data-flux="pol"],:root[data-style="contraste"]:not([data-theme="light"]) [data-sec="pol"]{--accent:#FF8080;--accent-ink:#FFA6A6;--accent-soft:#400A0A;--on-accent:#000000;--band:#400A0A;--band-2:#6E1616;--band-ink:#FFFFFF;--band-ink-2:#FFFFFF;--screen:#400A0A;--screen-2:#6E1616;--screen-ink:#FFFFFF;--screen-ink-2:#FFFFFF;}:root[data-style="contraste"]:not([data-theme="light"]) [data-sec="sci"]{--accent:#8CB8FF;--accent-ink:#B3D0FF;--accent-soft:#0A1A40;--on-accent:#000000;--band:#0A1A40;--band-2:#16306E;--band-ink:#FFFFFF;--band-ink-2:#FFFFFF;--screen:#0A1A40;--screen-2:#16306E;--screen-ink:#FFFFFF;--screen-ink-2:#FFFFFF;}}
+:root[data-style="contraste"][data-theme="dark"]{--paper:#000000;--card:#000000;--ink:#FFFFFF;--ink-2:#F0F0F0;--ink-3:#D6D6D6;--rule:#9A9A9A;--scrim:rgba(0,0,0,.75);--shadow:0 0 0 1px #9A9A9A;--display:system-ui,"Segoe UI",Roboto,sans-serif;--serif:system-ui,"Segoe UI",Roboto,sans-serif;--l4:#63C995;--l4-soft:#10301F;--l3:#58C3CB;--l3-soft:#0E2E32;--l2:#F2AA45;--l2-soft:#33240D;--l1:#B79BEB;--l1-soft:#261B3C;--l0:#B4BFD0;--l0-soft:#1B2638;--warn:#F2957A;--warn-soft:#3A1D13;color-scheme:dark;--accent:#8CB8FF;--accent-ink:#B3D0FF;--accent-soft:#0A1A40;--on-accent:#000000;--band:#0A1A40;--band-2:#16306E;--band-ink:#FFFFFF;--band-ink-2:#FFFFFF;--screen:#0A1A40;--screen-2:#16306E;--screen-ink:#FFFFFF;--screen-ink-2:#FFFFFF;}:root[data-style="contraste"][data-theme="dark"][data-flux="pol"],:root[data-style="contraste"][data-theme="dark"] [data-sec="pol"]{--accent:#FF8080;--accent-ink:#FFA6A6;--accent-soft:#400A0A;--on-accent:#000000;--band:#400A0A;--band-2:#6E1616;--band-ink:#FFFFFF;--band-ink-2:#FFFFFF;--screen:#400A0A;--screen-2:#6E1616;--screen-ink:#FFFFFF;--screen-ink-2:#FFFFFF;}:root[data-style="contraste"][data-theme="dark"] [data-sec="sci"]{--accent:#8CB8FF;--accent-ink:#B3D0FF;--accent-soft:#0A1A40;--on-accent:#000000;--band:#0A1A40;--band-2:#16306E;--band-ink:#FFFFFF;--band-ink-2:#FFFFFF;--screen:#0A1A40;--screen-2:#16306E;--screen-ink:#FFFFFF;--screen-ink-2:#FFFFFF;}
+:root[data-style="doux"]{--paper:#F6F3FB;--card:#FFFFFF;--ink:#2A2540;--ink-2:#5B5575;--ink-3:#77718F;--rule:#E3DDF0;--scrim:rgba(30,25,50,.45);--shadow:0 1px 2px rgba(60,40,110,.06),0 10px 26px rgba(60,40,110,.10);--l4:#1D6E46;--l4-soft:#DFF0E6;--l3:#136870;--l3-soft:#DCEFF0;--l2:#955500;--l2-soft:#FAEDD4;--l1:#6A47A3;--l1-soft:#ECE5F7;--l0:#4A5568;--l0-soft:#E8ECF2;--warn:#8F3A1C;--warn-soft:#FAE8E0;color-scheme:light;--accent:#4D74C9;--accent-ink:#3A5DAE;--accent-soft:#E5ECFA;--on-accent:#FFFFFF;--band:#5B7FD1;--band-2:#7B98DD;--band-ink:#FFFFFF;--band-ink-2:#E3EBFB;--screen:#4A6BC0;--screen-2:#6A88D6;--screen-ink:#FFFFFF;--screen-ink-2:#E3EBFB;}
+:root[data-style="doux"][data-flux="pol"],:root[data-style="doux"] [data-sec="pol"]{--accent:#D1495B;--accent-ink:#B33A4B;--accent-soft:#FBE6EA;--on-accent:#FFFFFF;--band:#C9475A;--band-2:#DD6B7C;--band-ink:#FFFFFF;--band-ink-2:#FBE0E5;--screen:#B83A4D;--screen-2:#D45E70;--screen-ink:#FFFFFF;--screen-ink-2:#FBE0E5;}
+:root[data-style="doux"] [data-sec="sci"]{--accent:#4D74C9;--accent-ink:#3A5DAE;--accent-soft:#E5ECFA;--on-accent:#FFFFFF;--band:#5B7FD1;--band-2:#7B98DD;--band-ink:#FFFFFF;--band-ink-2:#E3EBFB;--screen:#4A6BC0;--screen-2:#6A88D6;--screen-ink:#FFFFFF;--screen-ink-2:#E3EBFB;}
+@media (prefers-color-scheme:dark){:root[data-style="doux"]:not([data-theme="light"]){--paper:#18162A;--card:#221F38;--ink:#ECE9F7;--ink-2:#B8B3D1;--ink-3:#9792B2;--rule:#34304F;--scrim:rgba(0,0,0,.62);--shadow:0 1px 2px rgba(0,0,0,.45),0 12px 32px rgba(0,0,0,.42);--l4:#63C995;--l4-soft:#10301F;--l3:#58C3CB;--l3-soft:#0E2E32;--l2:#F2AA45;--l2-soft:#33240D;--l1:#B79BEB;--l1-soft:#261B3C;--l0:#B4BFD0;--l0-soft:#1B2638;--warn:#F2957A;--warn-soft:#3A1D13;color-scheme:dark;--accent:#9DB5F0;--accent-ink:#B7C9F4;--accent-soft:#232C4D;--on-accent:#101633;--band:#2A3566;--band-2:#3A4A85;--band-ink:#F2F5FF;--band-ink-2:#C4D1F2;--screen:#232C57;--screen-2:#36477F;--screen-ink:#F2F5FF;--screen-ink-2:#C4D1F2;}:root[data-style="doux"]:not([data-theme="light"])[data-flux="pol"],:root[data-style="doux"]:not([data-theme="light"]) [data-sec="pol"]{--accent:#F49AA6;--accent-ink:#F7B5BE;--accent-soft:#3D1A24;--on-accent:#1F0A10;--band:#5A2232;--band-2:#7A2E43;--band-ink:#FFF0F3;--band-ink-2:#F2C0C9;--screen:#4A1A28;--screen-2:#6E2A3E;--screen-ink:#FFF0F3;--screen-ink-2:#F2C0C9;}:root[data-style="doux"]:not([data-theme="light"]) [data-sec="sci"]{--accent:#9DB5F0;--accent-ink:#B7C9F4;--accent-soft:#232C4D;--on-accent:#101633;--band:#2A3566;--band-2:#3A4A85;--band-ink:#F2F5FF;--band-ink-2:#C4D1F2;--screen:#232C57;--screen-2:#36477F;--screen-ink:#F2F5FF;--screen-ink-2:#C4D1F2;}}
+:root[data-style="doux"][data-theme="dark"]{--paper:#18162A;--card:#221F38;--ink:#ECE9F7;--ink-2:#B8B3D1;--ink-3:#9792B2;--rule:#34304F;--scrim:rgba(0,0,0,.62);--shadow:0 1px 2px rgba(0,0,0,.45),0 12px 32px rgba(0,0,0,.42);--l4:#63C995;--l4-soft:#10301F;--l3:#58C3CB;--l3-soft:#0E2E32;--l2:#F2AA45;--l2-soft:#33240D;--l1:#B79BEB;--l1-soft:#261B3C;--l0:#B4BFD0;--l0-soft:#1B2638;--warn:#F2957A;--warn-soft:#3A1D13;color-scheme:dark;--accent:#9DB5F0;--accent-ink:#B7C9F4;--accent-soft:#232C4D;--on-accent:#101633;--band:#2A3566;--band-2:#3A4A85;--band-ink:#F2F5FF;--band-ink-2:#C4D1F2;--screen:#232C57;--screen-2:#36477F;--screen-ink:#F2F5FF;--screen-ink-2:#C4D1F2;}:root[data-style="doux"][data-theme="dark"][data-flux="pol"],:root[data-style="doux"][data-theme="dark"] [data-sec="pol"]{--accent:#F49AA6;--accent-ink:#F7B5BE;--accent-soft:#3D1A24;--on-accent:#1F0A10;--band:#5A2232;--band-2:#7A2E43;--band-ink:#FFF0F3;--band-ink-2:#F2C0C9;--screen:#4A1A28;--screen-2:#6E2A3E;--screen-ink:#FFF0F3;--screen-ink-2:#F2C0C9;}:root[data-style="doux"][data-theme="dark"] [data-sec="sci"]{--accent:#9DB5F0;--accent-ink:#B7C9F4;--accent-soft:#232C4D;--on-accent:#101633;--band:#2A3566;--band-2:#3A4A85;--band-ink:#F2F5FF;--band-ink-2:#C4D1F2;--screen:#232C57;--screen-2:#36477F;--screen-ink:#F2F5FF;--screen-ink-2:#C4D1F2;}
+/* En-tête : bouton Options et choix du flux (sciences en bleu, politique en rouge) */
+.topbar-in{min-height:56px;padding-block:8px}
+.optbtn{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;flex:none;width:58px;height:44px;border-radius:12px;border:1.5px solid var(--accent);background:var(--accent-soft);color:var(--accent-ink);font-family:var(--display);font-weight:700;font-size:10.5px;line-height:1;cursor:pointer}
+.optbtn:hover{background:var(--accent);color:var(--on-accent)}
+.fluxbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-bottom:9px}
+.fx{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;min-height:42px;padding:0 10px;border-radius:12px;border:1.5px solid color-mix(in srgb,var(--accent) 45%,var(--rule));background:var(--card);color:var(--accent-ink);font-family:var(--display);font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap;overflow:hidden}
+.fx span{overflow:hidden;text-overflow:ellipsis}
+@media (max-width:430px){.fx-long{display:none}.hdr-fav{display:none!important}}
+@media (max-width:380px){.edpill .ic{display:none}.edpill{padding:0 10px}}
+.fx-dot{flex:none;width:11px;height:11px;border-radius:50%;background:var(--accent)}
+.fx[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.fx[aria-selected="true"] .fx-dot{background:var(--on-accent)}
+/* Options */
+.opt-row .opt-ic{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent-ink)}
+.opt-row .row-title{font-size:16.5px}
+.opt-row > .ic:last-child{flex:none;color:var(--ink-3)}
+/* Voix */
+.vx-list{display:grid;gap:10px;margin:8px 0;padding:0;list-style:none}
+.vx-item{padding:12px 14px;border:1px solid var(--rule);border-radius:14px;background:var(--card)}
+.vx-item.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.vx-n{margin:0;font-family:var(--display);font-weight:700;font-size:16px}
+.vx-g{font-family:var(--mono);font-weight:500;font-size:12px;color:var(--ink-3);margin-left:6px}
+.vx-d{margin:4px 0 0;font-size:14.5px;line-height:1.4;color:var(--ink-2)}
+.vx-m{margin:6px 0 8px;font-size:12.5px;line-height:1.5;color:var(--ink-3)}
+.vx-st{margin:6px 0 0;font-size:13.5px;color:var(--ink-2)}
+.vx-st:empty{display:none}
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;font-family:var(--display);font-weight:700;font-size:11.5px;margin:0 6px 4px 0;white-space:nowrap}
+.bdg.off{background:var(--l4-soft);color:var(--l4)}
+.bdg.net{background:var(--l2-soft);color:var(--l2)}
+.bdg.cur{background:var(--accent);color:var(--on-accent)}
+.vx-q{width:100%;height:46px;margin:6px 0;padding:0 14px;border-radius:12px;border:1px solid var(--rule);background:var(--card);color:var(--ink);font-size:16px}
+.vx-cur{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:var(--accent-soft);color:var(--ink)}
+.vx-cur b{font-family:var(--display);font-size:17px}
+.vx-more{width:100%;margin-top:4px}
+.rg details{margin:8px 0;font-size:14.5px;line-height:1.5}
+.rg summary{cursor:pointer;font-family:var(--display);font-weight:700;color:var(--accent-ink);padding:6px 0}
+.rg ol{margin:6px 0;padding-left:22px}
+/* Styles visuels */
+.st-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:8px}
+.st-tile{display:grid;gap:4px;align-content:start;padding:8px;border-radius:16px;border:2px solid var(--rule);background:var(--card);color:var(--ink);text-align:left;cursor:pointer}
+.st-tile[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.st-prev{display:block;height:88px;border-radius:10px;background:var(--t-paper);padding:9px;border:1px solid rgba(127,127,127,.3)}
+.st-card{display:flex;flex-direction:column;gap:6px;height:100%;padding:8px;border-radius:8px;background:var(--t-card)}
+.st-card i{display:block;height:7px;border-radius:4px;background:var(--t-ink)}
+.st-card i:first-child{width:80%;opacity:.85}
+.st-card i:nth-child(2){width:55%;opacity:.4}
+.st-dots{display:flex;gap:6px;margin-top:auto}
+.st-dots b{display:block;height:14px;flex:1;border-radius:5px}
+.st-dots .sci{background:var(--t-sci)}
+.st-dots .pol{background:var(--t-pol)}
+.st-name{font-family:var(--display);font-weight:700;font-size:15px;margin-top:2px}
+.st-desc{font-size:12.5px;line-height:1.35;color:var(--ink-3)}
 /* Mises à jour */
 .maj{position:fixed;z-index:70;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 10px);margin:0 auto;width:min(calc(100% - 24px),30rem);max-height:calc(100dvh - 40px);overflow:auto;padding:14px 16px;border-radius:20px;border:1px solid var(--accent);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
 .maj-h{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-family:var(--display);font-weight:800;font-size:19px;color:var(--accent-ink)}
@@ -746,7 +825,12 @@ html.locked body.has-mini .sheet{padding-bottom:calc(110px + env(safe-area-inset
     <div class="top-actions">
       <button class="iconbtn hdr-fav" id="hdr-fav" data-action="tab" data-tab="favoris" aria-label="Mes favoris" title="Mes favoris"></button>
       <button class="edpill" id="edpill" data-action="archive" aria-label="Choisir une édition">Éditions</button>
+      <button class="optbtn" data-action="options" aria-label="Options : voix, style, réglages"><svg class="ic" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/></svg>Options</button>
     </div>
+  </div>
+  <div class="wrap fluxbar" role="tablist" aria-label="Flux d'informations">
+    <button role="tab" class="fx" data-sec="sci" data-action="flux" data-f="sci" aria-selected="true"><span class="fx-dot"></span><span>Sciences</span></button>
+    <button role="tab" class="fx" data-sec="pol" data-action="flux" data-f="pol" aria-selected="false"><span class="fx-dot"></span><span>Politique<span class="fx-long"> &amp; monde</span></span></button>
   </div>
 </header>
 
@@ -789,6 +873,7 @@ html.locked body.has-mini .sheet{padding-bottom:calc(110px + env(safe-area-inset
   <div class="dc-btns"><button class="dc-b" id="dc-toggle" data-action="toggle" aria-label="Pause ou lecture"></button><button class="dc-b" id="dc-next" data-action="next" aria-label="Suivant"></button></div>
 </div>
 
+<script src="voix-piper.js"></script>
 <script>
 (() => {
 'use strict';
@@ -863,6 +948,7 @@ const P = {
   pause:'<path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z" fill="currentColor" stroke="none"/>',
   next:'<path d="M6 6.2v11.6L14.6 12z" fill="currentColor" stroke="none"/><path d="M18 6v12"/>',
   flag:'<path d="M5 21V3.5"/><path d="M5 4h12.5l-2.4 4.2 2.4 4.3H5"/>',
+  palette:'<path d="M12 3.2a8.8 8.8 0 1 0 0 17.6c1 0 1.6-.7 1.6-1.5 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6h1.9a4.9 4.9 0 0 0 4.9-4.9c0-4-3.9-7.4-9.2-7.4z"/><circle cx="7.6" cy="11.6" r="1.1"/><circle cx="9.8" cy="7.6" r="1.1"/><circle cx="14.4" cy="7.4" r="1.1"/>',
   shower:'<path d="M4.5 21V8.5A4.5 4.5 0 0 1 9 4h.5a4.5 4.5 0 0 1 4.5 4.5v.5"/><path d="M10 9h8l-1.2 3h-5.6z"/><path d="M12 15v1.2M14.5 15v2.2M17 15v1.2M13 19v1.2M16 19v1.2"/>',
   gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/>',
   car:'<path d="M4 16.5V12l2-5h12l2 5v4.5"/><path d="M3.5 12h17v4.5h-17zM6.5 19v-2.5M17.5 19v-2.5"/><circle cx="7.5" cy="14.2" r=".6" fill="currentColor"/><circle cx="16.5" cy="14.2" r=".6" fill="currentColor"/>',
@@ -1011,7 +1097,18 @@ function secSwitchHTML(){
   return '<div class="wrap"><div class="secsw" role="tablist" aria-label="Rubrique"><button role="tab" data-action="sec" data-s="sci" aria-selected="' + (S.sec !== 'pol') + '">' + icon('atom', 17) + ' Sciences</button>' +
     '<button role="tab" data-action="sec" data-s="pol" aria-selected="' + (S.sec === 'pol') + '">' + icon('flag', 17) + ' Politique & monde</button></div></div>';
 }
-function setSec(sec){ S.sec = sec === 'pol' ? 'pol' : 'sci'; if (S.tab !== 'aujourdhui') setTab('aujourdhui'); else { renderToday(); window.scrollTo(0, 0); } if (S.sec === 'pol' && !S.pol) loadPol(); }
+function setSec(sec){ S.sec = sec === 'pol' ? 'pol' : 'sci'; if (S.tab !== 'aujourdhui') setTab('aujourdhui'); else { renderToday(); window.scrollTo(0, 0); } if (S.sec === 'pol' && !S.pol) loadPol(); fluxRacine(); }
+/* Le flux affiché colore toute l'appli : sciences en bleu, politique en rouge (dans chaque style). */
+function fluxRacine(){
+  const f = S.tab === 'aujourdhui' && S.sec === 'pol' ? 'pol' : 'sci', r = document.documentElement;
+  if (r.dataset.flux !== f) r.dataset.flux = f;
+  $$('.fluxbar [data-f]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.f === f)));
+  const bs = $('.brand-sub'); if (bs) bs.textContent = f === 'pol' ? 'Politique & monde' : 'des Sciences';
+  couleurBarre();
+}
+function couleurBarre(){
+  requestAnimationFrame(() => { const c = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim(); if (c) $$('meta[name="theme-color"]').forEach(m => m.setAttribute('content', c)); });
+}
 function polCardHTML(it){
   return '<article class="card" data-key="' + esc(it.key) + '"><div class="card-body"><div class="meta">' + numB(itemNum(it), 'sm') + catTag(CAT[it.cat]) + (it.lieu ? '<span>' + esc(it.lieu) + '</span>' : '') + '<span>' + esc(dateLabel(it)) + '</span></div>' +
     '<h3 class="card-title"><button class="linklike" data-action="open" data-key="' + esc(it.key) + '">' + t(it.title) + '</button></h3><p class="dek">' + t(it.dek) + '</p>' +
@@ -1238,10 +1335,10 @@ function renderToday(){
   const el = $('#view-aujourdhui'); if (!el) return;
   setTimeout(() => matinMaj(false), 50);
   el.dataset.sec = S.sec;
-  if (S.sec === 'pol'){ if (!S.pol && !S.polLoading) loadPol(); el.innerHTML = matinCardHTML() + secSwitchHTML() + polViewHTML(); return; }
+  if (S.sec === 'pol'){ if (!S.pol && !S.polLoading) loadPol(); el.innerHTML = matinCardHTML() + polViewHTML(); return; }
   const ed = S.edition;
   if (S.status !== 'ready' || !ed){ el.innerHTML = stateHTML(); return; }
-  el.innerHTML = matinCardHTML() + secSwitchHTML() + mastheadHTML(ed) + fallbackNoticeHTML() + installBannerHTML() + sommaireHTML(ed) + topHTML(ed) + frStripHTML(ed) + catSumHTML(ed) + feedSectionHTML(ed) + conceptHTML(ed) + agendaHTML(ed) + methodHTML() + footerHTML(ed);
+  el.innerHTML = matinCardHTML() + mastheadHTML(ed) + fallbackNoticeHTML() + installBannerHTML() + sommaireHTML(ed) + topHTML(ed) + frStripHTML(ed) + catSumHTML(ed) + feedSectionHTML(ed) + conceptHTML(ed) + agendaHTML(ed) + methodHTML() + footerHTML(ed);
   renderFeed();
 }
 
@@ -1446,7 +1543,7 @@ function renderListen(){
     listenNoteHTML() + '<div id="off-slot">' + offlineCardHTML() + '</div>' +
     '<div class="listen-grid"><div class="player"><p class="pl-label" id="pl-label"></p><h3 class="pl-title" id="pl-title"></h3><div class="pl-bar" aria-hidden="true"><i id="pl-fill"></i></div><div class="pl-time"><span id="pl-pos"></span><span id="pl-left"></span></div>' +
     '<div class="pl-ctrls"><button class="iconbtn" data-action="prev" aria-label="Chapitre précédent">' + icon('prev', 20) + '</button><button class="iconbtn lg" data-action="skip" data-d="-1" aria-label="Reculer de 10 secondes">' + icon('back10', 26) + '</button><button class="playbtn" id="pl-toggle" data-action="toggle" aria-label="Lecture">' + icon('play', 30) + '</button><button class="iconbtn lg" data-action="skip" data-d="1" aria-label="Avancer de 10 secondes">' + icon('fwd10', 26) + '</button><button class="iconbtn" data-action="next" aria-label="Chapitre suivant">' + icon('next', 20) + '</button></div>' +
-    speedHTML('pl') + '<div class="pl-set"><label class="voice"><span>Voix</span><select id="voice-select"></select></label></div>' +
+    speedHTML('pl') + '<div class="pl-set"><button class="btn sm ghost" data-action="opt-voix">' + icon('headphones', 16) + ' Voix : <span class="pl-voix-n">' + esc(vxNom()) + '</span></button></div>' +
     '<p class="pl-note">Lecture par la voix de synthèse de ton appareil. Pour une écoute continue, garde l\'écran allumé.</p></div>' +
     '<div class="modes"><h3 class="sub-h">Choisir une émission</h3>' +
     '<button class="mode" data-action="load" data-mode="flash"><span class="mode-ic">' + icon('play', 18) + '</span><span><b>Le flash</b><small>' + ed.items.length + ' titres · ≈ ' + fl + ' min</small></span></button>' +
@@ -1642,11 +1739,12 @@ const Player = {
   play(){
     if (!this.chapters.length) return;
     if (this.engine === 'file'){ this.playFile(); return; }
-    if (!this.synth){ openListenElsewhere(); return; }
+    if (!this.synth && !vxPiper()){ openListenElsewhere(); return; }
     if (this.done){ this.ci = 0; this.si = 0; this.done = false; }
     this.playing = true; this.started = true;
     const tk = ++this.token;
-    const busy = this.synth.speaking || this.synth.pending;
+    if (window.VoixPiper) VoixPiper.stop();
+    const busy = !!this.synth && (this.synth.speaking || this.synth.pending);
     if (busy){ try { this.synth.cancel(); } catch (e) {} setTimeout(() => { if (this.playing && tk === this.token) this.speak(); }, 90); }
     else this.speak();
     this.lock(); updatePlayerUI();
@@ -1654,7 +1752,7 @@ const Player = {
   pause(){
     this.playing = false; this.token++;
     if (this.engine === 'file'){ try { this.au && this.au.pause(); } catch (e) {} }
-    else { try { this.synth && this.synth.cancel(); } catch (e) {} }
+    else ttsCancel();
     this.unlock(); updatePlayerUI();
   },
   toggle(){ if (this.playing) this.pause(); else this.play(); },
@@ -1662,6 +1760,14 @@ const Player = {
     const tk = this.token;
     const txt = (this.sents[this.ci] || [])[this.si];
     if (txt == null){ this.finish(); return; }
+    if (vxPiper()){   /* voix téléchargée : fabriquée dans le téléphone, phrase par phrase (la suivante se prépare pendant la lecture) */
+      const id = S.vx.id, o = vxOpts(), nx = (this.sents[this.ci] || [])[this.si + 1] || (this.sents[this.ci + 1] || [])[0];
+      VoixPiper.dire(id, txt, Object.assign({ onstart: () => { if (nx) VoixPiper.fabriquer(id, nx, o).catch(() => {}); } }, o),
+        () => { if (tk === this.token) this.advance(); },
+        err => { if (tk !== this.token) return; if (vxEchec(err) === 'stop'){ this.playing = false; this.unlock(); updatePlayerUI(); return; } if (this.synth) this.speak(); else this.advance(); });
+      updatePlayerUI(); return;
+    }
+    if (!this.synth){ this.finish(); return; }
     let u; try { u = new SpeechSynthesisUtterance(txt); } catch (e) { this.finish(); return; }
     this.cur = u; /* garde une référence : sans elle, certains navigateurs perdent l'événement de fin */
     const v = pickVoice(); if (v){ u.voice = v; u.lang = v.lang; } else u.lang = 'fr-FR';
@@ -1692,7 +1798,7 @@ const Player = {
       updatePlayerUI(); return;
     }
     this.token++;
-    try { if (this.synth && (this.synth.speaking || this.synth.pending)) this.synth.cancel(); } catch (e) {}
+    ttsCancel();
     this.ci = Math.min(Math.max(ci, 0), Math.max(0, this.chapters.length - 1)); this.si = 0; this.done = false;
     if (this.playing){ const tk = this.token; setTimeout(() => { if (this.playing && tk === this.token) this.speak(); }, 90); }
     updatePlayerUI();
@@ -1714,7 +1820,7 @@ const Player = {
     }
     /* Voix du téléphone : on saute des phrases entières, autant qu'il en faut pour faire à peu près 10 secondes. */
     this.token++;
-    try { if (this.synth && (this.synth.speaking || this.synth.pending)) this.synth.cancel(); } catch (e) {}
+    ttsCancel();
     const need = CPS * (S.prefs.rate || 1) * SKIP_SEC;
     const len = (c, i) => ((this.lens[c] || [])[i] || 0);
     if (this.done){ this.done = false; this.ci = this.chapters.length - 1; this.si = Math.max(0, (this.sents[this.ci] || []).length); }
@@ -1741,10 +1847,10 @@ const Player = {
   restartSentence(){
     if (this.engine === 'file'){ try { if (this.au) this.au.playbackRate = S.prefs.rate || 1; } catch (e) {} updatePlayerUI(); return; }
     if (!this.playing){ updatePlayerUI(); return; }
-    this.token++; try { this.synth.cancel(); } catch (e) {}
+    this.token++; ttsCancel();
     const tk = this.token; setTimeout(() => { if (this.playing && tk === this.token) this.speak(); }, 90);
   },
-  stop(){ this.token++; this.playing = false; try { if (this.au) this.au.pause(); } catch (e) {} try { if (this.synth && (this.synth.speaking || this.synth.pending)) this.synth.cancel(); } catch (e) {} this.unlock(); },
+  stop(){ this.token++; this.playing = false; try { if (this.au) this.au.pause(); } catch (e) {} ttsCancel(); this.unlock(); },
   lock(){
     try {
       if (!('wakeLock' in navigator) || this.wake || document.visibilityState !== 'visible') return;
@@ -1767,11 +1873,13 @@ function loadVoices(){
   renderVoiceSelect();
 }
 function pickVoice(){
+  const uri = S.vx && S.vx.k === 'tel' ? S.vx.uri : S.prefs.voiceURI;
+  if (uri && Player.synth){ let all = []; try { all = Player.synth.getVoices() || []; } catch (e) {} const m = all.find(v => v.voiceURI === uri); if (m) return m; }
   const vs = Player.voices; if (!vs || !vs.length) return null;
-  if (S.prefs.voiceURI){ const m = vs.find(v => v.voiceURI === S.prefs.voiceURI); if (m) return m; }
   return vs[0];
 }
 function renderVoiceSelect(){
+  $$('.pl-voix-n').forEach(e => { e.textContent = vxNom(); });
   const sel = $('#voice-select'); if (!sel) return;
   const vs = Player.voices || [];
   if (!vs.length){ sel.innerHTML = '<option value="">Voix française par défaut</option>'; sel.disabled = !Player.synth; return; }
@@ -1795,7 +1903,7 @@ function startMode(mode, opt){
   if (!chapters.length) return;
   /* L'enregistrement du jour passe en premier (il continue écran éteint) ; sinon, la voix du téléphone. */
   const offline = navigator.onLine === false;
-  const seg0 = fileSegment(mode, opt);
+  const seg0 = vxPourInfos() ? null : fileSegment(mode, opt);
   const seg = (offline && !(seg0 && S.off && S.off.srcs.has(seg0.src))) ? null : seg0;  /* sans réseau : seulement ce qui est gardé */
   if (offline && Player.synth && seg0 && !seg) toast('Sans réseau : la voix du téléphone lit l\'édition.');
   if (seg) Player.load(mode, seg.chapters, label, edDate, seg);
@@ -1946,7 +2054,7 @@ function updatePlayerUI(){
   const note = $('.pl-note'); if (note) note.textContent = Player.engine === 'file' ? "Enregistrement audio de l'édition, préparé chaque matin." : "Lecture par la voix de synthèse de ton appareil. Pour une écoute continue, garde l'écran allumé.";
   const vw = $('.player .voice'); if (vw) vw.hidden = Player.engine === 'file' || !Player.synth;
   $$('#chapters .chap').forEach((b, i) => b.classList.toggle('on', i === Player.ci));
-  const ve = $('#view-ecouter'); if (ve) ve.dataset.sec = /^P/.test(Player.edDate || '') ? 'pol' : '';
+  const ve = $('#view-ecouter'); if (ve) ve.dataset.sec = /^P/.test(Player.edDate || '') ? 'pol' : 'sci';
   updateSpeedUI(); highlight(); updateMini(); updateMedia(); doucheUI();
 }
 function updateMini(){
@@ -1955,7 +2063,7 @@ function updateMini(){
   m.hidden = !show; document.body.classList.toggle('has-mini', show);
   if (!show){ if (ratePopOpen()) ratePop(false); return; }
   const many = Player.chapters.length > 1, nx = $('#mini-next'); if (nx) nx.hidden = !many;
-  m.dataset.sec = /^P/.test(Player.edDate || '') ? 'pol' : '';
+  m.dataset.sec = /^P/.test(Player.edDate || '') ? 'pol' : 'sci';
   const mr = $('#mini-rate'); if (mr) mr.textContent = rateShort(S.prefs.rate);
   $('#mini-label').textContent = Player.label || '';
   const ch = Player.chapters[Player.ci]; $('#mini-title').textContent = ch ? fr(chapTitle(ch)) : '';
@@ -2014,7 +2122,7 @@ function showSheet(html, label, replace){
   if (!S.sheetOpen) { S.lastFocus = document.activeElement; S.sheetStack = []; }
   else if (replace) { if (S.askCtl){ try { S.askCtl.abort(); } catch (e) {} S.askCtl = null; } }
   else { if (S.askCtl){ try { S.askCtl.abort(); } catch (e) {} S.askCtl = null; } S.sheetStack.push({ html: pn.innerHTML, label: pn.getAttribute('aria-label'), top: pn.scrollTop, key: S.detailKey, sec: pn.dataset.sec || '' }); if (S.sheetStack.length > 12) S.sheetStack.shift(); }
-  pn.innerHTML = html; pn.setAttribute('aria-label', label || 'Fiche'); pn.dataset.sec = S.nextSheetSec || ''; S.nextSheetSec = null;
+  pn.innerHTML = html; pn.setAttribute('aria-label', label || 'Fiche'); pn.dataset.sec = S.nextSheetSec || 'sci'; S.nextSheetSec = null;
   bd.hidden = false; document.documentElement.classList.add('locked'); pn.scrollTop = 0; S.sheetOpen = true; S.detailKey = null;
   const cb = pn.querySelector('[data-action="close"]'); if (cb) { try { cb.focus({ preventScroll:true }); } catch (e) { cb.focus(); } }
   updateMini();
@@ -2023,7 +2131,7 @@ function sheetBack(){
   const prev = S.sheetStack.pop(); if (!prev){ closeSheet(); return; }
   if (S.askCtl){ try { S.askCtl.abort(); } catch (e) {} S.askCtl = null; }
   const pn = $('#sheet-panel');
-  pn.innerHTML = prev.html; pn.setAttribute('aria-label', prev.label || 'Fiche'); S.detailKey = prev.key || null; pn.dataset.sec = prev.sec || '';
+  pn.innerHTML = prev.html; pn.setAttribute('aria-label', prev.label || 'Fiche'); S.detailKey = prev.key || null; pn.dataset.sec = prev.sec || 'sci';
   pn.scrollTop = prev.top || 0;
   const cb = pn.querySelector('[data-action="close"]'); if (cb) { try { cb.focus({ preventScroll:true }); } catch (e) {} }
 }
@@ -2199,7 +2307,7 @@ function setTab(tab, opt){
   TABS.forEach(x => { const v = $('#view-' + x); if (v) v.hidden = x !== tab; });
   $$('.top-nav [data-tab], .tabbar [data-tab], #hdr-fav').forEach(b => b.setAttribute('aria-current', b.dataset.tab === tab ? 'page' : 'false'));
   try { history.replaceState(history.state, '', '#' + tab); } catch (e) {}
-  renderView(tab); updateMini();
+  renderView(tab); updateMini(); fluxRacine();
   if (opt.scroll !== false) window.scrollTo(0, 0);
 }
 function toast(msg, ms){
@@ -2761,7 +2869,7 @@ function askYes(yes, no){
 function openMatinReglages(){
   const p = MPget();
   const lieux = p.lieux.length ? '<ul class="rg-lieux">' + p.lieux.map(l => '<li><span><b>' + esc(l.nom) + '</b><small>' + esc((l.type === 'maison' ? 'Maison' : l.type === 'travail' ? 'Travail' : 'Autre') + (l.adr ? ' · ' + l.adr : '')) + '</small></span><button class="iconbtn" data-action="m-lieu-del" data-id="' + esc(l.id) + '" aria-label="Supprimer ' + esc(l.nom) + '">' + icon('close', 16) + '</button></li>').join('') + '</ul>' : '<p class="muted small">Aucun lieu enregistré.</p>';
-  showSheet('<div class="sheet-head"><div class="in pad"><h2 class="sheet-h">Réglages du matin</h2><button class="iconbtn" data-action="close" aria-label="Fermer">' + icon('close') + '</button></div></div>' +
+  showSheet('<div class="sheet-head"><div class="in pad"><h2 class="sheet-h">Point du matin</h2><button class="iconbtn" data-action="close" aria-label="Fermer">' + icon('close') + '</button></div></div>' +
     '<div class="pad sheet-body rg">' +
     '<section class="rg-sec"><h3>Météo</h3><label class="rg-tick"><input type="checkbox" data-m="geo"' + (p.geo ? ' checked' : '') + '><span>Météo de l\'endroit où se trouve le téléphone</span></label>' +
       '<p class="muted small">Ville de secours (sans localisation) : <b>' + esc(p.ville ? p.ville.nom : 'aucune') + '</b></p>' +
@@ -2780,11 +2888,7 @@ function openMatinReglages(){
       '<form class="rg-form" data-form="tomtom"><input name="k" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="' + (p.tomtom ? 'Clé enregistrée sur ce téléphone' : 'Colle ta clé TomTom ici') + '"><button class="btn sm primary" type="submit">' + (p.tomtom ? 'Remplacer et tester' : 'Enregistrer et tester') + '</button></form>' +
       (p.tomtom ? '<div class="mt-chips"><button class="btn sm ghost" data-action="m-tt-test">Tester la clé</button><button class="btn sm ghost" data-action="m-tt-del">Effacer la clé</button></div>' : '') +
       '<p class="small" id="rg-tt" role="status"></p><p class="muted small">La clé reste dans ce téléphone. TomTom reçoit seulement le départ et l\'arrivée de tes trajets. Sans clé, Bison Futé signale déjà les coupures et travaux sur les routes nationales.</p></section>' +
-    '<section class="rg-sec"><h3>Application</h3><p class="rg-line">Version ' + APP_V + '</p><div class="mt-chips"><button class="btn sm" data-action="maj-check">' + icon('refresh', 15) + ' Rechercher une mise à jour</button><button class="btn sm ghost" data-action="maj-histo">Nouveautés</button></div></section>' +
-    '<section class="rg-sec"><h3>Voix</h3>' +
-      '<label class="rg-line">Reconnaissance de la voix <select data-m="moteur"><option value="auto"' + (p.moteur === 'auto' ? ' selected' : '') + '>Automatique</option><option value="google"' + (p.moteur === 'google' ? ' selected' : '') + '>Google (en ligne, la plus précise)</option><option value="local"' + (p.moteur === 'local' ? ' selected' : '') + '>Dans le téléphone (hors connexion, privée)</option></select></label>' +
-      '<div id="rg-vosk">' + voskBox() + '</div>' +
-      '<p class="muted small">Automatique : Google quand il y a du réseau, la voix hors connexion sinon (et pour le mode mains libres, si elle est téléchargée : pas de bip, rien n\'est envoyé).</p></section>' +
+    '<p class="muted small">Voix, style visuel et micro : bouton « Options » en haut de l\'écran.</p>' +
     '</div>', 'Réglages du matin');
 }
 function voskBox(){
@@ -3000,6 +3104,9 @@ function matinCommande(s, raw){
   if (/ (arrete|stop|fin) (la )?surveillance /.test(s)){ watchStop(); return { msg:'Surveillance arrêtée.' }; }
   if (/ surveille (la route|le trajet)? /.test(s)){ const d = (S.iti && S.iti.d) || (S.matin && S.matin.tr && S.matin.tr.d); if (d){ watchStart({ nom:d.nom, lat:d.lat, lon:d.lon }); return { msg:'Je surveille la route.', keep:true }; } }
   if (/ reglages? /.test(s) && / (matin|meteo|trajet|voix) /.test(s)){ openMatinReglages(); return { msg:'Les réglages du matin.' }; }
+  if (/ (ouvre |affiche )?(les )?options /.test(s) && !/ trajet /.test(s)){ openOptions(); return { msg:'Options.', keep:true }; }
+  if (/ (change(r)? de voix|choisi[rs]? (une|la|ma) voix|les voix|autre voix) /.test(s)){ openVoix(); return { msg:'Les voix.', keep:true }; }
+  if (/ (change(r)? de style|style visuel|change(r)? (les )?couleurs?) /.test(s)){ openStyle(); return { msg:'Les styles.', keep:true }; }
   if (/ douche /.test(s)){ if (/ (arrete|stop|quitte|quitter|fin|coupe|sors) /.test(s)){ doucheStop(); return { msg:'Mode douche arrêté.', keep:true }; } doucheStart(); return { msg:'Mode douche.', keep:true }; }
   if (Douche.on && / (quitte|quitter|termine|c est fini|j ai fini) /.test(s)){ doucheStop(); return { msg:'Mode douche arrêté.', keep:true }; }
   /* itinéraire vers … */
@@ -3050,7 +3157,7 @@ const Voice = {
     this.ctx = ctx || (askOpen() ? 'ask' : 'cmd'); this.got = false; this.err = null;
     if (!retry) this.resume = !!Player.playing;   /* l'écoute en cours est mise en pause pendant qu'on parle, puis reprend */
     if (Player.playing) Player.pause();
-    try { if (Player.synth && Player.synth.speaking) Player.synth.cancel(); } catch (e) {}
+    ttsCancel();
     const eng = moteurVoix(false);
     if (!eng){ vbub(online() ? 'La reconnaissance vocale n\'est pas disponible dans ce navigateur.' : 'Pas de réseau : télécharge la voix hors connexion dans les réglages du matin (une seule fois).', false, 5000); if (this.resume){ this.resume = false; Player.play(); } return; }
     if (eng === 'vosk'){
@@ -3150,8 +3257,19 @@ function ttsMesure(len, ms, rate){
   const cps = len / (ms / 1000) / (rate || 1); if (cps < 6 || cps > 40) return;
   const old = LS.get('mds.ttscps', 0); LS.set('mds.ttscps', old ? old * 0.7 + cps * 0.3 : cps);
 }
+function ttsCancel(){
+  try { if (Player.synth && (Player.synth.speaking || Player.synth.pending)) Player.synth.cancel(); } catch (e) {}
+  try { if (window.VoixPiper) VoixPiper.stop(); } catch (e) {}
+}
 function sayShort(text, then){
   let done = false; const go = () => { if (done) return; done = true; Libre.mute = Date.now() + 700; if (then) then(); };
+  if (vxPiper()){
+    Libre.mute = Date.now() + 60000;
+    try { if (Player.synth) Player.synth.cancel(); } catch (e) {}
+    VoixPiper.dire(S.vx.id, String(text), vxOpts(), go, err => { if (vxEchec(err) !== 'stop' && Player.synth){ sayShort(text, then); return; } go(); });
+    setTimeout(go, Math.max(25000, String(text).length * 200));
+    return;
+  }
   if (!Player.synth){ go(); return; }
   try {
     const u = new SpeechSynthesisUtterance(text); const v = pickVoice(); if (v){ u.voice = v; u.lang = v.lang; } else u.lang = 'fr-FR';
@@ -3523,6 +3641,16 @@ function onClick(e){
     case 'm-geo': S.matin = S.matin || {}; S.matin.wxNeed = false; matinRedraw(); matinMaj(true, true); break;
     case 'm-tr-maj': { const last = dernierTrajet(); if (last){ vbub('Je revérifie la route…', false, 2000); trajetVers(last.d, true).then(matinRedraw); } break; }
     case 'douche': doucheStart(); break;
+    case 'options': openOptions(); break;
+    case 'opt-voix': openVoix(); break;
+    case 'opt-style': openStyle(); break;
+    case 'opt-micro': openMicro(); break;
+    case 'opt-app': openAppli(); break;
+    case 'opt-fav': closeSheet(); setTab('favoris'); break;
+    case 'flux': setSec(a.dataset.f); break;
+    case 'style': appliquerStyle(a.dataset.s); openStyle(true); break;
+    case 'theme': appliquerStyle(null, a.dataset.t); $$('[data-action="theme"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.t === a.dataset.t))); break;
+    case 'vx-infos': case 'vx-filtre': case 'vx-ecoute-cur': case 'vx-ecoute-tel': case 'vx-exemple': case 'vx-get': case 'vx-use': case 'vx-ecoute': case 'vx-test': case 'vx-del': case 'vx-raz': vxAction(a); break;
     case 'maj-go': { a.disabled = true; a.textContent = 'Chargement…'; try { sessionStorage.setItem('mds.majtry', String(Maj.v)); } catch (e) {} fetch('./', { cache:'reload' }).catch(() => {}).finally(() => location.reload()); break; }
     case 'maj-tard': Maj.plusTard = Maj.v; majHide(); break;
     case 'maj-ok': majHide(); break;
@@ -3602,6 +3730,12 @@ function bindEvents(){
   });
   document.addEventListener('submit', e => { if (e.target && e.target.id === 'ask-form'){ e.preventDefault(); const inp = $('#ask-input'); const v = inp ? inp.value.trim() : ''; if (v) ask(v); } });
   document.addEventListener('input', e => { if (e.target && e.target.id === 'q'){ S.query = e.target.value; renderFeed(); } });
+  document.addEventListener('input', e => { if (e.target && e.target.id === 'vx-q'){ S.vxQ = e.target.value; clearTimeout(S.vxQt); S.vxQt = setTimeout(vxListe, 200); } });
+  document.addEventListener('change', e => {
+    const t = e.target; if (!t || !t.matches) return;
+    if (t.matches('[data-vxtout]')){ S.vxTout = t.checked; vxTel(); }
+    if (t.matches('[data-vxspk]')){ const id = t.dataset.vxspk, n = Number(t.value) | 0; LS.set('mds.voix.spk.' + id, n); if (S.vx.k === 'piper' && S.vx.id === id){ S.vx.spk = n; vxSave(); } vxEcoutePiper(id); }
+  });
   document.addEventListener('change', e => { if (e.target && e.target.id === 'voice-select'){ S.prefs.voiceURI = e.target.value || null; savePrefs(); Player.restartSentence(); } });
   document.addEventListener('keydown', e => { if (!S.sheetOpen) return; if (e.key === 'Escape') closeSheet(); else if (e.key === 'Tab') trapFocus(e); });
   $('#sheet').addEventListener('click', e => { if (e.target === e.currentTarget) closeSheet(); });
@@ -3690,11 +3824,254 @@ function watchUpdates(){
   try { navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'maj') checkUpdate(); else if (e.data && e.data.type === 'audio-etat') onAudioState(e.data); }); } catch (e) {}
   swSend({ type:'audio-etat' });
 }
+/* ---------- Options : un seul bouton en haut, tout est rangé ici ---------- */
+const STYLES = [{"id":"classique","nom":"Matin bleu","desc":"Le style d'origine. Clair le jour, sombre la nuit.","sombre":false,"p":{"paper":"#F2F5F9","card":"#FFFFFF","ink":"#0E1A2C","sci":"#1B4A8A","pol":"#A61E2E"}},{"id":"journal","nom":"Journal","desc":"Papier crème et titres de quotidien.","sombre":false,"p":{"paper":"#F3EEE3","card":"#FBF8F1","ink":"#1D1A15","sci":"#1F4E8C","pol":"#A61B1B"}},{"id":"nuit","nom":"Nuit noire","desc":"Fond noir : repose les yeux et économise la batterie.","sombre":true,"p":{"paper":"#000000","card":"#0E0E12","ink":"#ECECF1","sci":"#5AA9FF","pol":"#FF6B6B"}},{"id":"neon","nom":"Néon","desc":"Futuriste : couleurs vives sur fond de nuit.","sombre":true,"p":{"paper":"#0A0A1F","card":"#12122E","ink":"#E8E8FF","sci":"#22D3EE","pol":"#FF4757"}},{"id":"contraste","nom":"Grande lisibilité","desc":"Contraste maximal, texte net et sans fioritures.","sombre":false,"p":{"paper":"#FFFFFF","card":"#FFFFFF","ink":"#000000","sci":"#0033CC","pol":"#C40000"}},{"id":"doux","nom":"Pastel","desc":"Couleurs douces et lumineuses.","sombre":false,"p":{"paper":"#F6F3FB","card":"#FFFFFF","ink":"#2A2540","sci":"#4D74C9","pol":"#D1495B"}}];
+const sheetHead = t => '<div class="sheet-head"><div class="in pad"><h2 class="sheet-h">' + t + '</h2><button class="iconbtn" data-action="close" aria-label="Fermer">' + icon('close') + '</button></div></div>';
+function styleActuel(){ return document.documentElement.dataset.style || 'classique'; }
+function showOpt(html, label, replace){ S.nextSheetSec = document.documentElement.dataset.flux || 'sci'; showSheet(html, label, replace); }
+function openOptions(){
+  const st = STYLES.find(x => x.id === styleActuel()) || STYLES[0], th = LS.get('mds.theme', 'auto');
+  const row = (act, ic, t, sub) => '<li><button class="row opt-row" data-action="' + act + '"><span class="opt-ic">' + icon(ic, 22) + '</span><span class="row-main"><span class="row-title">' + t + '</span><span class="row-meta">' + sub + '</span></span>' + icon('arrow', 18) + '</button></li>';
+  showOpt(sheetHead('Options') + '<div class="pad sheet-body rg"><ul class="rows">' +
+    row('opt-voix', 'headphones', 'Voix', 'Utilisée : ' + esc(vxNom()) + '. Écouter, choisir, télécharger, effacer.') +
+    row('opt-style', 'palette', 'Style visuel', esc(st.nom) + (st.sombre ? '' : ' · ' + ({ light:'clair', dark:'sombre' }[th] || 'clair ou sombre selon le téléphone')) + '. ' + STYLES.length + ' styles au choix.') +
+    row('m-reglages', 'sun', 'Point du matin', 'Météo, lieux, point de départ, trafic, informations du matin.') +
+    row('opt-micro', 'mic', 'Micro', 'Comprendre ta voix : en ligne, ou sans Internet.') +
+    row('opt-fav', 'star', 'Mes favoris', 'Les découvertes que tu as gardées.') +
+    row('opt-app', 'refresh', 'Application', 'Version ' + APP_V + ' · mises à jour · nouveautés.') +
+    '</ul></div>', 'Options');
+}
+function openStyle(replace){
+  const st = styleActuel(), th = LS.get('mds.theme', 'auto'), cur = STYLES.find(x => x.id === st) || STYLES[0];
+  showOpt(sheetHead('Style visuel') + '<div class="pad sheet-body rg">' +
+    '<section class="rg-sec"><h3>Choisis ton style</h3><p class="muted small">Dans chaque style, les sciences restent en bleu et la politique en rouge.</p><div class="st-grid">' +
+    STYLES.map(x => '<button class="st-tile" data-action="style" data-s="' + x.id + '" aria-pressed="' + (x.id === st) + '" style="--t-paper:' + x.p.paper + ';--t-card:' + x.p.card + ';--t-ink:' + x.p.ink + ';--t-sci:' + x.p.sci + ';--t-pol:' + x.p.pol + '">' +
+      '<span class="st-prev"><span class="st-card"><i></i><i></i><span class="st-dots"><b class="sci"></b><b class="pol"></b></span></span></span><span class="st-name">' + esc(x.nom) + '</span><span class="st-desc">' + esc(x.desc) + '</span></button>').join('') + '</div></section>' +
+    '<section class="rg-sec"><h3>Clair ou sombre</h3>' + (cur.sombre ? '<p class="muted small">Le style « ' + esc(cur.nom) + ' » est toujours sombre.</p>' :
+      '<div class="seg" role="group" aria-label="Clair ou sombre">' + [['auto', 'Selon le téléphone'], ['light', 'Clair'], ['dark', 'Sombre']].map(o => '<button data-action="theme" data-t="' + o[0] + '" aria-pressed="' + (th === o[0]) + '">' + o[1] + '</button>').join('') + '</div>') + '</section>' +
+    '</div>', 'Style visuel', replace);
+}
+function appliquerStyle(st, th){
+  const r = document.documentElement;
+  if (st){ r.dataset.style = st; LS.set('mds.style', st); }
+  if (th){ if (th === 'light' || th === 'dark') r.dataset.theme = th; else delete r.dataset.theme; LS.set('mds.theme', th); }
+  couleurBarre();
+}
+function openMicro(){
+  const p = MPget();
+  showOpt(sheetHead('Micro') + '<div class="pad sheet-body rg"><section class="rg-sec"><h3>Comprendre ta voix</h3>' +
+    '<label class="rg-line">Reconnaissance <select data-m="moteur"><option value="auto"' + (p.moteur === 'auto' ? ' selected' : '') + '>Automatique</option><option value="google"' + (p.moteur === 'google' ? ' selected' : '') + '>Google (en ligne, la plus précise)</option><option value="local"' + (p.moteur === 'local' ? ' selected' : '') + '>Dans le téléphone (sans Internet, privée)</option></select></label>' +
+    '<p class="small"><span class="bdg net">Besoin d\'Internet</span> Google : la plus précise, ta voix part chez Google.</p>' +
+    '<p class="small"><span class="bdg off">Sans Internet</span> Dans le téléphone : rien n\'est envoyé, un peu moins précise.</p>' +
+    '<div id="rg-vosk">' + voskBox() + '</div>' +
+    '<p class="muted small">Automatique : Google quand il y a du réseau, sinon la reconnaissance dans le téléphone (si elle est téléchargée). En mode mains libres et douche, celle du téléphone est préférée : pas de bip, rien n\'est envoyé.</p></section></div>', 'Micro');
+}
+function openAppli(){
+  showOpt(sheetHead('Application') + '<div class="pad sheet-body rg"><section class="rg-sec"><h3>La Matinale</h3><p class="rg-line">Version ' + APP_V + '</p>' +
+    '<div class="mt-chips"><button class="btn sm" data-action="maj-check">' + icon('refresh', 15) + ' Rechercher une mise à jour</button><button class="btn sm ghost" data-action="maj-histo">Nouveautés</button></div></section>' +
+    '<section class="rg-sec"><h3>Ce qui est gardé dans le téléphone</h3><p class="small" id="ap-place">…</p><p class="muted small">Tes réglages, tes lieux, ta clé TomTom, les voix et les éditions gardées restent dans ce téléphone.</p></section></div>', 'Application');
+  placeTexte().then(t => { const e = $('#ap-place'); if (e) e.textContent = t; });
+}
+async function placeTexte(){
+  try { const e = await navigator.storage.estimate(); return 'Utilisé par l\'appli : ' + moTxt(e.usage || 0) + '. Encore libre : ' + moTxt(Math.max(0, (e.quota || 0) - (e.usage || 0))) + '.'; } catch (e) { return 'Espace : inconnu sur ce téléphone.'; }
+}
+const moTxt = n => n >= 1e9 ? (Math.round(n / 1e8) / 10).toString().replace('.', ',') + ' Go' : Math.max(0, Math.round(n / 1e6)) + ' Mo';
+
+/* ---------- Voix : voix du téléphone, voix téléchargées (Piper), enregistrement des infos ---------- */
+const LANGUES = { fr:'Français', en:'Anglais', de:'Allemand', es:'Espagnol', it:'Italien', nl:'Néerlandais', pt:'Portugais', ru:'Russe', pl:'Polonais', ar:'Arabe', zh:'Chinois', tr:'Turc', uk:'Ukrainien', sv:'Suédois', da:'Danois', no:'Norvégien', fi:'Finnois', el:'Grec', cs:'Tchèque', hu:'Hongrois', ro:'Roumain', ca:'Catalan', vi:'Vietnamien', fa:'Persan', is:'Islandais', ka:'Géorgien', kk:'Kazakh', lb:'Luxembourgeois', ne:'Népalais', sk:'Slovaque', sl:'Slovène', sr:'Serbe', sw:'Swahili', cy:'Gallois', hi:'Hindi', ml:'Malayalam', lv:'Letton' };
+const langueFr = code => { const c = String(code || '').replace('-', '_'), l = c.split('_')[0].toLowerCase(), r = c.split('_')[1]; return (LANGUES[l] || c) + (r ? ' (' + r + ')' : ''); };
+S.vx = { k:'auto' }; S.vxInfos = 'enreg'; S.vxDispo = new Set(); S.vxCat = null; S.vxFiltre = 'fr'; S.vxQ = ''; S.vxTout = false; S.vxFail = false;
+function vxInit(){
+  S.vx = LS.get('mds.voix', null) || (S.prefs.voiceURI ? { k:'tel', uri:S.prefs.voiceURI } : { k:'auto' });
+  S.vxInfos = LS.get('mds.voix.infos', 'enreg');
+  if (S.vx.k === 'piper' && window.VoixPiper) VoixPiper.etat().then(e => {
+    S.vxDispo = new Set(e.voix); renderVoiceSelect();
+    if (vxPiper()){ const go = () => VoixPiper.preparer(S.vx.id).catch(() => {}); if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout:6000 }); else setTimeout(go, 3000); }
+  }).catch(() => {});
+}
+function vxSave(){ LS.set('mds.voix', S.vx); }
+function vxPiper(){ return !!(S.vx && S.vx.k === 'piper' && !S.vxFail && window.VoixPiper && S.vxDispo.has(S.vx.id)); }
+function vxOpts(){ return { lent: Math.max(0.4, Math.min(2.5, 1 / (S.prefs.rate || 1))), speaker: S.vx && S.vx.spk != null ? S.vx.spk : undefined }; }
+function vxPourInfos(){ return S.vxInfos === 'voix' && (vxPiper() || (S.vx.k === 'tel' && !!Player.synth)); }
+function vxNom(){
+  if (S.vx && S.vx.k === 'piper') return (S.vx.nom || 'Voix téléchargée') + (S.vxFail ? ' (en panne)' : '');
+  const v = pickVoice(); return v ? v.name : 'voix du téléphone';
+}
+/* Une voix téléchargée qui ne répond pas : la voix du téléphone prend le relais (le temps de la séance). */
+function vxEchec(err){
+  if (err && err.name === 'NotAllowedError'){ toast('Touche Lecture pour démarrer l\'écoute.'); return 'stop'; }
+  if (!S.vxFail){ S.vxFail = true; toast('La voix téléchargée ne répond pas : la voix du téléphone prend le relais.', 4000); renderVoiceSelect(); }
+  return 'relais';
+}
+async function vxCatalogue(){ if (S.vxCat) return S.vxCat; S.vxCat = await VoixPiper.lireCatalogue(); return S.vxCat; }
+function openVoix(){
+  showOpt(sheetHead('Voix') + '<div class="pad sheet-body rg" id="vx-body">' +
+    '<section class="rg-sec"><h3>La voix utilisée</h3><div class="vx-cur" id="vx-cur"></div>' +
+    '<p class="small" style="margin-top:12px">Elle lit la météo, le trajet, les questions et les fiches.</p>' +
+    '<p class="small"><b>Pour les infos du jour :</b></p><div class="seg" role="group" aria-label="Voix des infos du jour">' +
+      '<button data-action="vx-infos" data-v="enreg" aria-pressed="' + (S.vxInfos !== 'voix') + '">L\'enregistrement</button><button data-action="vx-infos" data-v="voix" aria-pressed="' + (S.vxInfos === 'voix') + '">La voix choisie</button></div>' +
+    '<p class="muted small">L\'enregistrement (voix Siwis, faite chaque matin sur le serveur) est le plus fluide. Il marche sans Internet si tu as touché « Garder l\'audio ».</p></section>' +
+    '<section class="rg-sec"><h3>Mes voix téléchargées</h3><p class="small"><span class="bdg off">' + icon('check', 12) + ' Sans Internet</span>Elles marchent partout, même en mode avion.</p><ul class="vx-list" id="vx-dl"><li class="muted small">Chargement…</li></ul></section>' +
+    '<section class="rg-sec"><h3>Télécharger de nouvelles voix</h3><p class="small">Des voix de grande qualité, gratuites. Écoute un exemple, puis télécharge celle qui te plaît. La première fois, le moteur de voix (' + (window.VoixPiper ? VoixPiper.MOTEUR_MO : 29) + ' Mo) vient avec. <b>Wi-Fi conseillé.</b></p>' +
+      '<input class="vx-q" id="vx-q" type="search" placeholder="Rechercher : nom, langue (ex. anglais)…" autocomplete="off" value="' + esc(S.vxQ) + '">' +
+      '<div class="seg" role="group" aria-label="Langues"><button data-action="vx-filtre" data-f="fr" aria-pressed="' + (S.vxFiltre === 'fr') + '">Français</button><button data-action="vx-filtre" data-f="tout" aria-pressed="' + (S.vxFiltre !== 'fr') + '">Toutes les langues</button></div>' +
+      '<ul class="vx-list" id="vx-cat"><li class="muted small">Chargement…</li></ul><p class="muted small" id="vx-place"></p></section>' +
+    '<section class="rg-sec"><h3>Les voix du téléphone</h3><ul class="vx-list" id="vx-tel"></ul>' +
+      '<label class="rg-tick"><input type="checkbox" data-vxtout' + (S.vxTout ? ' checked' : '') + '><span>Afficher toutes les langues</span></label>' +
+      '<details><summary>Ajouter des voix au téléphone</summary><p>Sur Android, avec le moteur Google :</p><ol><li>Ouvre les <b>Paramètres</b> du téléphone.</li><li>Cherche « <b>Synthèse vocale</b> » (ou Accessibilité → Sortie de la synthèse vocale).</li><li>Touche la roue à côté de « Moteur de reconnaissance vocale Google » / « Services Google de synthèse vocale », puis <b>Installer les données vocales</b> → <b>Français</b>.</li><li>Choisis une voix et télécharge-la (Wi-Fi conseillé), puis reviens ici : elle apparaît dans la liste.</li></ol>' +
+      '<p class="muted small">Le téléphone dit lui-même si une voix marche sans Internet ; il ne le dit pas toujours juste. Pour être sûr : essaie-la en mode avion.</p></details></section>' +
+    '<section class="rg-sec"><button class="btn sm ghost" data-action="vx-raz">' + icon('close', 15) + ' Effacer toutes les voix téléchargées</button></section>' +
+    '</div>', 'Voix');
+  vxRemplir();
+}
+function vxCurHTML(){
+  const p = vxPiper(), t = S.vx.k === 'tel' || S.vx.k === 'auto', v = t ? pickVoice() : null;
+  const hors = p ? true : v ? v.localService !== false : null;
+  return '<span>' + icon('headphones', 20) + '</span><b>' + esc(vxNom()) + '</b>' + (S.vx.k === 'auto' ? '<span class="bdg net" style="background:var(--card);color:var(--ink-2)">automatique</span>' : '') +
+    (hors == null ? '' : hors ? '<span class="bdg off">Sans Internet</span>' : '<span class="bdg net">Besoin d\'Internet</span>') +
+    '<button class="btn sm" data-action="vx-ecoute-cur">' + icon('play', 15) + ' Écouter</button>';
+}
+function vxItemPiper(v, dl){
+  const used = vxPiper() && S.vx.id === v.id, mls = v.locuteurs > 2;
+  const meta = [langueFr(v.langue), 'qualité ' + v.qualite, v.mo + ' Mo', v.licence ? 'licence ' + v.licence : ''].filter(Boolean).join(' · ');
+  let bt = '';
+  if (dl){
+    bt = (used ? '<span class="bdg cur">' + icon('check', 12) + ' Utilisée</span>' : '<button class="btn sm primary" data-action="vx-use" data-k="piper" data-id="' + esc(v.id) + '">Utiliser</button>') +
+      '<button class="btn sm" data-action="vx-ecoute" data-id="' + esc(v.id) + '">' + icon('play', 15) + ' Écouter</button>' +
+      '<button class="btn sm ghost" data-action="vx-test" data-id="' + esc(v.id) + '">Tester la vitesse</button>' +
+      '<button class="btn sm ghost" data-action="vx-del" data-id="' + esc(v.id) + '">Effacer</button>';
+    if (mls) bt += '<label class="rg-line" style="width:100%">Lecteur n° <select data-vxspk="' + esc(v.id) + '">' + Array.from({ length: v.locuteurs }, (_, i) => '<option value="' + i + '"' + ((LS.get('mds.voix.spk.' + v.id, 0) | 0) === i ? ' selected' : '') + '>' + (i + 1) + '</option>').join('') + '</select></label>';
+  } else {
+    bt = '<button class="btn sm" data-action="vx-exemple" data-id="' + esc(v.id) + '">' + icon('play', 15) + ' Exemple</button>' +
+      '<button class="btn sm primary" data-action="vx-get" data-id="' + esc(v.id) + '">' + icon('download', 15) + ' Télécharger</button>';
+  }
+  return '<li class="vx-item' + (used ? ' on' : '') + '" data-id="' + esc(v.id) + '"><p class="vx-n">' + esc(v.nom) + (v.genre ? '<span class="vx-g">' + esc(v.genre) + '</span>' : '') + '</p>' +
+    (v.desc ? '<p class="vx-d">' + esc(v.desc) + '</p>' : '') + '<p class="vx-m">' + (dl ? '<span class="bdg off">' + icon('check', 12) + ' Sans Internet</span>' : '<span class="bdg net">Exemple : besoin d\'Internet</span>') + esc(meta) + '</p>' +
+    '<div class="mt-chips">' + bt + '</div><div class="pbar" hidden><i></i></div><p class="vx-st" role="status"></p></li>';
+}
+async function vxRemplir(){
+  const cur = $('#vx-cur'); if (cur) cur.innerHTML = vxCurHTML();
+  vxTel();
+  if (!window.VoixPiper){ const e = $('#vx-cat'); if (e) e.innerHTML = '<li class="muted small">Les voix téléchargeables ne sont pas disponibles dans ce navigateur.</li>'; return; }
+  try {
+    const [cat, et] = await Promise.all([vxCatalogue(), VoixPiper.etat()]);
+    S.vxDispo = new Set(et.voix);
+    const dl = $('#vx-dl'); if (dl){ const mine = cat.filter(v => S.vxDispo.has(v.id)); dl.innerHTML = mine.length ? mine.map(v => vxItemPiper(v, true)).join('') : '<li class="muted small">Aucune pour l\'instant : choisis-en une plus bas.</li>'; }
+    vxListe();
+    const pl = $('#vx-place'); if (pl) VoixPiper.place().then(x => { if (x) pl.textContent = 'Place libre dans le téléphone : ' + moTxt(x.libre) + '.' + (et.moteur ? ' Moteur de voix installé.' : ''); });
+  } catch (e) {
+    const c = $('#vx-cat'); if (c) c.innerHTML = '<li class="muted small">' + (online() ? 'La liste des voix ne se charge pas pour le moment.' : 'Pas de réseau : la liste des voix à télécharger a besoin d\'Internet.') + '</li>';
+    const dl = $('#vx-dl'); if (dl && dl.textContent.includes('Chargement')) dl.innerHTML = '<li class="muted small">Aucune.</li>';
+  }
+}
+function vxListe(){
+  const box = $('#vx-cat'); if (!box || !S.vxCat) return;
+  const q = norm(S.vxQ || '').trim();
+  let l = S.vxCat.filter(v => !S.vxDispo.has(v.id));
+  if (S.vxFiltre === 'fr' && !q) l = l.filter(v => v.fr);
+  if (q) l = l.filter(v => norm([v.nom, v.desc, v.genre, v.langue, v.langueNom, v.pays, langueFr(v.langue), v.qualite].join(' ')).includes(q));
+  const n = l.length; l = l.slice(0, 40);
+  box.innerHTML = n ? l.map(v => vxItemPiper(v, false)).join('') + (n > 40 ? '<li class="muted small">… et ' + (n - 40) + ' autres : précise ta recherche.</li>' : '') : '<li class="muted small">' + (q ? 'Aucune voix ne correspond à « ' + esc(S.vxQ) + ' ».' : 'Toutes ces voix sont déjà téléchargées.') + '</li>';
+}
+function vxTel(){
+  const box = $('#vx-tel'); if (!box) return;
+  if (!Player.synth){ box.innerHTML = '<li class="muted small">Ce navigateur n\'a pas de voix de lecture.</li>'; return; }
+  let all = []; try { all = Player.synth.getVoices() || []; } catch (e) {}
+  if (!S.vxTout) all = all.filter(v => /^fr([-_]|$)/i.test(v.lang || ''));
+  all = all.slice().sort((a, b) => voiceScore(b) - voiceScore(a));
+  const curUri = S.vx.k === 'tel' ? S.vx.uri : null;
+  const auto = '<li class="vx-item' + (S.vx.k === 'auto' ? ' on' : '') + '"><p class="vx-n">Automatique</p><p class="vx-d">La meilleure voix française du téléphone' + (Player.voices && Player.voices[0] ? ' (aujourd\'hui : ' + esc(Player.voices[0].name) + ')' : '') + '.</p><div class="mt-chips">' +
+    (S.vx.k === 'auto' ? '<span class="bdg cur">' + icon('check', 12) + ' Utilisée</span>' : '<button class="btn sm primary" data-action="vx-use" data-k="auto">Utiliser</button>') + '</div></li>';
+  box.innerHTML = auto + (all.length ? all.map((v, i) => {
+    const used = curUri === v.voiceURI;
+    return '<li class="vx-item' + (used ? ' on' : '') + '"><p class="vx-n">' + esc(v.name) + '<span class="vx-g">' + esc(langueFr(v.lang)) + '</span></p><p class="vx-m">' +
+      (v.localService === false ? '<span class="bdg net">Besoin d\'Internet</span>' : '<span class="bdg off">Sans Internet</span>') + (v.default ? 'voix par défaut du téléphone' : '') + '</p><div class="mt-chips">' +
+      (used ? '<span class="bdg cur">' + icon('check', 12) + ' Utilisée</span>' : '<button class="btn sm primary" data-action="vx-use" data-k="tel" data-uri="' + esc(v.voiceURI) + '">Utiliser</button>') +
+      '<button class="btn sm" data-action="vx-ecoute-tel" data-uri="' + esc(v.voiceURI) + '">' + icon('play', 15) + ' Écouter</button></div></li>';
+  }).join('') : '<li class="muted small">Aucune voix ' + (S.vxTout ? '' : 'française ') + 'trouvée dans le téléphone. Vois « Ajouter des voix au téléphone » ci-dessous.</li>');
+}
+const VX_PHRASE = 'Bonjour ! C\'est cette voix qui te lira la Matinale : la météo, ton trajet et les dernières découvertes.';
+function vxEcouteTel(uri, txt){
+  if (!Player.synth) return;
+  ttsCancel(); Player.pause && Player.playing && Player.pause();
+  try { const u = new SpeechSynthesisUtterance(txt || VX_PHRASE); let all = Player.synth.getVoices() || []; const v = uri ? all.find(x => x.voiceURI === uri) : pickVoice(); if (v){ u.voice = v; u.lang = v.lang; } else u.lang = 'fr-FR'; u.rate = ttsRate(); Player.synth.speak(u); } catch (e) {}
+}
+function vxStatut(id, t){ const li = $('.vx-item[data-id="' + CSS.escape(id) + '"]'); const e = li && $('.vx-st', li); if (e) e.textContent = t; return li; }
+async function vxAction(a){
+  const act = a.dataset.action, id = a.dataset.id;
+  if (act === 'vx-infos'){ S.vxInfos = a.dataset.v === 'voix' ? 'voix' : 'enreg'; LS.set('mds.voix.infos', S.vxInfos); $$('[data-action="vx-infos"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === S.vxInfos))); toast(S.vxInfos === 'voix' ? 'Les infos seront lues avec la voix choisie.' : 'Les infos utiliseront l\'enregistrement.'); return; }
+  if (act === 'vx-filtre'){ S.vxFiltre = a.dataset.f; $$('[data-action="vx-filtre"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.f === S.vxFiltre))); vxListe(); return; }
+  if (act === 'vx-ecoute-cur'){ if (vxPiper()) vxEcoutePiper(S.vx.id); else vxEcouteTel(S.vx.k === 'tel' ? S.vx.uri : null); return; }
+  if (act === 'vx-ecoute-tel'){ vxEcouteTel(a.dataset.uri); return; }
+  if (act === 'vx-exemple'){
+    const v = (S.vxCat || []).find(x => x.id === id); if (!v) return;
+    if (!online()){ toast('L\'exemple a besoin d\'Internet.'); return; }
+    ttsCancel(); if (Player.playing) Player.pause();
+    const au = VoixPiper.audio(); au.src = VoixPiper.exemple(v); vxStatut(id, 'Exemple en cours…');
+    au.onended = () => vxStatut(id, ''); au.onerror = () => vxStatut(id, 'L\'exemple ne se charge pas.');
+    au.play().catch(() => vxStatut(id, 'L\'exemple ne se charge pas.'));
+    return;
+  }
+  if (act === 'vx-get'){
+    const v = (S.vxCat || []).find(x => x.id === id); if (!v) return;
+    const mot = await VoixPiper.moteurPresent(), tot = v.mo + (mot ? 0 : VoixPiper.MOTEUR_MO);
+    if (!a.dataset.ok){ a.dataset.ok = '1'; a.innerHTML = icon('download', 15) + ' Confirmer : ' + tot + ' Mo'; vxStatut(id, (mot ? '' : 'Avec le moteur de voix (une seule fois). ') + 'Wi-Fi conseillé. Touche encore pour lancer.'); return; }
+    if (!online()){ toast('Pas de réseau : le téléchargement a besoin d\'Internet.'); return; }
+    const pl = await VoixPiper.place(); if (pl && pl.libre && pl.libre < tot * 1.3e6){ vxStatut(id, 'Pas assez de place dans le téléphone (il faut ' + tot + ' Mo).'); return; }
+    a.disabled = true; const li = vxStatut(id, 'Téléchargement…'), bar = li && $('.pbar', li), fill = bar && $('i', bar); if (bar) bar.hidden = false;
+    try {
+      await VoixPiper.telecharger(id, (f, t) => { if (fill) fill.style.width = Math.round(f * 100) + '%'; vxStatut(id, (t || '') + ' : ' + Math.round(f * 100) + ' %'); });
+      toast('« ' + v.nom + ' » est dans ton téléphone.');
+      await vxRemplir();
+      const li2 = vxStatut(id, 'Prête : touche « Utiliser » pour la choisir.'); if (li2) li2.scrollIntoView({ block:'nearest', behavior:'smooth' });
+    } catch (e) { a.disabled = false; delete a.dataset.ok; a.innerHTML = icon('download', 15) + ' Réessayer'; if (bar) bar.hidden = true; vxStatut(id, 'Le téléchargement s\'est arrêté (' + (e && e.message || 'réseau') + '). Rien n\'est perdu : réessaie.'); }
+    return;
+  }
+  if (act === 'vx-use'){
+    const k = a.dataset.k;
+    if (k === 'piper'){ const v = (S.vxCat || []).find(x => x.id === id); if (!v) return; S.vx = { k:'piper', id, nom:v.nom }; if (v.locuteurs > 2) S.vx.spk = LS.get('mds.voix.spk.' + id, 0) | 0; }
+    else if (k === 'tel'){ S.vx = { k:'tel', uri:a.dataset.uri }; S.prefs.voiceURI = a.dataset.uri; savePrefs(); }
+    else { S.vx = { k:'auto' }; S.prefs.voiceURI = null; savePrefs(); }
+    S.vxFail = false; vxSave(); renderVoiceSelect(); await vxRemplir();
+    if (vxPiper()){ vxStatut(id, 'Préparation de la voix…'); VoixPiper.preparer(id).then(() => { vxStatut(id, ''); sayShort(VX_PHRASE); }).catch(e => vxStatut(id, 'Cette voix ne démarre pas : ' + (e && e.message || 'erreur') + '.')); }
+    else sayShort(VX_PHRASE);
+    return;
+  }
+  if (act === 'vx-ecoute'){ vxEcoutePiper(id); return; }
+  if (act === 'vx-test'){
+    vxStatut(id, 'Test en cours…');
+    try { const r = await VoixPiper.tester(id), q = r.ratio;
+      vxStatut(id, (q < 0.5 ? 'Très rapide sur ton téléphone : lecture fluide.' : q < 0.9 ? 'Assez rapide : lecture fluide.' : q < 1.3 ? 'Un peu juste : de petites pauses entre les phrases sont possibles. Une voix « légère » ira plus vite.' : 'Trop lente pour ce téléphone : préfère une voix « légère » ou une voix du téléphone.') + ' (' + (Math.round(q * 100) / 100).toString().replace('.', ',') + ' s de calcul par seconde de voix)');
+    } catch (e) { vxStatut(id, 'Le test n\'a pas marché : ' + (e && e.message || 'erreur') + '.'); }
+    return;
+  }
+  if (act === 'vx-del'){
+    if (!a.dataset.ok){ a.dataset.ok = '1'; a.textContent = 'Confirmer l\'effacement'; return; }
+    await VoixPiper.effacer(id);
+    if (S.vx.k === 'piper' && S.vx.id === id){ S.vx = { k:'auto' }; vxSave(); renderVoiceSelect(); }
+    const et = await VoixPiper.etat(); S.vxDispo = new Set(et.voix); toast('Voix effacée.'); vxRemplir();
+    return;
+  }
+  if (act === 'vx-raz'){
+    if (!a.dataset.ok){ a.dataset.ok = '1'; a.textContent = 'Confirmer : tout effacer (voix et moteur)'; return; }
+    await VoixPiper.effacerTout(); S.vxDispo = new Set();
+    if (S.vx.k === 'piper'){ S.vx = { k:'auto' }; vxSave(); renderVoiceSelect(); }
+    toast('Voix téléchargées effacées.'); vxRemplir();
+  }
+}
+function vxEcoutePiper(id){
+  ttsCancel(); if (Player.playing) Player.pause();
+  const v = (S.vxCat || []).find(x => x.id === id), o = { lent: vxOpts().lent };
+  if (v && v.locuteurs > 2) o.speaker = LS.get('mds.voix.spk.' + id, 0) | 0;
+  vxStatut(id, 'Préparation…');
+  VoixPiper.dire(id, VX_PHRASE, Object.assign(o, { onstart: () => vxStatut(id, '') }), () => {}, e => vxStatut(id, 'Lecture impossible : ' + (e && e.message || 'erreur') + '.'));
+}
+
 /* ---------- Mises à jour de l'appli (comme l'appli de Léonie) ----------
    L'édition du jour arrive toute seule. Une nouvelle version de l'appli, elle, s'annonce :
    « Nouvelle mise à jour ! » avec ce qui change → « Mettre à jour » ou « Plus tard » → « Mise à jour terminée ! ».
    Jamais pendant une lecture, une question ou le mode douche : elle attend la fin. */
-const APP_V = 3;
+const APP_V = 4;
 const Maj = { v:0, list:null, plusTard:0, t:0, last:0 };
 const majListe = l => arr(l).filter(e => e && Number(e.v) > 0 && Array.isArray(e.points));
 function majOccupe(){ return Player.playing || S.matinRun || Douche.on || !!S.awaitTrajet || (Voice.on && !Libre.on) || askOpen(); }
@@ -3743,6 +4120,7 @@ function applyTsize(){ try { document.documentElement.dataset.tsize = String(Num
 function boot(){
   applyTsize();
   bindEvents();
+  vxInit(); couleurBarre();
   const h = (location.hash || '').slice(1);
   if (h.startsWith('f=')){ try { S.pendingKey = decodeURIComponent(h.slice(2)); } catch (e) {} }   /* lien partagé vers une fiche */
   let nid = null; if (h.startsWith('n=')){ try { nid = decodeURIComponent(h.slice(2)); } catch (e) {} }   /* lien partagé vers une notion */
