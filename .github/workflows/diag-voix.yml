@@ -15,21 +15,22 @@ jobs:
       - name: Paquets et catalogue
         continue-on-error: true
         run: |
+          set +e
           mkdir -p keep w && cd w
           for p in onnxruntime-web@1.18.0 @diffusionstudio/piper-wasm@1.0.0 @diffusionstudio/vits-web@latest; do
-            d=$(echo "$p" | tr '/@' '__'); mkdir -p "$d"; (cd "$d" && npm pack "$p" -q >/dev/null 2>&1 && tar xzf *.tgz && echo "== $p" && find package -type f -printf "%s\t%p\n" | sort -k2 | head -80) >> ../keep/paquets.txt 2>&1
+            d=$(echo "$p" | tr '/@' '__'); mkdir -p "$d"; (cd "$d" && npm pack "$p" -q >/dev/null 2>&1 && tar xzf *.tgz && echo "== $p" && find package -type f -printf "%s\t%p\n" | grep -v "\.map$\|\.d\.ts$\|/lib/\|/docs/" | sort -k2 | head -60) >> ../keep/paquets.txt 2>&1
           done
           O=w/onnxruntime-web_1.18.0/package; P=w/_diffusionstudio_piper-wasm_1.0.0/package; V=w/_diffusionstudio_vits-web_latest/package
           cd ..; mkdir -p keep/ort keep/piper keep/vits
           cp $O/dist/ort.wasm.min.js $O/dist/ort.min.js $O/dist/ort-wasm-simd.wasm $O/dist/ort-wasm.wasm keep/ort/ 2>/dev/null; cp $O/LICENSE keep/ort/ 2>/dev/null
-          cp $P/build/* keep/piper/ 2>/dev/null; cp $P/LICENSE* $P/README* $P/package.json keep/piper/ 2>/dev/null
+          cp $P/build/* keep/piper/ 2>/dev/null || for x in js wasm data; do curl -sSL -m 120 -o keep/piper/piper_phonemize.$x https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.$x; done; cp $P/LICENSE* $P/README* $P/package.json keep/piper/ 2>/dev/null
           cp -r $V/dist keep/vits/ 2>/dev/null; cp $V/package.json $V/LICENSE* $V/README* keep/vits/ 2>/dev/null
           curl -sSL -m 60 -o keep/voices.json https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/voices.json
           { echo "== CORS HF"; curl -sS -m 30 -o /dev/null -D - -H "Origin: https://hadesdray-crypto.github.io" "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/fr/fr_FR/siwis/low/fr_FR-siwis-low.onnx.json" | grep -iE "^(HTTP|access-control|location|content-length)";
             echo "== CORS HF onnx (redirection)"; curl -sS -m 30 -o /dev/null -D - -H "Origin: https://hadesdray-crypto.github.io" "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/fr/fr_FR/siwis/low/fr_FR-siwis-low.onnx" | grep -iE "^(HTTP|access-control|location|content-length)";
             echo "== suivi"; curl -sSL -m 120 -o siwis.onnx -w "%{http_code} %{size_download} %{url_effective}\n" -H "Origin: https://hadesdray-crypto.github.io" "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/fr/fr_FR/siwis/low/fr_FR-siwis-low.onnx"; } > keep/cors.txt 2>&1
           for f in fr/fr_FR/siwis/medium/MODEL_CARD fr/fr_FR/upmc/medium/MODEL_CARD fr/fr_FR/tom/medium/MODEL_CARD fr/fr_FR/gilles/low/MODEL_CARD fr/fr_FR/mls/medium/MODEL_CARD fr/fr_FR/mls_1840/low/MODEL_CARD fr/fr_FR/siwis/low/fr_FR-siwis-low.onnx.json; do echo "== $f"; curl -sSL -m 30 "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/$f" | head -c 3000; echo; done > keep/cartes.txt 2>&1
-          ls -la keep keep/*
+          ls -laR keep | head -80
       - name: Écrire sur la branche diag
         if: always()
         run: |
