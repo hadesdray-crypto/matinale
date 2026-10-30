@@ -1,0 +1,19 @@
+name: Diagnostic bornes
+on:
+  push:
+    branches: [main]
+    paths: [".github/workflows/diag-overpass.yml"]
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: |
+          set +e; r=""
+          Q='%5Bout%3Ajson%5D%5Btimeout%3A20%5D%3Bnode%5B%22amenity%22%3D%22charging_station%22%5D(49.0%2C1.1%2C49.25%2C1.2)%3Bout%205%3B'
+          for b in https://overpass-api.de/api https://overpass.kumi.systems/api https://overpass.private.coffee/api https://maps.mail.ru/osm/tools/overpass/api; do
+            h=$(curl -sS -m 30 -D - -o /tmp/o.json -H "Origin: https://hadesdray-crypto.github.io" "$b/interpreter?data=$Q" | grep -iE "^(HTTP|access-control-allow-origin)" | tr -d '\r' | tr '\n' ' ')
+            n=$(grep -o '"type": *"node"' /tmp/o.json | wc -l); s=$(curl -sS -m 20 -o /dev/null -w "%{http_code}" "$b/status")
+            r="$r | $b → $h noeuds=$n status=$s"
+          done
+          echo "::notice title=Overpass::$r"
