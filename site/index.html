@@ -4145,9 +4145,26 @@ async function stationsSurRoute(carbu, pts){
     .map(x => ({ nom: cap(String(x.adresse || '').toLowerCase()), ville: x.ville || '', lat: x.geom.lat, lon: x.geom.lon, prix: x[f], maj: x[m] }))
     .filter(x => distRoute(x, pts) <= 1.5).sort((a, b2) => a.prix - b2.prix);
 }
-/* Bornes de recharge près de la route (OpenStreetMap). */
+/* Bornes de recharge près de la route : base nationale des bornes (ODRÉ, données publiques), sinon OpenStreetMap. */
 async function bornesSurRoute(pts){
   if (!pts || pts.length < 2 || !online()) return null;
+  try { const L = await bornesIrve(pts); if (L && L.length) return L; } catch (e) {}
+  return bornesOsm(pts);
+}
+async function bornesIrve(pts){
+  const b = boiteRoute(pts, 0.02), base = 'https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/bornes-irve/records?select=' +
+    encodeURIComponent('nom_station,nom_enseigne,nom_operateur,adresse_station,coordonneesxy,puissance_nominale,id_station_itinerance') + '&order_by=puissance_nominale%20desc&limit=100&where=';
+  /* dans cette base, la latitude et la longitude sont inversées : on essaie dans ce sens, puis dans l'autre */
+  let j = await fetchJSON(base + encodeURIComponent('in_bbox(coordonneesxy,' + [b[1], b[0], b[3], b[2]].join(',') + ')'), 15000);
+  if (!(j.results || []).length) j = await fetchJSON(base + encodeURIComponent('in_bbox(coordonneesxy,' + b.join(',') + ')'), 15000);
+  const vus = new Set();
+  return (j.results || []).map(x => {
+    const c = x.coordonneesxy || {}; let lat = c.lat, lon = c.lon; if (lon > 35 && lat < 15){ const t = lat; lat = lon; lon = t; }
+    return { nom: x.nom_enseigne || x.nom_station || x.nom_operateur || 'Borne de recharge', lat, lon, kw: x.puissance_nominale > 1000 ? x.puissance_nominale / 1000 : x.puissance_nominale, id: x.id_station_itinerance || (lat + ',' + lon) };
+  }).filter(x => typeof x.lat === 'number' && !vus.has(x.id) && vus.add(x.id)).map(x => (x.d = distRoute(x, pts), x)).filter(x => x.d <= 2)
+    .sort((a, b2) => (b2.kw || 0) - (a.kw || 0)).slice(0, 8);
+}
+async function bornesOsm(pts){
   const b = boiteRoute(pts, 0.02), q = '[out:json][timeout:25];node["amenity"="charging_station"](' + b.join(',') + ');out 300;';
   const j = await fetchJSON('https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(q), 28000);
   const kw = t => { let m = 0; Object.keys(t).forEach(k => { if (/output|maxpower/.test(k)){ const x = parseFloat(String(t[k]).replace(',', '.')); if (x > m) m = /kw/i.test(t[k]) || x < 400 ? x : x / 1000; } }); return m || null; };

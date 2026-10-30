@@ -20,7 +20,7 @@
     {"id": "adresses", "nom": "Recherche d'adresses (Géoplateforme IGN)", "url": "https://data.geopf.fr/geocodage/search?q=Louviers&limit=1"},
     {"id": "itineraire", "nom": "Itinéraire sans clé (OSRM)", "url": "https://router.project-osrm.org/route/v1/driving/1.165,49.216;1.151,49.024?overview=false"},
     {"id": "carburants", "nom": "Prix des carburants (données de l'État)", "url": "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?limit=1"},
-    {"id": "bornes", "nom": "Bornes de recharge (OpenStreetMap)", "url": "https://overpass-api.de/api/status"},
+    {"id": "bornes", "nom": "Bornes de recharge (base nationale ODRÉ)", "url": "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/bornes-irve/records?limit=1"},
     {"id": "voix", "nom": "Voix à télécharger (Piper)", "url": "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/voices.json"},
     {"id": "exemples", "nom": "Exemples des voix", "url": "https://rhasspy.github.io/piper-samples/samples/fr/fr_FR/siwis/medium/speaker_0.mp3"},
     {"id": "trafic", "nom": "Trafic Bison Futé (relevé toutes les 20 minutes)", "url": "https://raw.githubusercontent.com/hadesdray-crypto/matinale/trafic/trafic.json", "frais_heures": 30}
