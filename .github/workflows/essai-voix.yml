@@ -23,8 +23,10 @@ jobs:
         run: |
           mkdir -p keep && cp scripts/essai-voix/essai.html site/
           (cd site && python3 -m http.server 8000 > /dev/null 2>&1 &) ; sleep 1
-          timeout 900 python3 scripts/essai-voix/essai.py "$PWD/keep"
-          cat keep/resultats.json | head -c 6000
+          timeout 900 python3 scripts/essai-voix/essai.py "$PWD/keep" > keep/essai-log.txt 2>&1; echo "code $?" >> keep/essai-log.txt
+          echo "::notice title=Essai::$(tail -c 1500 keep/essai-log.txt | tr '\n' ' ')"
+          echo "::notice title=Fichiers::$(ls -la keep | tr '\n' ' ')"
+          echo "::notice title=Resultats::$(head -c 3500 keep/resultats.json 2>/dev/null | tr '\n' ' ')"
       - name: Réécoute par la reconnaissance vocale
         continue-on-error: true
         run: |
@@ -43,12 +45,12 @@ jobs:
                   r.AcceptWaveform(d)
               print(f.split('/')[-1], '→', json.loads(r.FinalResult()).get('text'))
           PY
-          cat keep/reecoute.txt
+          cat keep/reecoute.txt; echo "::notice title=Reecoute::$(tr '\n' ' ' < keep/reecoute.txt | head -c 3000)"
       - name: Écrire sur la branche diag
         if: always()
         run: |
-          cd keep && rm -f *.wav.tmp
+          mkdir -p keep && cd keep && echo ok > .garde
           git init -q && git checkout -q -b diag
           git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A && git commit -q -m "Essai des voix"
+          git add -A && git commit -q --allow-empty -m "Essai des voix"
           git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" diag
