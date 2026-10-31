@@ -1,6 +1,7 @@
 Politique & monde : lecture de 20 sources (avec Gemini)…
-Sources lues : 20 ; muettes : 0 [] ; articles : 290
-Fiches détaillées : 3 pages lisibles sur 10 fiches.
-Fiches détaillées écrites : 3.
-Politique & monde n° 4 du 2026-10-30 : 10 sujets (3 France, 7 monde), mode Gemini (gemini-flash-latest), fiches détaillées : 3.
-Demandes à l'IA (politique) : gemini-flash-latest 1, gemini-flash-lite-latest 1
+Sources lues : 20 ; muettes : 0 [] ; articles : 297
+  · Gemini gemini-flash-latest : TimeoutError The read operation timed out
+Fiches détaillées : 10 pages lisibles sur 10 fiches.
+Fiches détaillées écrites : 10.
+Politique & monde n° 5 du 2026-10-31 : 10 sujets (6 France, 4 monde), mode Gemini (gemini-3.8-flash), fiches détaillées : 10.
+Demandes à l'IA (politique) : gemini-flash-latest 1, gemini-3.8-flash 1, gemini-flash-lite-latest 4

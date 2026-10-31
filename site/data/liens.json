@@ -1,0 +1,146 @@
+{
+ "at": "2026-10-31T04:02:10+00:00",
+ "liens": [
+  {
+   "id": "argus",
+   "groupe": "vehicule",
+   "nom": "L'argus",
+   "url": "https://www.largus.fr/cote/immatriculation/",
+   "desc": "Marque, modèle et version, avec la plaque.",
+   "etat": "ok",
+   "code": 200,
+   "verifie": "2026-10-31",
+   "echecs": 0
+  },
+  {
+   "id": "oscaro",
+   "groupe": "vehicule",
+   "nom": "Oscaro",
+   "url": "https://www.oscaro.com/",
+   "desc": "Modèle et motorisation : « Sélectionnez votre véhicule », puis la plaque.",
+   "etat": "protege",
+   "code": 403,
+   "verifie": "2026-10-31",
+   "echecs": 0
+  },
+  {
+   "id": "histovec",
+   "groupe": "vehicule",
+   "nom": "HistoVec (site officiel de l'État)",
+   "url": "https://histovec.interieur.gouv.fr/histovec/proprietaire",
+   "desc": "Le rapport officiel de ton véhicule, avec ta carte grise.",
+   "etat": "ok",
+   "code": 200,
+   "verifie": "2026-10-31",
+   "echecs": 0
+  },
+  {
+   "id": "evdb",
+   "groupe": "vehicule",
+   "nom": "EV Database (électriques)",
+   "url": "https://ev-database.org/",
+   "desc": "Batterie utile et consommation réelle des voitures électriques.",
+   "etat": "ok",
+   "code": 200,
+   "verifie": "2026-10-31",
+   "echecs": 0
+  },
+  {
+   "id": "tomtom",
+   "groupe": "tomtom",
+   "nom": "TomTom pour les développeurs",
+   "url": "https://developer.tomtom.com/",
+   "desc": "Créer ta clé TomTom gratuite (trafic en direct).",
+   "etat": "ok",
+   "code": 200,
+   "verifie": "2026-10-31",
+   "echecs": 0
+  }
+ ],
+ "services": [
+  {
+   "id": "meteo",
+   "nom": "Météo (Open-Meteo, modèles Météo-France)",
+   "etat": "ok",
+   "code": 200,
+   "ms": 265,
+   "verifie": "2026-10-31",
+   "echecs": 0
+  },
+  {
+   "id": "adresses",
+   "nom": "Recherche d'adresses (Géoplateforme IGN)",
+   "etat": "ok",
+   "code": 200,
+   "ms": 1188,
+   "verifie": "2026-10-31",
+   "echecs": 0
+  },
+  {
+   "id": "itineraire",
+   "nom": "Itinéraire sans clé (OSRM)",
+   "etat": "ok",
+   "code": 200,
+   "ms": 495,
+   "verifie": "2026-10-31",
+   "echecs": 0
+  },
+  {
+   "id": "carburants",
+   "nom": "Prix des carburants (données de l'État)",
+   "etat": "ok",
+   "code": 200,
+   "ms": 789,
+   "verifie": "2026-10-31",
+   "echecs": 0
+  },
+  {
+   "id": "bornes",
+   "nom": "Bornes de recharge (base nationale ODRÉ)",
+   "etat": "ok",
+   "code": 200,
+   "ms": 523,
+   "verifie": "2026-10-31",
+   "echecs": 0
+  },
+  {
+   "id": "voix",
+   "nom": "Voix à télécharger (Piper)",
+   "etat": "ok",
+   "code": 200,
+   "ms": 113,
+   "verifie": "2026-10-31",
+   "echecs": 0
+  },
+  {
+   "id": "exemples",
+   "nom": "Exemples des voix",
+   "etat": "ok",
+   "code": 200,
+   "ms": 86,
+   "verifie": "2026-10-31",
+   "echecs": 0
+  },
+  {
+   "id": "trafic",
+   "nom": "Trafic Bison Futé (relevé toutes les 20 minutes)",
+   "etat": "ok",
+   "code": 200,
+   "ms": 115,
+   "verifie": "2026-10-31",
+   "echecs": 0
+  }
+ ],
+ "ia": {
+  "sciences": {
+   "date": "2026-10-31",
+   "ia": true,
+   "modele": "gemini-flash-lite-latest"
+  },
+  "politique": {
+   "date": "2026-10-31",
+   "ia": true,
+   "modele": "gemini-3.8-flash"
+  }
+ }
+}

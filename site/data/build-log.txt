@@ -1,10 +1,17 @@
 Liens de « Comprendre » : 56 valides sur 56.
 Lecture de 42 sources (avec Gemini)…
   · PNAS : https://www.pnas.org/action/showFeed?type=etoc&feed=rss&jc=pnas ne répond pas (HTTPError)
-Sources lues : 40 ; muettes : 2 ['arXiv astrophysique (prépublication)', 'PNAS']
-Articles retenus après tri : 233
+Sources lues : 41 ; muettes : 1 ['PNAS']
+Articles retenus après tri : 536
 Vidéos francophones récentes : 0
-  · Gemini gemini-flash-latest : TimeoutError The read operation timed out
+  · Gemini gemini-flash-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
   · Gemini gemini-3.8-flash : HTTP 503 {
   "error": {
     "code": 503,
@@ -13,10 +20,10 @@ Vidéos francophones récentes : 0
   }
 }
 
-Fiches détaillées : 11 pages lisibles sur 18 fiches.
-Fiches détaillées écrites : 11.
-Images libres de droits gardées : 1.
+Fiches détaillées : 10 pages lisibles sur 19 fiches.
+Fiches détaillées écrites : 10.
   · Openverse : TimeoutError The read operation timed out
-Illustrations libres de droits : 13 sur 17 fiches (7 image(s) écartée(s) par le contrôle de Gemini).
-Édition n° 12 du 2026-10-30 : 18 fiches, mode Gemini (gemini-flash-lite-latest), 0 vidéos francophones.
-Demandes à l'IA : gemini-flash-latest 1, gemini-3.8-flash 1, gemini-flash-lite-latest 27
+  · Openverse : TimeoutError The read operation timed out
+Illustrations libres de droits : 14 sur 19 fiches (9 image(s) écartée(s) par le contrôle de Gemini).
+Édition n° 13 du 2026-10-31 : 19 fiches, mode Gemini (gemini-flash-lite-latest), 0 vidéos francophones.
+Demandes à l'IA : gemini-flash-latest 1, gemini-3.8-flash 1, gemini-flash-lite-latest 30
