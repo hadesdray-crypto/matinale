@@ -5,7 +5,9 @@ name: Matinale des Sciences
 
 on:
   schedule:
-    - cron: "17 3 * * *"   # 3 h 17 UTC, soit 5 h 17 à Paris en été et 4 h 17 en hiver
+    - cron: "17 3 * * *"   # 3 h 17 UTC, soit 5 h 17 à Paris en été et 4 h 17 en hiver : le passage principal
+    - cron: "2 4 * * *"    # passage de secours n° 1 : ne fait rien si l'édition du jour est déjà complète
+    - cron: "47 4 * * *"   # passage de secours n° 2 (dernière chance) : publie ce qu'il a, et prévient par e-mail si c'est trop maigre
   workflow_dispatch:
   push:
     paths:
@@ -25,10 +27,25 @@ jobs:
   edition:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    outputs:
+      publier: ${{ steps.verif.outputs.ok != 'true' }}
     steps:
       - uses: actions/checkout@v5
 
+      # Passages de secours : si l'édition du jour est déjà complète, on ne refait rien (et on ne republie pas).
+      - name: Contrôle de l'édition du jour (passages de secours seulement)
+        id: verif
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] && python3 scripts/verif_edition.py --site site; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Installer le paquet envoyé (fichier .zip)
+        if: steps.verif.outputs.ok != 'true'
         run: |
           for z in *.zip; do
             [ -f "$z" ] || continue
@@ -44,29 +61,50 @@ jobs:
           test -f scripts/run.sh || { echo "::error::Le paquet est absent : envoie le fichier matinale.zip à la racine du dépôt."; exit 1; }
 
       - name: Garder les outils audio d'un jour sur l'autre
+        if: steps.verif.outputs.ok != 'true'
         uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/matinale-outils
           key: matinale-voix-sherpa-v1.12.14-siwis
 
       - name: Préparer l'édition du jour, l'audio et l'archive
+        if: steps.verif.outputs.ok != 'true'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           # Pour signaler un lien ou un service en panne (signalement GitHub, qui prévient par e-mail).
           GITHUB_TOKEN: ${{ github.token }}
           # Un lancement manuel (Run workflow) refait toujours l'édition du jour, même si elle existe déjà.
           MATINALE_FORCE: ${{ github.event_name == 'workflow_dispatch' && '1' || '' }}
+          # Dernier passage programmé : mieux vaut une petite édition qu'aucune édition du jour.
+          MATINALE_LAST_CHANCE: ${{ github.event.schedule == '47 4 * * *' && '1' || '' }}
         run: bash scripts/run.sh
 
       - name: Numéro de version de l'appli (le même que la liste des nouveautés)
+        if: steps.verif.outputs.ok != 'true'
         run: python3 scripts/version_appli.py
 
       - uses: actions/upload-pages-artifact@v4
+        if: steps.verif.outputs.ok != 'true'
         with:
           path: site
 
+      # Dernier contrôle : si malgré tout l'édition est incomplète au dernier passage, un signalement GitHub (e-mail) prévient.
+      - name: Contrôle final de l'édition
+        if: steps.verif.outputs.ok != 'true'
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ "${{ github.event.schedule }}" = "47 4 * * *" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python3 scripts/verif_edition.py --site site --alerte || true
+          else
+            python3 scripts/verif_edition.py --site site || true
+          fi
+
   publication:
     needs: edition
+    if: needs.edition.outputs.publier == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

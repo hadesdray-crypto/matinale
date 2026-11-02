@@ -14,6 +14,10 @@ Ce que fait le script, chaque matin (lancé par GitHub Actions) :
     de l'IA qui contient un chiffre absent de l'article est retirée.
     Sans clé, ou si Gemini ne répond pas, chaque fiche reprend le titre et le résumé publiés par la source,
     avec la mention « Non évalué ».
+    Pour qu'une panne de l'IA gratuite ne vide jamais l'édition : demandes par petits lots, 4 modèles Gemini
+    essayés tour à tour (un modèle qui répond trop maigre passe la main au suivant), jusqu'à 3 tours pour
+    redemander les fiches manquantes, puis fiches de secours sans IA pour atteindre le minimum (edition_sante.py).
+    Une édition plus maigre que celle déjà en ligne ne la remplace jamais.
  4. Il lit les flux YouTube des chaînes francophones de l'annuaire (section Francophonie).
  5. Il vérifie que chaque lien répond, puis écrit site/data/latest.json, site/data/archive.json et
     site/data/editions/<date>.json.
@@ -37,6 +41,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
+import edition_sante
 from html.entities import name2codepoint
 from zoneinfo import ZoneInfo
 
@@ -55,7 +60,12 @@ GEMINI_ENDPOINT = os.environ.get('GEMINI_ENDPOINT', 'https://generativelanguage.
 GEMINI_MODELS = ['gemini-flash-latest', 'gemini-3.8-flash', 'gemini-flash-lite-latest', 'gemini-3.5-flash-lite']
 GEMINI_LITE = ['gemini-flash-lite-latest', 'gemini-3.5-flash-lite']
 GEMINI_GAP = float(os.environ.get('MATINALE_GEMINI_GAP', '4.5'))   # secondes entre deux demandes (limite par minute)
-_AI = {'last': 0.0, 'lock': threading.Lock(), 'exhausted': set()}
+GEMINI_TIMEOUT = float(os.environ.get('MATINALE_GEMINI_TIMEOUT', '120'))   # délai maximum d'une réponse (des demandes courtes, par lots)
+GEMINI_RETRY_PAUSE = float(os.environ.get('MATINALE_GEMINI_RETRY_PAUSE', '20'))   # pause avant de redemander au même modèle
+BATCH_SIZE = 20   # articles confiés à l'IA par demande (3 demandes courtes valent mieux qu'une énorme qui expire)
+ROUND_PAUSE = float(os.environ.get('MATINALE_ROUND_PAUSE', '45'))   # pause entre deux tours de demandes
+_AI = {'last': 0.0, 'lock': threading.Lock(), 'exhausted': set(), 'fails': {}, 'deadline': None}
+IA_BUDGET = float(os.environ.get('MATINALE_IA_BUDGET', '1080'))   # secondes maximum pour écrire l'édition (le reste du travail doit tenir dans les 45 min du lancement)
 NOTIONS = {}   # identifiant -> titre des notions de la section « Comprendre » (site/data/bases.json)
 
 STATS = {'feeds_ok': [], 'feeds_ko': [], 'mode': 'rss', 'model': None, 'dropped_links': 0, 'ai_sentences_removed': 0, 'ai_calls': {}}
@@ -691,7 +701,7 @@ def _ai_wait():
         _AI['last'] = time.time()
 
 
-def gemini_call(prompt, key, images=None, light=False):
+def gemini_call(prompt, key, images=None, light=False, skip=()):
     """images : liste facultative de (type MIME, données en base64), jointes à la question.
     light=True : petite tâche, confiée au modèle Flash-Lite pour garder le quota Flash pour l'édition."""
     models = ([os.environ['GEMINI_MODEL']] if os.environ.get('GEMINI_MODEL') and not light else []) + (GEMINI_LITE if light else GEMINI_MODELS)
@@ -699,31 +709,76 @@ def gemini_call(prompt, key, images=None, light=False):
     body = json.dumps({'contents': [{'role': 'user', 'parts': parts}],
                        'generationConfig': {'temperature': 0.2, 'responseMimeType': 'application/json', 'maxOutputTokens': 32768}}).encode()
     for m in dict.fromkeys(models):
-        if m in _AI['exhausted']:
-            continue   # quota du jour épuisé pour ce modèle : inutile de redemander
+        if m in skip or m in _AI['exhausted'] or _AI['fails'].get(m, 0) >= 3:
+            continue   # quota du jour épuisé, ou modèle en panne ce matin (3 échecs de suite) : on passe au suivant
+        if _AI['deadline'] and time.time() > _AI['deadline']:
+            log('  · Budget de temps de l\'IA épuisé pour l\'édition.')
+            return None, None
         url = f'{GEMINI_ENDPOINT}/v1beta/models/{m}:generateContent'
-        req = urllib.request.Request(url, data=body, headers={'Content-Type': 'application/json', 'x-goog-api-key': key})
-        try:
-            _ai_wait()
-            STATS['ai_calls'][m] = STATS['ai_calls'].get(m, 0) + 1
-            with urllib.request.urlopen(req, timeout=240) as r:
-                data = json.load(r)
-            parts = data['candidates'][0]['content']['parts']
-            text = ''.join(p.get('text', '') for p in parts if not p.get('thought'))
-            text = re.sub(r'^\s*```(?:json)?\s*|\s*```\s*$', '', text)
-            return json.loads(text), m
-        except urllib.error.HTTPError as e:
-            msg = e.read()[:300].decode('utf-8', 'replace')
-            log(f'  · Gemini {m} : HTTP {e.code} {msg}')
-            if e.code == 429 and re.search(r'(per day|PerDay|daily|quota)', msg, re.I):
-                _AI['exhausted'].add(m)
-                log(f'  · {m} : quota du jour épuisé, ce modèle n\'est plus utilisé jusqu\'à demain.')
-            if e.code in (400, 401, 403) and ('API key' in msg or 'API_KEY' in msg or 'PERMISSION' in msg):
-                log('  · La clé GEMINI_API_KEY est refusée : vérifie-la dans les réglages du dépôt (Secrets).')
-                return None, None
-        except Exception as e:
-            log(f'  · Gemini {m} : {type(e).__name__} {str(e)[:200]}')
+        for essai in (1, 2):   # un 2e essai sur le même modèle si c'est une panne passagère (délai dépassé, erreur serveur, limite par minute)
+            req = urllib.request.Request(url, data=body, headers={'Content-Type': 'application/json', 'x-goog-api-key': key})
+            passager = False
+            try:
+                _ai_wait()
+                STATS['ai_calls'][m] = STATS['ai_calls'].get(m, 0) + 1
+                reste = (_AI['deadline'] - time.time()) if _AI['deadline'] else GEMINI_TIMEOUT
+                with urllib.request.urlopen(req, timeout=min(GEMINI_TIMEOUT, max(10, reste))) as r:
+                    data = json.load(r)
+                parts = data['candidates'][0]['content']['parts']
+                text = ''.join(p.get('text', '') for p in parts if not p.get('thought'))
+                text = re.sub(r'^\s*```(?:json)?\s*|\s*```\s*$', '', text)
+                try:
+                    res = json.loads(text)
+                    _AI['fails'][m] = 0
+                    return res, m
+                except json.JSONDecodeError as e:
+                    rescued = salvage_json(text)   # réponse abîmée : on garde les fiches entières qu'elle contient
+                    if rescued:
+                        log(f'  · Gemini {m} : réponse abîmée ({str(e)[:60]}), {len(rescued["fiches"])} fiche(s) récupérée(s).')
+                        return rescued, m
+                    log(f'  · Gemini {m} : JSONDecodeError {str(e)[:120]}')
+                    passager = True
+            except urllib.error.HTTPError as e:
+                msg = e.read()[:300].decode('utf-8', 'replace')
+                log(f'  · Gemini {m} : HTTP {e.code} {msg}')
+                if e.code == 429 and re.search(r'(per day|PerDay|daily|quota)', msg, re.I):
+                    _AI['exhausted'].add(m)
+                    log(f'  · {m} : quota du jour épuisé, ce modèle n\'est plus utilisé jusqu\'à demain.')
+                elif e.code in (429, 500, 502, 503, 504):
+                    passager = True
+                if e.code in (400, 401, 403) and ('API key' in msg or 'API_KEY' in msg or 'PERMISSION' in msg):
+                    log('  · La clé GEMINI_API_KEY est refusée : vérifie-la dans les réglages du dépôt (Secrets).')
+                    return None, None
+            except Exception as e:
+                log(f'  · Gemini {m} : {type(e).__name__} {str(e)[:200]}')
+                passager = not (isinstance(e, TimeoutError) or 'timed out' in str(e))   # un délai dépassé : inutile de réessayer le même modèle, on passe au suivant
+            _AI['fails'][m] = _AI['fails'].get(m, 0) + 1
+            if not passager or essai == 2 or m in _AI['exhausted']:
+                break
+            time.sleep(GEMINI_RETRY_PAUSE)
     return None, None
+
+
+def salvage_json(text):
+    """Réponse JSON coupée ou abîmée : récupère les fiches entières (objets complets du tableau « fiches »).
+    Renvoie {'fiches': [...]} ou None s'il n'y en a aucune."""
+    i = text.find('"fiches"')
+    j = text.find('[', i) if i >= 0 else -1
+    if j < 0:
+        return None
+    dec, pos, out = json.JSONDecoder(), j + 1, []
+    while True:
+        k = text.find('{', pos)
+        if k < 0:
+            break
+        try:
+            obj, end = dec.raw_decode(text, k)
+        except json.JSONDecodeError:
+            break
+        if isinstance(obj, dict) and obj.get('ref'):
+            out.append(obj)
+        pos = end
+    return {'fiches': out} if out else None
 
 
 PROMPT = """Tu es le rédacteur scientifique de « La Matinale des Sciences », une revue de presse quotidienne en français, sérieuse et sans erreur, pour le grand public.
@@ -779,28 +834,36 @@ def s_(v, n):
     return v.strip() if isinstance(v, str) and 0 < len(v.strip()) <= n else ''
 
 
-def ai_edition(cands, vids, n, key, used_ids):
-    pool, per_src = [], {}
-    n_inv = 0
-    for c in cands:  # au plus 5 articles par source (et 15 « inventions » en tout), pour garder une édition variée
-        if c['cat'] == 'inventions':
-            if n_inv >= 15:
-                continue
-            n_inv += 1
-        if per_src.get(c['source'], 0) < 5:
-            pool.append(c)
-            per_src[c['source']] = per_src.get(c['source'], 0) + 1
-        if len(pool) >= 60:
-            break
+def ai_batch(batch, vids, want, key, used_ids):
+    """Une demande courte à Gemini : choisit et rédige jusqu'à `want` fiches parmi les articles du lot.
+    Si un modèle répond mais donne trop peu de fiches (réponse tronquée, paresseuse), on redemande au modèle suivant
+    et on garde la meilleure réponse. Renvoie (fiches validées, modèle qui a répondu ou None)."""
     arts = [{'ref': f'a{i}', 'source': c['source'], 'langue': c['lang'], 'date': c['date'].astimezone(PARIS).date().isoformat(),
-             'categorie_probable': c['cat'], 'titre': c['title'], 'texte': shorten(one_line(c['summary']), 900)} for i, c in enumerate(pool)]
+             'categorie_probable': c['cat'], 'titre': c['title'], 'texte': shorten(one_line(c['summary']), 900)} for i, c in enumerate(batch)]
     vlist = [{'ref': f'v{i}', 'chaine': v['by'], 'titre': v['title'], 'description': shorten(v['_desc'], 300)} for i, v in enumerate(vids)]
-    prompt = PROMPT.format(n=n, notions='\n'.join(f'{k} : {v}' for k, v in NOTIONS.items()) or '(aucune)', articles='\n'.join(json.dumps(a, ensure_ascii=False) for a in arts),
+    prompt = PROMPT.format(n=want, notions='\n'.join(f'{k} : {v}' for k, v in NOTIONS.items()) or '(aucune)', articles='\n'.join(json.dumps(a, ensure_ascii=False) for a in arts),
                            videos='\n'.join(json.dumps(v, ensure_ascii=False) for v in vlist) or '(aucune)')
-    res, model = gemini_call(prompt, key)
-    if not isinstance(res, dict):
-        return None
-    refs = {a['ref']: c for a, c in zip(arts, pool)}
+    enough = max(2, min(want, len(batch)) // 2)
+    best, best_model, best_ids, tried = [], None, set(), set()
+    for _ in range(len(GEMINI_MODELS)):
+        res, model = gemini_call(prompt, key, skip=tried)
+        if not isinstance(res, dict) or not model:
+            break
+        tried.add(model)
+        trial = set(used_ids)
+        got = _parse_fiches(res, batch, arts, vlist, vids, want, trial)
+        if len(got) > len(best):
+            best, best_model, best_ids = got, model, trial
+        if len(best) >= enough:
+            break
+        log(f'  · {model} : seulement {len(got)} fiche(s) sur {want} demandées, on essaie le modèle suivant.')
+    used_ids |= best_ids
+    return best, best_model
+
+
+def _parse_fiches(res, batch, arts, vlist, vids, want, used_ids):
+    """Valide et met en forme les fiches d'une réponse de Gemini (chiffres vérifiés contre l'article, liens des sources)."""
+    refs = {a['ref']: c for a, c in zip(arts, batch)}
     vrefs = {v['ref']: vv for v, vv in zip(vlist, vids)}
     items, seen = [], set()
     for f in res.get('fiches') or []:
@@ -855,23 +918,102 @@ def ai_edition(cands, vids, n, key, used_ids):
             'videoQuery': title, 'journal': None, 'doi': '', '_src': c,
             'notions': [x for x in (f.get('notions') or []) if isinstance(x, str) and x in NOTIONS][:2],
         })
-        if len(items) >= n:
+        if len(items) >= want:
             break
-    if len(items) < 4:
-        log(f'  · Gemini : seulement {len(items)} fiche(s) valide(s), on passe à la version sans IA.')
+    return items
+
+
+def ai_edition(cands, vids, n, key, used_ids, have=None):
+    """Écrit l'édition par LOTS : plusieurs petites demandes (≈20 articles chacune) au lieu d'une énorme qui expire ou
+    se tronque. `have` : fiches déjà prêtes (tour précédent) ; on ne demande que ce qui manque, sur les articles restants.
+    Renvoie la liste des fiches (au plus n), ou None si l'IA n'a rien donné de plus."""
+    have = list(have or [])
+    taken = {it['_src']['link'] for it in have}
+    pool, per_src, n_inv = [], {}, 0
+    for c in cands:  # au plus 5 articles par source (et 15 « inventions » en tout), pour garder une édition variée
+        if c['link'] in taken:
+            continue
+        if c['cat'] == 'inventions':
+            if n_inv >= 15:
+                continue
+            n_inv += 1
+        if per_src.get(c['source'], 0) < 5:
+            pool.append(c)
+            per_src[c['source']] = per_src.get(c['source'], 0) + 1
+        if len(pool) >= 60:
+            break
+    missing = n - len(have)
+    if not pool or missing <= 0:
         return None
-    STATS['mode'], STATS['model'] = 'gemini', model
-    cats = res.get('categories') if isinstance(res.get('categories'), dict) else {}
-    present = {it['cat'] for it in items}
+    k = max(1, -(-len(pool) // BATCH_SIZE))
+    batches = [pool[i::k] for i in range(k)]   # lots mélangés : chacun contient des articles de toutes les notes
+    want = min(10, -(-missing // k) + 2)
+    items, model, answered = list(have), None, 0
+    for b in batches:
+        got, m = ai_batch(b, vids, want, key, used_ids)
+        if m:
+            model, answered = m, answered + 1
+        for it in got:
+            cap = 5 if it['cat'] == 'inventions' else 4
+            if any(it['_src']['link'] == x['_src']['link'] or similar(it['title'], x['title']) for x in items):
+                continue
+            if sum(1 for x in items if x['cat'] == it['cat']) >= cap:
+                continue
+            items.append(it)
+        log(f'  · Lot de {len(b)} articles : {len(got)} fiche(s) rédigée(s) par {m or "aucun modèle"}.')
+    items.sort(key=lambda it: (it['_src']['priority'], it['_src']['score']), reverse=True)
+    items = items[:n]
+    if len(items) <= len(have):
+        return None
+    STATS['mode'], STATS['model'] = 'gemini', model or STATS.get('model')
+    return items
+
+
+FRAME_PROMPT = """Tu rédiges l'en-tête de « La Matinale des Sciences », revue de presse scientifique quotidienne en français.
+Voici les fiches de l'édition du jour (catégorie : titre. chapeau). N'invente aucun chiffre, nom ou fait absent de ces lignes.
+
+Réponds uniquement avec ce JSON :
+{{"titre_edition": "titre de l'édition, moins de 80 caractères", "intro": "2 phrases qui présentent l'édition", "categories": {{"espace": "une phrase qui résume les fiches de cette catégorie"}}}}
+Une clé « categories » par catégorie présente dans la liste, aucune autre.
+
+FICHES :
+{fiches}
+"""
+
+
+def ai_frame(items, key):
+    """Titre, introduction et résumés par catégorie de l'édition (une petite demande, modèle léger).
+    En cas d'échec, l'édition garde son en-tête habituel : rien de bloquant."""
+    prompt = FRAME_PROMPT.format(fiches='\n'.join(f"{it['cat']} : {it['title']}. {it['dek']}" for it in items))
+    res, _m = gemini_call(prompt, key, light=True)
+    if not isinstance(res, dict):
+        return {'title': '', 'intro': '', 'categories': {}}
     allowed_all = set()
     for it in items:
-        allowed_all |= number_set(it['_src']['title'] + ' ' + it['_src']['summary'], variants=True)
+        allowed_all |= number_set(it['_src']['title'] + ' ' + it['_src']['summary'] + ' ' + it['title'] + ' ' + it['dek'], variants=True)
+    cats = res.get('categories') if isinstance(res.get('categories'), dict) else {}
+    present = {it['cat'] for it in items}
     summaries = {k: {'summary': v.strip()} for k, v in cats.items()
                  if k in present and isinstance(v, str) and 0 < len(v.strip()) <= 300 and numbers_ok(v, allowed_all)}
-    title = s_(res.get('titre_edition'), 100)
-    intro = s_(res.get('intro'), 500)
-    return {'items': items, 'categories': summaries, 'title': title if title and numbers_ok(title, allowed_all) else '',
-            'intro': intro if intro and numbers_ok(intro, allowed_all) else ''}
+    title, intro = s_(res.get('titre_edition'), 100), s_(res.get('intro'), 500)
+    return {'title': title if title and numbers_ok(title, allowed_all) else '',
+            'intro': intro if intro and numbers_ok(intro, allowed_all) else '', 'categories': summaries}
+
+
+def top_up(items, cands, used_ids, want):
+    """Secours sans IA : complète avec des fiches composées à partir des articles français non encore retenus,
+    jusqu'à `want` fiches. Renvoie le nombre de fiches ajoutées."""
+    if len(items) >= want:
+        return 0
+    links = {it['_src']['link'] for it in items}
+    pool = [c for c in cands if c['lang'] == 'fr' and c['link'] not in links
+            and not any(similar(c['title'], it['title']) or similar(c['title'], it['_src']['title']) for it in items)]
+    chosen = pick(pool, want - len(items), per_cat=3, per_source=3)
+    for c in chosen:
+        it = rss_item(c, used_ids)
+        it['_src'] = c
+        items.append(it)
+    return len(chosen)
 
 
 # ---------------------------------------------------------------- Fichiers
@@ -990,22 +1132,39 @@ def main():
         log(f'Vidéos francophones indisponibles ({type(e).__name__}).')
 
     used_ids = set()
-    made = None
+    archive_prev = latest.get('archive') or []
+    gate = edition_sante.seuil(archive_prev, today)                       # minimum de fiches pour une édition complète
+    last_chance = bool(os.environ.get('MATINALE_LAST_CHANCE'))             # dernier lancement de la matinée : mieux vaut peu que rien
+    floor = 3 if last_chance else gate
+    full = max(gate, round(0.85 * a.max_items))                           # en dessous, on redemande à l'IA les fiches qui manquent
+    items = []
     if key and cands:
-        made = ai_edition(cands, vids, a.max_items, key, used_ids)
-        if not made:
-            log('Gemini n\'a pas répondu : nouvel essai dans 40 secondes.')
-            time.sleep(40)
-            used_ids.clear()
-            made = ai_edition(cands, vids, a.max_items, key, used_ids)
-    if not made:
+        _AI['deadline'] = time.time() + IA_BUDGET
+        for tour in (1, 2, 3):
+            if _AI['deadline'] and time.time() > _AI['deadline']:
+                break
+            if tour > 1:
+                log(f"Tour {tour} : {len(items)} fiche(s) sur {a.max_items} voulues, on redemande les manquantes dans {int(ROUND_PAUSE)} secondes.")
+                time.sleep(ROUND_PAUSE)
+            got = ai_edition(cands, vids, a.max_items, key, used_ids, have=items)
+            if got:
+                items = got
+            if len(items) >= full:
+                break
+        _AI['deadline'] = None
+    if items:
+        added = top_up(items, cands, used_ids, gate)    # panne de l'IA : on complète avec des fiches sans IA plutôt que de publier une édition maigre
+        if added:
+            log(f"Édition complétée par {added} fiche(s) composée(s) sans IA (l'IA n'a pas donné assez de fiches).")
+    else:
         used_ids.clear()
         fr_cands = [c for c in cands if c['lang'] == 'fr']
         chosen = pick(fr_cands, a.max_items)
-        made = {'items': [rss_item(c, used_ids) for c in chosen], 'categories': {}, 'title': '', 'intro': ''}
+        items = [rss_item(c, used_ids) for c in chosen]
         STATS['mode'] = 'rss'
-        for it, c in zip(made['items'], chosen):
+        for it, c in zip(items, chosen):
             it['_src'] = c
+    made = {'items': items, 'categories': {}, 'title': '', 'intro': ''}
 
     items = made['items']
     if not a.no_link_check and items:
@@ -1017,11 +1176,21 @@ def main():
             log(f'Liens morts écartés : {dead}')
         items = [it for it, st in zip(items, status) if st != 'mort']
 
-    if len(items) < 3:
-        log("Pas assez de nouveautés vérifiées aujourd'hui : l'édition précédente reste en ligne.")
-        summary_md([f"### Matinale du {today}", "Pas assez de nouveautés vérifiées : l'édition précédente reste en ligne.",
+    # Garde-fous : jamais d'édition plus maigre que celle déjà en ligne pour aujourd'hui, ni trop maigre pour la vente.
+    kept_today = (prev.get('date') == today and bool(prev.get('generator')) and
+                  (len(prev.get('items') or []) > len(items) or (prev.get('generator') == 'gemini' and STATS['mode'] != 'gemini')))
+    if len(items) < floor or kept_today:
+        why = (f"l'édition du jour déjà en ligne est meilleure ({len(prev.get('items') or [])} fiches, mode {prev.get('generator')}, contre {len(items)} fiches en mode {STATS['mode']})" if kept_today
+               else f"seulement {len(items)} fiche(s) vérifiée(s) pour un minimum de {floor}")
+        log(f"Pas d'édition maigre publiée : {why}. L'édition précédente reste en ligne.")
+        summary_md([f"### Matinale du {today}", f"Édition non remplacée : {why}.",
                     f"Sources lues : {len(STATS['feeds_ok'])} · muettes : {', '.join(STATS['feeds_ko']) or 'aucune'}"])
         return 0
+    if len(items) < gate:
+        log(f"Attention : édition incomplète ({len(items)} fiches, minimum habituel {gate}) publiée faute de mieux.")
+    if key and STATS['mode'] == 'gemini':
+        frame = ai_frame(items, key)
+        made.update(frame)
 
     if key and STATS['mode'] == 'gemini' and not a.no_detail:
         try:
