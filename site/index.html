@@ -4393,15 +4393,15 @@ async function agDepartCheck(force){
     if (!c) return;
     agDepGarde(c);
     const avant = (c.partir - Date.now()) / 60000, hm = hmDe(new Date(c.partir)), hmN = hmDe(new Date(c.norm));
-    const gros = c.retard >= 10 || c.retard >= 0.2 * c.habituel;
-    const k45 = iso + 'a' + (gros ? hm : 'ras'), k15 = iso + 'b';
-    if (gros && avant <= 45 && avant > 15 && !st.n[k45]){
-      st.n[k45] = 1; LS.set(AGD_KEY, st);
-      agNotifier('Bouchons : ' + c.retard + ' min de plus', 'Pars à ' + agHDisp(hm) + ' au lieu de ' + agHDisp(hmN) + ' pour être à ' + c.lieu + ' à ' + agHDisp(tr.h) + '.', 'dep-a');
-    }
-    if (avant <= 15 && avant > -5 && !st.n[k15]){
-      st.n[k15] = 1; LS.set(AGD_KEY, st);
-      agNotifier('Départ dans ' + Math.max(1, Math.round(avant)) + ' min', 'Pars à ' + agHDisp(hm) + (c.retard >= 3 ? ' (' + c.retard + ' min de retard sur la route)' : ' : route normale') + ' pour être à ' + agHDisp(tr.h) + '.', 'dep-b');
+    /* Silence si la route est normale : on ne parle que d'un vrai retard ou de travaux/accident sur le trajet. */
+    const gros = c.retard >= 10 || c.retard >= 0.2 * c.habituel, evt = c.causes && c.causes.length && c.retard < 10;
+    if ((gros || evt) && avant <= 45 && avant > -5){
+      const k = iso + (gros ? 'r' + Math.round(c.partir / 300000) : 'e' + c.causes.join('|').slice(0, 40));
+      if (!st.n[k]){
+        st.n[k] = 1; LS.set(AGD_KEY, st);
+        if (gros) agNotifier('Bouchons : ' + c.retard + ' min de plus', 'Pars à ' + agHDisp(hm) + ' au lieu de ' + agHDisp(hmN) + ' pour être à ' + c.lieu + ' à ' + agHDisp(tr.h) + '.', 'dep-a');
+        else agNotifier('Ralentissement sur ta route', c.causes[0] + '. Prévois un peu de marge : pars vers ' + agHDisp(hm) + '.', 'dep-e');
+      }
     }
   } catch (e) {}
 }
