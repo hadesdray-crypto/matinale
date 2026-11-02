@@ -2,11 +2,12 @@
   {
     "v": 8,
     "date": "2026-11-02",
-    "titre": "Mon agenda : trajets et rendez-vous",
+    "titre": "Mon agenda et alerte de départ",
     "points": [
       "Options → Mon agenda : dicte tes trajets de la semaine (« Lundi là-bas à 7 h, mardi 8 h 30, mercredi repos… »). L'appli te relit tout pour valider avant d'enregistrer.",
       "Calendrier en vue semaine et mois, pour revoir et corriger chaque jour. Jusqu'à 2 semaines, ou tout le mois.",
       "Rendez-vous : ajoute-les à la voix ou à la main. La Matinale te les lit avant les infos, et te rappelle ceux de demain en soirée.",
+      "Alerte de départ : l'appli calcule ton trajet avec le trafic du moment, directement sur ton téléphone. Si les bouchons s'allongent, elle te dit à quelle heure partir (« Pars à 6 h 20 au lieu de 6 h 50 »), au moins 15 min avant, et te rappelle ton agenda de demain le soir. Appuie sur « Activer les alertes de départ » dans la carte Mon agenda.",
       "Tout reste sur ton téléphone : aucune requête IA, rien n'est envoyé ailleurs."
     ]
   },

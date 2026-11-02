@@ -853,7 +853,7 @@ html.locked body.has-mini .sheet{padding-bottom:calc(110px + env(safe-area-inset
 .ag-cell i.ag-r{color:var(--ink-2);font-weight:500}
 .ag-cell.on{background:var(--accent-soft)}
 .ag-cell.today{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
-.ag-foot{position:sticky;bottom:0;z-index:4;display:flex;gap:10px;padding:12px calc(84px + env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--paper);border-top:1px solid var(--rule)}
+.ag-dep{display:flex;flex-direction:column;gap:2px;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--bg2,#eef3fb);font-size:.92rem}.ag-dep.ko{background:#fde8e8;color:#8a1c1c}.ag-dep[hidden]{display:none}.ag-foot{position:sticky;bottom:0;z-index:4;display:flex;gap:10px;padding:12px calc(84px + env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--paper);border-top:1px solid var(--rule)}
 .ag-foot .btn{flex:1;justify-content:center;min-height:50px}
 .ag-foot .btn[disabled]{opacity:.5}
 .ag-field{display:grid;gap:6px;margin:12px 0;font-size:14.5px;color:var(--ink-2)}
@@ -1041,6 +1041,7 @@ const P = {
   today:'<path d="M3.5 18.5h17M7 15a5 5 0 0 1 10 0"/><path d="M12 4.5v3M5.4 7.9l1.9 1.9M18.6 7.9l-1.9 1.9"/>',
   grid:'<rect x="4" y="4" width="7" height="7" rx="1.6"/><rect x="13" y="4" width="7" height="7" rx="1.6"/><rect x="4" y="13" width="7" height="7" rx="1.6"/><rect x="13" y="13" width="7" height="7" rx="1.6"/>',
   star:'<path d="M12 3.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/>',
+  bell:'<path d="M6 17h12l-1.5-2v-4a4.5 4.5 0 0 0-9 0v4zM10 20h4"/>',
   calendar:'<rect x="4" y="5" width="16" height="15" rx="2.2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
   search:'<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.3-4.3"/>',
   close:'<path d="M6 6l12 12M18 6L6 18"/>',
@@ -4336,7 +4337,88 @@ function agCardHTML(){
     const x = lignes(iso, 'Aujourd\'hui', !soir), y = lignes(dem, soir ? 'Demain : n\'oublie pas' : 'Demain', soir);
     h += (x || y ? x + y : '<p class="mt-sub">Rien de prévu aujourd\'hui ni demain.</p>') + '<div class="mt-chips"><button class="btn sm" data-action="ag-open">Ouvrir</button><button class="btn sm ghost" data-action="ag-ecoute">' + icon('play', 15) + ' Écouter</button></div>';
   }
-  return h + '</div></div></section>';
+  const nb = (!vide && agNotifEtat() === 'default') ? '<div class="mt-chips"><button class="btn sm" data-action="ag-notif">' + icon('bell', 15) + ' Activer les alertes de départ</button></div>' : '';
+  return h + (agDepHTML() || '<span class="ag-dep" hidden></span>') + nb + '</div></div></section>';
+}
+
+/* ----- Alerte de départ : calculée sur le téléphone, sans serveur ni IA ----- */
+const AGD_KEY = 'mds.agdep';
+const hmDe = d => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+function agNotifEtat(){ return ('Notification' in window) ? Notification.permission : 'absent'; }
+async function agNotifier(titre, corps, tag){
+  let ok = false;
+  try {
+    if (agNotifEtat() === 'granted'){
+      const reg = 'serviceWorker' in navigator ? await navigator.serviceWorker.getRegistration() : null;
+      if (reg && reg.showNotification){ await reg.showNotification(titre, { body:corps, tag, icon:'icon-192.png', renotify:true, vibrate:[200, 100, 200] }); ok = true; }
+      else { new Notification(titre, { body:corps, tag }); ok = true; }
+    }
+  } catch (e) {}
+  if (document.visibilityState === 'visible'){ toast(titre + ' ' + corps, 9000); if (!ok && Player.synth) try { sayShort(titre + '. ' + corps); } catch (e) {} }
+  return ok;
+}
+/* Heure de départ : arrivée voulue, moins le trajet avec le trafic du moment, moins la marge. */
+async function agDepartCalcul(iso){
+  const a = agGet(), tr = a.trajets[iso]; if (!a.lieu || !tr || tr.off || !tr.h || !online()) return null;
+  const t = await trajetVers({ nom:a.lieu.nom, lat:a.lieu.lat, lon:a.lieu.lon }, false);
+  if (!t || !t.r) return null;
+  const E = routeEtat(t), marge = MPget().marge || 10, extra = E.retard ? 0 : (E.marge || 0);
+  const habituel = (t.r.usual != null ? t.r.usual : (t.r.libre || t.r.min));
+  const duree = t.r.min + extra, [H, M] = tr.h.split(':').map(Number), [y, mo, d] = iso.split('-').map(Number);
+  const arrivee = new Date(y, mo - 1, d, H, M), partir = new Date(arrivee.getTime() - (duree + marge) * 60000);
+  const norm = new Date(arrivee.getTime() - (habituel + marge) * 60000);
+  return { iso, partir:partir.getTime(), norm:norm.getTime(), duree, habituel, retard:Math.max(0, duree - habituel), at:Date.now(), causes:E.causes.slice(0, 2), lieu:a.lieu.nom };
+}
+async function agDepartCheck(force){
+  try {
+    const now = new Date(), iso = agIso(now), a = agGet(), st = LS.get(AGD_KEY, { n:{} });
+    st.n = st.n || {};
+    Object.keys(st.n).forEach(k => { if (k.slice(0, 10) < agIso(agPlus(now, -2))) delete st.n[k]; });
+    /* Rappel de la veille au soir, une fois */
+    const dem = agIso(agPlus(now, 1)), kS = dem + 'soir';
+    if (now.getHours() >= 18 && !st.n[kS]){
+      const tr = a.trajets[dem], rs = agRdvDu(a, dem);
+      if ((tr && !tr.off) || rs.length){
+        st.n[kS] = 1; LS.set(AGD_KEY, st);
+        agNotifier('Demain', agDitJour(dem, 'Demain').replace(/^Demain, /, '').replace(/^./, c => c.toUpperCase()), 'soir');
+      }
+    }
+    /* Alerte de départ du jour */
+    const tr = a.trajets[iso]; if (!tr || tr.off || !tr.h || !a.lieu) { agDepGarde(null); return; }
+    const [H, M] = tr.h.split(':').map(Number), arrivee = new Date(now.getFullYear(), now.getMonth(), now.getDate(), H, M);
+    const reste = (arrivee - now) / 60000;
+    if (reste < -5 || reste > 240) { agDepGarde(null); return; }
+    const prev = LS.get(AGD_KEY + '.c', null), frais = prev && prev.iso === iso && Date.now() - prev.at < (force ? 0 : 4 * 60000);
+    const c = frais ? prev : await agDepartCalcul(iso);
+    if (!c) return;
+    agDepGarde(c);
+    const avant = (c.partir - Date.now()) / 60000, hm = hmDe(new Date(c.partir)), hmN = hmDe(new Date(c.norm));
+    const gros = c.retard >= 10 || c.retard >= 0.2 * c.habituel;
+    const k45 = iso + 'a' + (gros ? hm : 'ras'), k15 = iso + 'b';
+    if (gros && avant <= 45 && avant > 15 && !st.n[k45]){
+      st.n[k45] = 1; LS.set(AGD_KEY, st);
+      agNotifier('Bouchons : ' + c.retard + ' min de plus', 'Pars à ' + agHDisp(hm) + ' au lieu de ' + agHDisp(hmN) + ' pour être à ' + c.lieu + ' à ' + agHDisp(tr.h) + '.', 'dep-a');
+    }
+    if (avant <= 15 && avant > -5 && !st.n[k15]){
+      st.n[k15] = 1; LS.set(AGD_KEY, st);
+      agNotifier('Départ dans ' + Math.max(1, Math.round(avant)) + ' min', 'Pars à ' + agHDisp(hm) + (c.retard >= 3 ? ' (' + c.retard + ' min de retard sur la route)' : ' : route normale') + ' pour être à ' + agHDisp(tr.h) + '.', 'dep-b');
+    }
+  } catch (e) {}
+}
+function agDepGarde(c){
+  if (c) LS.set(AGD_KEY + '.c', c); else { try { localStorage.removeItem(AGD_KEY + '.c'); } catch (e) {} }
+  const el = $('.ag-dep'); const html = agDepHTML(); if (el) el.outerHTML = html || '<span class="ag-dep" hidden></span>';
+}
+function agDepHTML(){
+  const c = LS.get(AGD_KEY + '.c', null); if (!c || c.iso !== agIso(new Date()) || Date.now() - c.at > 30 * 60000) return '';
+  const hm = hmDe(new Date(c.partir)), hmN = hmDe(new Date(c.norm));
+  return '<div class="ag-dep ' + (c.retard >= 10 ? 'ko' : 'ok') + '"><b>' + icon('car', 15) + ' Pars à ' + agHDisp(hm) + '</b><span>' +
+    (c.retard >= 3 ? c.retard + ' min de retard sur la route (habituellement ' + agHDisp(hmN) + ').' : 'Route normale.') + ' Vérifié à ' + agHDisp(hmDe(new Date(c.at))) + '.</span></div>';
+}
+function agDepInit(){
+  if (S.agDepOn) return; S.agDepOn = true;
+  const go = () => { if (document.visibilityState === 'visible') agDepartCheck(); };
+  setInterval(go, 3 * 60000); document.addEventListener('visibilitychange', go); setTimeout(go, 4000);
 }
 
 /* ----- Les touches et les formulaires ----- */
@@ -4372,9 +4454,11 @@ function agClick(e){
     case 'ag-corriger': agDicter(true); break;
     case 'ag-enregistrer': agEnregistrer(); break;
     case 'ag-ecoute': agEcoute(); break;
+    case 'ag-notif': try { Notification.requestPermission().then(r => { toast(r === 'granted' ? 'Alertes activées.' : 'Alertes refusées : tu peux les autoriser dans les réglages du navigateur.'); const c = $('.ag-sec'); if (c) c.outerHTML = agCardHTML(); agDepartCheck(true); }); } catch (e) {} break;
   }
 }
 document.addEventListener('click', agClick);
+agDepInit();
 document.addEventListener('change', e => {
   const t = e.target; if (!t || !t.matches || !t.matches('[data-agf="draft-h"]')) return;
   const D = agDraft(), i = D.items.find(x => x.wd === Number(t.dataset.wd)); if (!i) return;
