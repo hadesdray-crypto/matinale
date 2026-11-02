@@ -4301,6 +4301,8 @@ function agVoix(alts){
 function agCommande(s){
   if (/ (ajoute|ajouter|note|noter|mets|mettre|nouveau|enregistre) .*(rendez vous|rdv)/.test(s)){ S.agJour = null; agMic('rdv'); return { msg:'Dis ton rendez-vous.', keep:true }; }
   if (/ (dicte|dicter|enregistre|enregistrer|note|noter|mets|mettre) .*(trajets?|semaine|planning)/.test(s)){ agDraft(); agDicter(false); return { msg:'Dicte tes jours.', keep:true }; }
+  if (/ (demain|programme de demain|lendemain) /.test(s) && / (lis|lire|dis|dire|resume|resumer|prepare|preparer|ecoute|ecouter|agenda|programme|rappelle|rappeler) /.test(s)){ agDemain(); return { msg:'Voilà demain.', keep:true }; }
+  if (/ (lance|lancer|demarre|demarrer|ouvre|ouvrir) .*(itineraire|navigation|gps|route)/.test(s)){ agNaviguer(); return { msg:'Itinéraire.', keep:true }; }
   if (/ (mon agenda|mes rendez vous|mon planning|mes trajets) /.test(s)){ agOuvrir(false); return { msg:'Ton agenda.', keep:true }; }
   return null;
 }
@@ -4335,7 +4337,7 @@ function agCardHTML(){
   if (vide) h += '<p class="mt-sub">Dicte tes trajets et tes rendez-vous : la Matinale te les rappelle chaque matin, avant les informations.</p><div class="mt-chips"><button class="btn sm primary" data-action="ag-dicter">' + icon('mic', 15) + ' Dicter ma semaine</button><button class="btn sm" data-action="ag-open">Ouvrir</button></div>';
   else {
     const x = lignes(iso, 'Aujourd\'hui', !soir), y = lignes(dem, soir ? 'Demain : n\'oublie pas' : 'Demain', soir);
-    h += (x || y ? x + y : '<p class="mt-sub">Rien de prévu aujourd\'hui ni demain.</p>') + '<div class="mt-chips"><button class="btn sm" data-action="ag-open">Ouvrir</button><button class="btn sm ghost" data-action="ag-ecoute">' + icon('play', 15) + ' Écouter</button></div>';
+    h += (x || y ? x + y : '<p class="mt-sub">Rien de prévu aujourd\'hui ni demain.</p>') + '<div class="mt-chips"><button class="btn sm" data-action="ag-open">Ouvrir</button><button class="btn sm ' + (soir ? 'primary' : 'ghost') + '" data-action="ag-demain">' + icon('play', 15) + ' Écouter demain</button><button class="btn sm ghost" data-action="ag-ecoute">' + icon('play', 15) + ' Écouter</button></div>' + navCarteHTML();
   }
   const nb = (!vide && agNotifEtat() === 'default') ? '<div class="mt-chips"><button class="btn sm" data-action="ag-notif">' + icon('bell', 15) + ' Activer les alertes de départ</button></div>' : '';
   return h + (agDepHTML() || '<span class="ag-dep" hidden></span>') + nb + '</div></div></section>';
@@ -4380,7 +4382,7 @@ async function agDepartCheck(force){
       const tr = a.trajets[dem], rs = agRdvDu(a, dem);
       if ((tr && !tr.off) || rs.length){
         st.n[kS] = 1; LS.set(AGD_KEY, st);
-        agNotifier('Demain', agDitJour(dem, 'Demain').replace(/^Demain, /, '').replace(/^./, c => c.toUpperCase()), 'soir');
+        agNotifier('Ton programme de demain', agDitJour(dem, 'Demain').replace(/^Demain, /, '').replace(/^./, c => c.toUpperCase()).replace(/\. (\p{Ll})/gu, (m, c) => '. ' + c.toUpperCase()) + ' Ouvre la Matinale pour l\'écouter en détail.', 'soir');
       }
     }
     /* Alerte de départ du jour */
@@ -4421,6 +4423,137 @@ function agDepInit(){
   setInterval(go, 3 * 60000); document.addEventListener('visibilitychange', go); setTimeout(go, 4000);
 }
 
+/* ----- Le soir : le programme de demain, complet (météo, puis trajets, puis rendez-vous) ----- */
+const JOURS_LONG = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+const MOIS_LONG = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+function plageH(hs){   /* [7,8,9,14] → [[7,9],[14,14]] */
+  const out = []; hs.forEach(h => { const l = out[out.length - 1]; if (l && h - l[1] <= 1) l[1] = h; else out.push([h, h]); }); return out;
+}
+function meteoDemainTexte(w, iso, place){
+  const H = (w.j || {}).hourly || {}, T = H.time || [], rows = [];
+  T.forEach((t, i) => { if (String(t).slice(0, 10) === iso){ const h = +String(t).slice(11, 13); if (h >= 6 && h <= 21) rows.push({ h, t:H.temperature_2m[i], f:H.apparent_temperature[i], p:H.precipitation[i] || 0, c:H.weather_code[i], g:H.wind_gusts_10m[i] || 0, v:H.visibility ? H.visibility[i] : null }); } });
+  if (!rows.length) return '';
+  const num = a => a.filter(x => typeof x === 'number');
+  const mat = rows.filter(r => r.h <= 11), apr = rows.filter(r => r.h >= 12 && r.h <= 19);
+  const tmin = Math.round(Math.min(...num(rows.map(r => r.t)))), tmax = Math.round(Math.max(...num(rows.map(r => r.t))));
+  const f7 = Math.round(Math.min(...num(mat.slice(0, 3).map(r => r.f))));
+  const midi = rows.find(r => r.h === 13) || rows[Math.floor(rows.length / 2)];
+  const wet = r => r.p >= 0.2, plages = plageH(rows.filter(wet).map(r => r.h));
+  const p = ['Météo' + (place ? ' à ' + place : '') + ' : ' + (WMO(midi.c) ? WMO(midi.c) + ', ' : '') + 'entre ' + tmin + ' et ' + tmax + ' degrés.'];
+  p.push(plages.length ? 'Pluie ' + plages.map(x => 'de ' + x[0] + ' heures à ' + (x[1] + 1) + ' heures').join(', puis ') + '.' : 'Pas de pluie prévue.');
+  const al = [], gust = Math.round(Math.max(...rows.map(r => r.g)));
+  if (rows.some(r => r.c >= 95)) al.push('orages');
+  if (rows.some(r => (r.c >= 71 && r.c <= 77) || r.c === 85 || r.c === 86)) al.push('neige');
+  if (mat.slice(0, 4).some(r => r.t <= 0.5)) al.push('gel, attention au verglas sur la route');
+  if (mat.slice(0, 5).some(r => [45, 48].includes(r.c) || (typeof r.v === 'number' && r.v < 1000))) al.push('brouillard le matin');
+  if (gust >= 50) al.push('rafales jusqu\'à ' + gust + ' kilomètres heure');
+  if (al.length) p.push('Attention : ' + al.join(', ') + '.');
+  /* ce qui change dans l'après-midi */
+  const ch = [], pm = mat.some(wet), pa = apr.some(wet);
+  if (!pm && pa){ const r = apr.find(wet); ch.push('la pluie arrive vers ' + r.h + ' heures'); }
+  else if (pm && !pa) ch.push('la pluie s\'arrête dans l\'après-midi');
+  const tm = num(mat.map(r => r.t)), ta = num(apr.map(r => r.t));
+  if (tm.length && ta.length){ const d = Math.round(Math.max(...ta) - Math.max(...tm)); if (d >= 5) ch.push('il fera ' + d + ' degrés de plus l\'après-midi'); else if (d <= -5) ch.push('il fera ' + (-d) + ' degrés de moins l\'après-midi'); }
+  if (apr.some(r => r.g >= 50) && !mat.some(r => r.g >= 50)) ch.push('le vent se lève dans l\'après-midi');
+  if (apr.some(r => r.c >= 95) && !mat.some(r => r.c >= 95)) ch.push('des orages sont possibles l\'après-midi');
+  if (ch.length) p.push('Attention, ça change dans l\'après-midi : ' + ch.join(', ') + '.');
+  const tenue = f7 <= 0 ? 'manteau chaud, bonnet et gants' : f7 <= 6 ? 'manteau ou grosse veste' : f7 <= 12 ? 'veste chaude' : f7 <= 17 ? 'veste légère ou pull' : 'tenue légère';
+  p.push('Conseil : ' + tenue + (plages.length ? ', et un parapluie' : '') + '.');
+  return p.join(' ');
+}
+async function agGeoRdv(txt, near){
+  S.agGeo = S.agGeo || {}; const k = cmdNorm(txt); if (S.agGeo[k]) return S.agGeo[k];
+  try { const r = (await chercheLieu(txt, near))[0]; if (r) return (S.agGeo[k] = { nom:txt, lat:r.lat, lon:r.lon }); } catch (e) {}
+  return null;
+}
+async function agDemainTexte(){
+  const a = agGet(), now = new Date(), d = agPlus(now, 1), iso = agIso(d), tr = a.trajets[iso], rs = agRdvDu(a, iso), marge = MPget().marge || 10;
+  const tete = 'Demain, ' + JOURS_LONG[d.getDay()] + ' ' + d.getDate() + ' ' + MOIS_LONG[d.getMonth()] + '.';
+  if (!(tr && !tr.off) && !rs.length) return tete + (tr && tr.off ? ' Pas de trajet prévu et aucun rendez-vous.' : ' Rien n\'est prévu dans ton agenda.');
+  /* les étapes de la journée, dans l'ordre */
+  const etapes = [];
+  if (tr && !tr.off && tr.h && a.lieu) etapes.push({ h:tr.h, nom:a.lieu.nom, lat:a.lieu.lat, lon:a.lieu.lon, travail:true });
+  else if (tr && !tr.off && tr.h) etapes.push({ h:tr.h, nom:'là-bas', travail:true });
+  const dep = online() ? await depart(false).catch(() => null) : null;
+  for (const r of rs){
+    const e = { h:r.h, nom:r.t, rdv:true, adr:r.l };
+    if (r.l && online()){ const g = await agGeoRdv(r.l, dep || a.lieu); if (g){ e.lat = g.lat; e.lon = g.lon; e.lieu = g.nom; } }
+    etapes.push(e);
+  }
+  etapes.sort((x, y) => String(x.h || '99').localeCompare(String(y.h || '99')));
+  const parts = [tete];
+  /* 1. météo : là où tu seras, sinon là où tu es */
+  const ref = etapes.find(e => e.lat != null) || dep;
+  if (ref && online()){
+    try { const w = await meteoFetch({ lat:ref.lat, lon:ref.lon }), nom = await communeDe({ lat:ref.lat, lon:ref.lon }).catch(() => ''); const m = meteoDemainTexte(w, iso, nom); if (m) parts.push(m); else parts.push('Je n\'ai pas la météo de demain.'); }
+    catch (e) { parts.push('Je n\'ai pas pu récupérer la météo de demain.'); }
+  } else parts.push(online() ? 'Je ne connais pas ta position pour la météo.' : 'Pas de réseau : je n\'ai pas la météo de demain.');
+  /* 2. trajets : un par destination, depuis la précédente */
+  const tj = []; let prev = dep;
+  for (const e of etapes){
+    if (e.lat == null){ if (e.travail) tj.push('Tu dois être là-bas à ' + agHSay(e.h) + '.'); prev = prev; continue; }
+    let ph = '';
+    if (prev && kmBetween(prev, e) < 0.4) ph = 'Pour ' + e.nom + ', tu es déjà sur place.';
+    else if (prev && online()){
+      try {
+        const res = await trajet(prev, e), r = res.r, E = routeEtat(res), hab = r ? (r.usual != null ? r.usual : (r.libre || r.min)) : null;
+        const lib = e.travail ? 'Pour aller à ' + e.nom : 'Pour ' + (e.rdv ? e.nom + (e.adr ? ' à ' + e.adr : '') : e.nom);
+        if (r){
+          ph = lib + ' : environ ' + hab + ' minutes' + (r.sansTrafic ? ' sans trafic' : ' en temps habituel') + ', ' + r.km + ' kilomètres.';
+          if (e.h){ const [H, M] = e.h.split(':').map(Number), dp = new Date(d.getFullYear(), d.getMonth(), d.getDate(), H, M - hab - marge); ph += ' Pour être là à ' + agHSay(e.h) + ', pars à ' + agHSay(hmDe(dp)) + '.'; }
+        } else ph = lib + ' : je n\'ai pas pu calculer le trajet.';
+        if (E.causes.length) ph += ' En ce moment : ' + E.causes.join(', ').toLowerCase() + '. Je te préviendrai demain si ça change quelque chose.';
+        else if (r && !r.sansTrafic) ph += ' Rien de signalé sur la route à cette heure.';
+      } catch (er) { ph = 'Je n\'ai pas pu calculer le trajet vers ' + e.nom + '.'; }
+    } else ph = 'Trajet vers ' + e.nom + ' : pas de réseau pour le calculer.';
+    tj.push(ph); prev = { lat:e.lat, lon:e.lon };
+  }
+  if (tj.length) parts.push('Trajets. ' + tj.join(' '));
+  if (tr && !tr.off && !a.lieu) parts.push('Pense à enregistrer le lieu de ton trajet dans ton agenda, pour que je calcule la route.');
+  /* 3. rendez-vous */
+  if (rs.length) parts.push('Rendez-vous. ' + rs.map(r => (r.h ? 'À ' + agHSay(r.h) + ' : ' : '') + r.t + (r.l ? ', ' + r.l : '') + '.').join(' '));
+  else parts.push('Aucun rendez-vous.');
+  return parts.join(' ');
+}
+function navCarteHTML(){
+  const n = navProchaine(); if (!n) return '';
+  return '<div class="mt-chips"><button class="btn sm primary" data-action="ag-nav">' + icon('car', 15) + ' Lancer l\'itinéraire vers ' + esc(n.nom) + '</button><button class="btn sm ghost" data-action="ag-nav-app">' + esc(NAVS[navChoix()]) + '</button></div>';
+}
+function agNaviguer(){
+  const n = navProchaine(); if (!n){ toast('Aucune destination avec une adresse dans ton agenda.'); return; }
+  const u = navLien(n);
+  try { window.open(u, '_blank', 'noopener') || (location.href = u); } catch (e) { location.href = u; }
+}
+try { if (LS.get('mds.debug', false)) window.__mdsDemain = () => agDemainTexte(); } catch (e) {}
+async function agDemain(){
+  toast('Je prépare ton programme de demain…', 4000);
+  let txt; try { txt = await agDemainTexte(); } catch (e) { txt = agDitJour(agIso(agPlus(new Date(), 1)), 'Demain') || 'Je n\'ai pas pu préparer demain.'; }
+  matinDire('agenda-demain', 'Demain', txt);
+}
+
+/* ----- Lancer l'itinéraire dans l'appli de navigation du téléphone (rien ne passe par un serveur) ----- */
+const NAVS = { gmaps:'Google Maps', waze:'Waze', systeme:'Appli par défaut' };
+const navChoix = () => { const c = LS.get('mds.nav', 'gmaps'); return NAVS[c] ? c : 'gmaps'; };
+function navLien(d){   /* d : { lat, lon } ou { adr } */
+  const c = navChoix(), ll = d.lat != null ? d.lat + ',' + d.lon : null;
+  if (c === 'waze') return ll ? 'https://waze.com/ul?ll=' + ll + '&navigate=yes' : 'https://waze.com/ul?q=' + encodeURIComponent(d.adr) + '&navigate=yes';
+  if (c === 'systeme') return ll ? 'geo:0,0?q=' + ll + '(' + encodeURIComponent(d.nom || 'Destination') + ')' : 'geo:0,0?q=' + encodeURIComponent(d.adr);
+  return 'https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=' + (ll ? ll : encodeURIComponent(d.adr));
+}
+/* Prochaine destination : le lieu du trajet du jour (ou de demain après 17 h), sinon le prochain rendez-vous avec une adresse. */
+function navProchaine(){
+  const a = agGet(), now = new Date(), soir = now.getHours() >= 17;
+  const cand = [];
+  [agIso(now), agIso(agPlus(now, 1))].forEach((iso, k) => {
+    if (k === 1 && !soir) return;
+    const tr = a.trajets[iso]; if (tr && !tr.off && tr.h && a.lieu) cand.push({ h:iso + tr.h, nom:a.lieu.nom, lat:a.lieu.lat, lon:a.lieu.lon });
+    agRdvDu(a, iso).forEach(r => { if (r.l) cand.push({ h:iso + (r.h || '23:59'), nom:r.t, adr:r.l }); });
+  });
+  const today = agIso(now) + hmDe(now);
+  const futur = cand.filter(c => c.h >= today).sort((x, y) => x.h.localeCompare(y.h));
+  return futur[0] || null;
+}
+
 /* ----- Les touches et les formulaires ----- */
 function agClick(e){
   const a = e.target.closest('[data-action^="ag-"]'); if (!a) return;
@@ -4454,6 +4587,9 @@ function agClick(e){
     case 'ag-corriger': agDicter(true); break;
     case 'ag-enregistrer': agEnregistrer(); break;
     case 'ag-ecoute': agEcoute(); break;
+    case 'ag-demain': agDemain(); break;
+    case 'ag-nav': agNaviguer(); break;
+    case 'ag-nav-app': { const k = Object.keys(NAVS), n = k[(k.indexOf(navChoix()) + 1) % k.length]; LS.set('mds.nav', n); const c = $('.ag-sec'); if (c) c.outerHTML = agCardHTML(); toast('Navigation : ' + NAVS[n]); break; }
     case 'ag-notif': try { Notification.requestPermission().then(r => { toast(r === 'granted' ? 'Alertes activées.' : 'Alertes refusées : tu peux les autoriser dans les réglages du navigateur.'); const c = $('.ag-sec'); if (c) c.outerHTML = agCardHTML(); agDepartCheck(true); }); } catch (e) {} break;
   }
 }
