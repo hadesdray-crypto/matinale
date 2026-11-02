@@ -1,5 +1,16 @@
 [
   {
+    "v": 8,
+    "date": "2026-11-02",
+    "titre": "Mon agenda : trajets et rendez-vous",
+    "points": [
+      "Options → Mon agenda : dicte tes trajets de la semaine (« Lundi là-bas à 7 h, mardi 8 h 30, mercredi repos… »). L'appli te relit tout pour valider avant d'enregistrer.",
+      "Calendrier en vue semaine et mois, pour revoir et corriger chaque jour. Jusqu'à 2 semaines, ou tout le mois.",
+      "Rendez-vous : ajoute-les à la voix ou à la main. La Matinale te les lit avant les infos, et te rappelle ceux de demain en soirée.",
+      "Tout reste sur ton téléphone : aucune requête IA, rien n'est envoyé ailleurs."
+    ]
+  },
+  {
     "v": 7,
     "date": "2026-10-30",
     "titre": "Liens vérifiés chaque matin",

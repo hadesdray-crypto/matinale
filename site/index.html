@@ -824,6 +824,55 @@ html.locked body.has-mini .sheet{padding-bottom:calc(110px + env(safe-area-inset
 .tag{padding:3px 8px;border-radius:999px;background:var(--paper);color:var(--ink-2);font-family:var(--display);font-weight:600;font-size:11.5px;white-space:nowrap}
 .tag.search{background:var(--l2-soft);color:var(--l2)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* Agenda : trajets et rendez-vous */
+.ag-sec{padding-top:10px}
+.ag-lieu{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:4px 0 12px}
+.ag-actions{display:grid;gap:8px;margin:6px 0 14px}
+.ag-actions .btn{justify-content:center;min-height:50px}
+.ag-vues{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.ag-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0 10px}
+.ag-nav b{font-family:var(--display);font-size:15.5px;text-align:center}
+.ag-days{display:grid;gap:8px;margin-bottom:12px}
+.ag-day{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:14px;padding:10px 12px;min-height:58px;cursor:pointer;font:inherit}
+.ag-day.today{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.ag-dn{display:grid;justify-items:center;min-width:46px;font-family:var(--display)}
+.ag-dn b{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.ag-dn span{font-size:22px;font-weight:700;line-height:1.1}
+.ag-dc{display:grid;gap:5px;flex:1;min-width:0}
+.ag-chip{display:inline-flex;align-items:center;gap:6px;width:fit-content;max-width:100%;padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-size:13.5px;font-weight:600}
+.ag-chip.off{background:transparent;border:1px dashed var(--rule);color:var(--ink-3);font-weight:500}
+.ag-rdv{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink-2)}
+.ag-vide{font-size:13.5px;color:var(--ink-3)}
+.ag-mois{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-bottom:12px}
+.ag-mh{text-align:center;font-size:12px;color:var(--ink-3);padding:4px 0}
+.ag-cell{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;min-height:58px;padding:5px 2px;border:1px solid var(--rule);border-radius:10px;background:var(--card);color:var(--ink);cursor:pointer;font:inherit}
+.ag-cell b{font-size:14px}
+.ag-cell i{font-style:normal;font-size:10.5px;line-height:1.15;color:var(--accent-ink);font-weight:600}
+.ag-cell i.off{color:var(--ink-3)}
+.ag-cell i.ag-r{color:var(--ink-2);font-weight:500}
+.ag-cell.on{background:var(--accent-soft)}
+.ag-cell.today{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.ag-foot{position:sticky;bottom:0;z-index:4;display:flex;gap:10px;padding:12px calc(84px + env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--paper);border-top:1px solid var(--rule)}
+.ag-foot .btn{flex:1;justify-content:center;min-height:50px}
+.ag-foot .btn[disabled]{opacity:.5}
+.ag-field{display:grid;gap:6px;margin:12px 0;font-size:14.5px;color:var(--ink-2)}
+.ag-field input{min-height:48px;border:1px solid var(--rule);border-radius:12px;background:var(--card);color:var(--ink);padding:0 12px;font:inherit;font-size:16px;width:100%;box-sizing:border-box}
+.ag-info,.ag-warn{display:flex;align-items:center;gap:6px;font-size:14px;margin:8px 0}
+.ag-warn{color:var(--accent-ink);font-weight:600}
+.ag-bigmic{width:100%;justify-content:center;min-height:60px;font-size:17px;margin:6px 0 10px}
+.ag-scopes{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 8px}
+.ag-draft,.ag-recap,.ag-rl{list-style:none;margin:6px 0;padding:0;display:grid;gap:8px}
+.ag-dr{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:8px 10px;border:1px solid var(--rule);border-radius:12px;background:var(--card)}
+.ag-dr b{min-width:84px;font-family:var(--display)}
+.ag-dr input{min-height:42px;border:1px solid var(--rule);border-radius:10px;background:var(--paper);color:var(--ink);padding:0 8px;font:inherit;font-size:16px}
+.ag-dr.need{border-color:#c0392b;box-shadow:inset 0 0 0 1px #c0392b}
+.ag-dr .btn{margin-left:auto}
+.ag-recap li{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--rule);border-radius:12px;background:var(--card)}
+.ag-recap li span{color:var(--accent-ink);font-weight:600;text-align:right}
+.ag-card .ag-bloc{margin:8px 0;padding:8px 10px;border-radius:12px;background:var(--accent-soft)}
+.ag-card .ag-bloc.fort{border:1px solid var(--accent)}
+.ag-card .ag-bloc b{font-family:var(--display);font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent-ink)}
 </style>
 </head>
 <body>
@@ -1359,7 +1408,7 @@ function renderToday(){
   if (S.sec === 'pol'){ if (!S.pol && !S.polLoading) loadPol(); el.innerHTML = matinCardHTML() + polViewHTML(); return; }
   const ed = S.edition;
   if (S.status !== 'ready' || !ed){ el.innerHTML = stateHTML(); return; }
-  el.innerHTML = matinCardHTML() + mastheadHTML(ed) + fallbackNoticeHTML() + installBannerHTML() + sommaireHTML(ed) + topHTML(ed) + frStripHTML(ed) + catSumHTML(ed) + feedSectionHTML(ed) + conceptHTML(ed) + agendaHTML(ed) + methodHTML() + footerHTML(ed);
+  el.innerHTML = matinCardHTML() + agCardHTML() + mastheadHTML(ed) + fallbackNoticeHTML() + installBannerHTML() + sommaireHTML(ed) + topHTML(ed) + frStripHTML(ed) + catSumHTML(ed) + feedSectionHTML(ed) + conceptHTML(ed) + agendaHTML(ed) + methodHTML() + footerHTML(ed);
   renderFeed();
 }
 
@@ -2783,6 +2832,16 @@ async function matinEcoute(){
 function matinDire(mode, title, text){ S.deepFlow = false; Player.load(mode, [{ title, text }], 'Point du matin', null); renderChapters(); renderTranscript(); Player.play(); }
 const MATIN_SUITE = ' Place aux informations scientifiques.';
 function matinRoute(){
+  /* L'agenda d'abord : les rendez-vous du jour, puis la route si le trajet est déjà prévu (sinon on pose la question). */
+  const AGJ = agAujourdhui();
+  if (AGJ.phrase && !S.agDit && Player.synth){ S.agDit = true; matinDire('matin-agenda', 'Ton agenda', AGJ.phrase); return; }
+  S.agDit = false;
+  if (AGJ.trajet && Player.synth){
+    trajetVers({ nom:AGJ.trajet.lieu.nom, lat:AGJ.trajet.lieu.lat, lon:AGJ.trajet.lieu.lon }, true)
+      .then(t => { matinRedraw(); matinDire('matin-route', 'Ta route', trajetStatut(t).join(' ') + MATIN_SUITE); })
+      .catch(() => matinInfos());
+    return;
+  }
   if (!Voice.ok || !Player.synth){ matinInfos(); return; }
   S.awaitTrajet = { step:'q', until:Date.now() + 60000 };
   clearTimeout(S.jourT); S.jourT = setTimeout(() => { if (S.awaitTrajet){ S.awaitTrajet = null; if (Voice.on) Voice.stop(true); matinInfos(); } }, 60000);
@@ -3354,6 +3413,7 @@ function ctxEd(s){
 }
 /* Comprend une phrase et agit. Rend { msg, keep } (keep : ne pas relancer la lecture mise en pause), ou null. */
 function voiceCommand(alts, ctx){
+  if (ctx === 'agenda') return agVoix(alts);   /* dictée de l'agenda */
   let ed = S.edition, max = ed ? ed.items.length : 0;
   const wasPlaying = Voice.resume || Player.playing;   /* la lecture a été mise en pause le temps d'écouter (ou continue, en mains libres) */
   for (const raw of alts){
@@ -3362,6 +3422,7 @@ function voiceCommand(alts, ctx){
     const has = re => re.test(s), n = spokenNum(s, max);
     const jr = trajetReponse(raw, s); if (jr) return jr;
     const mc = matinCommande(s, raw); if (mc) return mc;
+    const ac = agCommande(s); if (ac) return ac;
     if (has(/ (aide|commandes?|que (peux|puis|dois) je dire|quoi dire) /)){ openVoiceHelp(); return { msg:'Voici ce que tu peux dire.', keep:true }; }
     if (!n && has(/ (non|c est bon|ca ira|pas besoin|ca va aller|rien|termine|fini|merci|non merci) /) && !has(/ (lis|ouvre|approfondi\w*|plus vite|moins vite) /)){
       if (ctx === 'ask' || askOpen()){ askNo(); return { msg:'D\'accord. Bonne journée !', keep:true }; }
@@ -3434,7 +3495,7 @@ function deep(key, keepSheet){
 function askNo(){ S.deepFlow = false; clearTimeout(S.askT); Douche.q = ''; if (askOpen()) closeSheet(); if (S.matinRun){ if (!matinSuite()) matinFin(); } else if (Douche.on) sayShort('D\'accord. Bonne journée !', () => doucheStop()); }
 /* À la fin du flash (ou d'un sujet approfondi) : « Tu veux approfondir un sujet ? » */
 function onListenEnd(mode){
-  if (mode === 'matin-meteo'){ matinRoute(); return; }
+  if (mode === 'matin-meteo' || mode === 'matin-agenda'){ matinRoute(); return; }
   if (mode === 'matin-route' || mode === 'matin'){ matinInfos(); return; }
   if (mode === 'flash') askDeeper('flash', S.edition);
   else if (mode === 'pflash') askDeeper('flash', S.pol && S.pol.ed);
@@ -3880,6 +3941,453 @@ function watchUpdates(){
 /* ---------- Options : un seul bouton en haut, tout est rangé ici ---------- */
 const STYLES = [{"id":"classique","nom":"Matin bleu","desc":"Le style d'origine. Clair le jour, sombre la nuit.","sombre":false,"p":{"paper":"#F2F5F9","card":"#FFFFFF","ink":"#0E1A2C","sci":"#1B4A8A","pol":"#A61E2E"}},{"id":"journal","nom":"Journal","desc":"Papier crème et titres de quotidien.","sombre":false,"p":{"paper":"#F3EEE3","card":"#FBF8F1","ink":"#1D1A15","sci":"#1F4E8C","pol":"#A61B1B"}},{"id":"nuit","nom":"Nuit noire","desc":"Fond noir : repose les yeux et économise la batterie.","sombre":true,"p":{"paper":"#000000","card":"#0E0E12","ink":"#ECECF1","sci":"#5AA9FF","pol":"#FF6B6B"}},{"id":"neon","nom":"Néon","desc":"Futuriste : couleurs vives sur fond de nuit.","sombre":true,"p":{"paper":"#0A0A1F","card":"#12122E","ink":"#E8E8FF","sci":"#22D3EE","pol":"#FF4757"}},{"id":"contraste","nom":"Grande lisibilité","desc":"Contraste maximal, texte net et sans fioritures.","sombre":false,"p":{"paper":"#FFFFFF","card":"#FFFFFF","ink":"#000000","sci":"#0033CC","pol":"#C40000"}},{"id":"doux","nom":"Pastel","desc":"Couleurs douces et lumineuses.","sombre":false,"p":{"paper":"#F6F3FB","card":"#FFFFFF","ink":"#2A2540","sci":"#4D74C9","pol":"#D1495B"}}];
 const sheetHead = t => '<div class="sheet-head"><div class="in pad"><h2 class="sheet-h">' + t + '</h2><button class="iconbtn" data-action="close" aria-label="Fermer">' + icon('close') + '</button></div></div>';
+/* ---------- Agenda : trajets et rendez-vous ----------
+   Tout reste dans le téléphone (jamais sur GitHub, jamais envoyé à une IA) : les phrases dictées sont comprises ici, par des règles.
+   Données : { v:1, lieu:{nom,lat,lon}|null, trajets:{ 'AAAA-MM-JJ':{ h:'07:00', off:false } }, rdv:[{ id, d, h, t, l }] } */
+const AG_LS = 'mds.agenda';
+const AG_JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+const AG_MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+const AG_MOIS_N = AG_MOIS.map(m => norm(m));
+const agWd = d => (d.getDay() + 6) % 7;   /* lundi = 0 */
+const agIso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const agDate = iso => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+const agPlus = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const agHm = (h, m) => String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+const agHDisp = hm => { const m = /^(\d{1,2}):(\d{2})$/.exec(hm || ''); return m ? (+m[1]) + ' h' + (m[2] === '00' ? '' : ' ' + m[2]) : ''; };
+const agHSay = hm => { const m = /^(\d{1,2}):(\d{2})$/.exec(hm || ''); return m ? (+m[1]) + (+m[1] > 1 ? ' heures' : ' heure') + (m[2] === '00' ? '' : ' ' + (+m[2])) : ''; };
+const agJourLong = d => AG_JOURS[agWd(d)] + ' ' + d.getDate() + (d.getDate() === 1 ? 'er' : '') + ' ' + AG_MOIS[d.getMonth()];
+function agGet(){
+  const o = { v:1, lieu:null, trajets:{}, rdv:[] }, v = LS.get(AG_LS, null);
+  if (v && typeof v === 'object') Object.assign(o, v);
+  if (!o.trajets || typeof o.trajets !== 'object' || Array.isArray(o.trajets)) o.trajets = {};
+  if (!Array.isArray(o.rdv)) o.rdv = [];
+  return o;
+}
+function agSet(a){
+  const limite = agIso(agPlus(new Date(), -45));   /* on ne garde pas le passé lointain */
+  Object.keys(a.trajets).forEach(k => { if (k < limite) delete a.trajets[k]; });
+  a.rdv = a.rdv.filter(r => r && r.d >= limite);
+  LS.set(AG_LS, a);
+  const carte = $('.ag-sec'); if (carte) carte.outerHTML = agCardHTML();   /* la carte de l'accueil suit tout de suite */
+}
+
+/* ----- Comprendre une phrase dictée ----- */
+const AG_NUMS = { zero:0, un:1, une:1, deux:2, trois:3, quatre:4, cinq:5, six:6, sept:7, huit:8, neuf:9, dix:10, onze:11, douze:12, treize:13, quatorze:14, quinze:15, seize:16,
+  'dix sept':17, 'dix huit':18, 'dix neuf':19, vingt:20, 'vingt et un':21, 'vingt et une':21, 'vingt deux':22, 'vingt trois':23, 'vingt quatre':24, 'vingt cinq':25,
+  trente:30, 'trente cinq':35, quarante:40, 'quarante cinq':45, cinquante:50, 'cinquante cinq':55 };
+const AG_NW = Object.keys(AG_NUMS).sort((a, b) => b.length - a.length).join('|');
+const AG_WD = 'lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche';
+/* Texte sans accents, en minuscules, avec les heures écrites en chiffres : « huit heures et demie » → « 8 heures et demie », « 7:30 » → « 7h30 ». */
+function agPrep(raw){
+  let s = ' ' + norm(raw).replace(/[’'`]/g, ' ').replace(/(\d)\s*:\s*(\d)/g, '$1h$2').replace(/[^a-z0-9/ ]/g, ' ').replace(/\s+/g, ' ').trim() + ' ';
+  s = s.replace(/ apres midi /g, ' apresmidi ').replace(/ de l apres midi /g, ' apresmidi ');
+  s = s.replace(/ midi et demie? /g, ' 12 h 30 ').replace(/ midi et quart /g, ' 12 h 15 ').replace(/ midi /g, ' 12 h ').replace(/ minuit /g, ' 0 h ');
+  s = s.replace(new RegExp('(^| )(' + AG_NW + ') (heures?|h)(?= |$)', 'g'), (m, a, n, u) => a + AG_NUMS[n] + ' ' + u);
+  s = s.replace(new RegExp('( heures?| h| moins) (' + AG_NW + ')(?= |$)', 'g'), (m, u, n) => u + ' ' + AG_NUMS[n]);
+  return s;
+}
+/* Les heures citées : { pos, end, h, m, amb } (amb : « 3 heures » sans « matin » ni « après-midi », à confirmer). */
+function agHeures(s, defQual){
+  const out = [], re = /(^| )(\d{1,2}) ?(?:h|heures?)(?: ?(\d{1,2}))?(?: (et demie?|et quart|moins le quart|moins (\d{1,2})))?(?= |$)/g;
+  let m;
+  while ((m = re.exec(s))){
+    let h = +m[2], mi = m[3] ? +m[3] : 0;
+    if (m[4]){ if (/demi/.test(m[4])) mi = 30; else if (/et quart/.test(m[4])) mi = 15; else { h -= 1; mi = m[4] === 'moins le quart' ? 45 : 60 - (+m[5] || 0); } }
+    if (h < 0 || h > 24 || mi < 0 || mi > 59) continue;
+    if (h === 24) h = 0;
+    const apres = s.slice(m.index + m[0].length, m.index + m[0].length + 28);
+    let qual = defQual || null;
+    if (/^ ?(de l apresmidi|apresmidi|du soir|ce soir)/.test(apres)) qual = 'pm'; else if (/^ ?(du matin|ce matin)/.test(apres)) qual = 'am';
+    if (qual === 'pm' && h < 12) h += 12; else if (qual === 'am' && h === 12) h = 0;
+    out.push({ pos:m.index, end:m.index + m[0].length, h, m:mi, amb: !qual && h >= 1 && h <= 6 });
+  }
+  return out;
+}
+const AG_OFF = / (repos|conge|conges|off|ferie|libre|rien|pas de (?:travail|trajet|boulot|taf)|ne travaille pas|je ne travaille pas|ne pars pas|pas la bas|je ne vais pas) /;
+/* « Lundi je dois être là-bas à 7 h, mardi à 8 h 30, mercredi repos » → [{ wd:0, h:'07:00' }, { wd:1, h:'08:30' }, { wd:2, off:true }].
+   Plusieurs jours pour une même heure : « lundi mardi et jeudi 7 h ». « Du lundi au vendredi 8 h », « en semaine », « tous les jours ». */
+function agParseTrajets(raw){
+  const s = agPrep(raw), ev = [];
+  const used = [];
+  let m;
+  const rr = new RegExp('(^| )du (' + AG_WD + ') au (' + AG_WD + ')(?= |$)', 'g');
+  while ((m = rr.exec(s))){
+    const a = AG_JOURS.indexOf(m[2]), b = AG_JOURS.indexOf(m[3]); const l = [];
+    for (let i = a, n = 0; n < 8; n++, i = (i + 1) % 7){ l.push(i); if (i === b) break; }
+    ev.push({ pos:m.index, k:'day', wds:l }); used.push([m.index, m.index + m[0].length]);
+  }
+  const grp = [[/(^| )(tous les jours|chaque jour|7 jours sur 7)(?= |$)/g, [0, 1, 2, 3, 4, 5, 6]], [/(^| )en semaine(?= |$)/g, [0, 1, 2, 3, 4]], [/(^| )(le |les )?week ?end(?= |$)/g, [5, 6]]];
+  grp.forEach(([re, l]) => { while ((m = re.exec(s))){ ev.push({ pos:m.index, k:'day', wds:l }); used.push([m.index, m.index + m[0].length]); } });
+  const rd = new RegExp('(^| )(' + AG_WD + ')s?(?= |$)', 'g');
+  while ((m = rd.exec(s))){ const p = m.index; if (used.some(u => p >= u[0] && p < u[1])) continue; ev.push({ pos:p, k:'day', wds:[AG_JOURS.indexOf(m[2])] }); }
+  agHeures(s).forEach(h => ev.push({ pos:h.pos, k:'time', h:h.h, m:h.m, amb:h.amb }));
+  const ro = new RegExp(AG_OFF.source.replace(/^ /, '(^| )').replace(/ $/, '(?= |$)'), 'g');
+  while ((m = ro.exec(s))) ev.push({ pos:m.index, k:'off' });
+  ev.sort((a, b) => a.pos - b.pos);
+  const res = new Map(), sans = [];
+  let pending = [], pt = null;
+  const put = (wds, v) => wds.forEach(w => res.set(w, v));
+  ev.forEach(e => {
+    if (e.k === 'day'){ if (pt){ put(e.wds, pt); pt = null; } else pending = pending.concat(e.wds); }
+    else if (e.k === 'time'){ const v = { h:agHm(e.h, e.m), amb:e.amb }; if (pending.length){ put(pending, v); pending = []; } else pt = v; }
+    else { if (pending.length){ put(pending, { off:true }); pending = []; } else pt = { off:true }; }
+  });
+  pending.forEach(w => { if (!res.has(w)) sans.push(w); });
+  const items = Array.from(res.entries()).sort((a, b) => a[0] - b[0]).map(([wd, v]) => Object.assign({ wd }, v));
+  sans.forEach(wd => { if (!items.some(i => i.wd === wd)) items.push({ wd, h:null }); });
+  items.sort((a, b) => a.wd - b.wd);
+  let scope = null;
+  if (/ semaine prochaine /.test(s)) scope = 'sem+1'; else if (/ (2|deux) semaines /.test(s)) scope = '2sem'; else if (/ (ce mois|le mois|du mois|tout le mois) /.test(s) && !/ mois prochain /.test(s)) scope = 'mois'; else if (/ mois prochain /.test(s)) scope = 'mois+1'; else if (/ cette semaine /.test(s)) scope = 'sem';
+  return { items, scope };
+}
+/* Les dates concernées par un choix : cette semaine (à partir d'aujourd'hui), la semaine prochaine, 2 semaines, ce mois, le mois prochain. */
+function agPlage(scope, now){
+  const t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), lundi = agPlus(t0, -agWd(t0));
+  let a = t0, b = agPlus(lundi, 6);
+  if (scope === 'sem+1'){ a = agPlus(lundi, 7); b = agPlus(lundi, 13); }
+  else if (scope === '2sem'){ b = agPlus(lundi, 13); }
+  else if (scope === 'mois'){ b = new Date(t0.getFullYear(), t0.getMonth() + 1, 0); }
+  else if (scope === 'mois+1'){ a = new Date(t0.getFullYear(), t0.getMonth() + 1, 1); b = new Date(t0.getFullYear(), t0.getMonth() + 2, 0); }
+  const out = []; for (let d = a; d <= b; d = agPlus(d, 1)) out.push(d);
+  return out;
+}
+/* Phrase de rendez-vous : « rendez-vous chez le dentiste jeudi à 14 h 30 », « le 12 novembre à 10 h réunion », « demain 9 h médecin ». */
+function agParseRdv(raw, now){
+  now = now || new Date();
+  let s = agPrep(raw); const t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  let d = null, mm, defQual = null;
+  const cut = (m) => { s = s.slice(0, m.index) + ' ' + s.slice(m.index + m[0].length); };
+  if ((mm = / apres demain /.exec(s))){ d = agPlus(t0, 2); cut(mm); }
+  else if ((mm = / demain /.exec(s))){ d = agPlus(t0, 1); cut(mm); }
+  else if ((mm = / (aujourd hui|ce soir|ce matin|cet apresmidi) /.exec(s))){ d = t0; defQual = /soir|apresmidi/.test(mm[1]) ? 'pm' : /matin/.test(mm[1]) ? 'am' : null; cut(mm); }
+  if (!d && (mm = new RegExp(' (?:le )?(\\d{1,2}|1er|premier) (' + AG_MOIS_N.join('|') + ')(?: (\\d{4}))? ').exec(s))){
+    const jour = /^\d/.test(mm[1]) ? +mm[1] : 1, mo = AG_MOIS_N.indexOf(mm[2]);
+    let y = mm[3] ? +mm[3] : t0.getFullYear(); let c = new Date(y, mo, jour);
+    if (!mm[3] && c < t0) c = new Date(y + 1, mo, jour);
+    if (c.getMonth() === mo) d = c; cut(mm);
+  }
+  if (!d && (mm = / (\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))? /.exec(s))){
+    const jour = +mm[1], mo = +mm[2] - 1; let y = mm[3] ? (+mm[3] < 100 ? 2000 + +mm[3] : +mm[3]) : t0.getFullYear(); let c = new Date(y, mo, jour);
+    if (!mm[3] && c < t0) c = new Date(y + 1, mo, jour);
+    if (c.getMonth() === mo && mo >= 0 && mo < 12) d = c; cut(mm);
+  }
+  if (!d && (mm = new RegExp(' (' + AG_WD + ')( prochain)? ').exec(s))){
+    const wd = AG_JOURS.indexOf(mm[1]); let diff = (wd - agWd(t0) + 7) % 7;
+    d = agPlus(t0, diff); cut(mm);
+    d._wd = true;
+  }
+  if (!d && (mm = / le (\d{1,2}) /.exec(s))){
+    const jour = +mm[1]; if (jour >= 1 && jour <= 31){ let c = new Date(t0.getFullYear(), t0.getMonth(), jour); if (c < t0) c = new Date(t0.getFullYear(), t0.getMonth() + 1, jour); d = c; cut(mm); }
+  }
+  const hs = agHeures(s, defQual); let hm = null, amb = false;
+  if (hs.length){
+    const h = hs[0]; hm = agHm(h.h, h.m); amb = h.amb;
+    if (h.amb && h.h >= 1 && h.h <= 6){ hm = agHm(h.h + 12, h.m); }   /* « à 3 heures » pour un rendez-vous : l'après-midi, à confirmer */
+    s = s.slice(0, h.pos) + ' ' + s.slice(h.end);
+    s = s.replace(/ (?:a|vers|pour) ?(?= |$)/, ' ');
+  }
+  if (d && d._wd && hm && d.getTime() === t0.getTime()){ const [H, M] = hm.split(':').map(Number); if (H * 60 + M < now.getHours() * 60 + now.getMinutes()) d = agPlus(d, 7); }
+  /* Titre : ce qui reste, sans les mots de commande. Les accents sont repris de la phrase d'origine. */
+  const accent = {}; String(raw || '').toLowerCase().split(/[\s,;.!?’'`]+/).forEach(w => { const n = norm(w).trim(); if (n) accent[n] = accent[n] || w; });
+  let words = s.replace(/ (apresmidi|du soir|du matin|de l|ce soir|ce matin) /g, ' ').trim().split(/\s+/).filter(Boolean);
+  const FILLER = new Set(['rendez', 'vous', 'rdv', 'j', 'ai', 'ajoute', 'ajouter', 'ajoutes', 'note', 'noter', 'notes', 'mets', 'mettre', 'enregistre', 'enregistrer', 'nouveau', 'un', 'une', 'dans', 'agenda', 'mon', 'ma', 'pour', 'le', 'la', 'les', 'l', 'a', 'au', 'ce', 'cet', 'cette', 'de', 'du', 'des', 'et', 'prochain', 'prochaine', 'je', 'dois', 'etre', 'suis', 'vais', 'faut', 'il', 'y', 'va', 'avoir']);
+  while (words.length && FILLER.has(words[0])) words.shift();
+  while (words.length && FILLER.has(words[words.length - 1])) words.pop();
+  let t = words.map(w => accent[w] || w).join(' ').replace(/\b([ldjnsc]|qu) (?=[aeiouyéèêàâîïôûh])/g, "$1'").replace(/\s+/g, ' ').trim();
+  t = t.charAt(0).toUpperCase() + t.slice(1);
+  return { d: d ? agIso(d) : null, h: hm, t: t || 'Rendez-vous', amb };
+}
+
+/* ----- Les écrans ----- */
+const AG_SCOPES = [['sem', 'Cette semaine'], ['sem+1', 'Semaine prochaine'], ['2sem', '2 semaines'], ['mois', 'Ce mois'], ['mois+1', 'Mois prochain']];
+const agScopeDefaut = () => agWd(new Date()) >= 5 ? 'sem+1' : 'sem';
+const agRdvDu = (a, iso) => a.rdv.filter(r => r.d === iso).sort((x, y) => String(x.h || '').localeCompare(String(y.h || '')));
+const agFoot = (...btns) => '<div class="ag-foot">' + btns.join('') + '</div>';
+const agLundi = d => agPlus(d, -agWd(d));
+function agState(){ S.ag = S.ag || { vue:'sem', ref:agIso(new Date()), draft:null }; return S.ag; }
+const agDansAgenda = () => !!$('#sheet-panel .ag');
+
+function agJourLigne(d, a){
+  const iso = agIso(d), tr = a.trajets[iso], rs = agRdvDu(a, iso);
+  let h = '<button class="ag-day' + (iso === agIso(new Date()) ? ' today' : '') + '" data-action="ag-jour" data-d="' + iso + '"><span class="ag-dn"><b>' + AG_JOURS[agWd(d)].slice(0, 3) + '.</b><span>' + d.getDate() + '</span></span><span class="ag-dc">';
+  if (tr) h += tr.off ? '<span class="ag-chip off">Pas de trajet</span>' : '<span class="ag-chip">' + icon('car', 14) + ' Là-bas à ' + agHDisp(tr.h) + (a.lieu ? ' · ' + esc(a.lieu.nom) : '') + '</span>';
+  rs.forEach(r => { h += '<span class="ag-rdv">' + icon('calendar', 13) + ' ' + (r.h ? agHDisp(r.h) + ' · ' : '') + esc(r.t) + '</span>'; });
+  if (!tr && !rs.length) h += '<span class="ag-vide">Rien de prévu</span>';
+  return h + '</span></button>';
+}
+function agSemaineHTML(a, ref){
+  const l = agLundi(agDate(ref) || new Date()), f = agPlus(l, 6), jours = [];
+  for (let i = 0; i < 7; i++) jours.push(agJourLigne(agPlus(l, i), a));
+  const titre = 'Du ' + l.getDate() + (l.getMonth() !== f.getMonth() ? ' ' + AG_MOIS[l.getMonth()] : '') + ' au ' + f.getDate() + ' ' + AG_MOIS[f.getMonth()];
+  return '<div class="ag-nav"><button class="btn sm ghost" data-action="ag-prev" aria-label="Semaine précédente">‹</button><b>' + titre + '</b><button class="btn sm ghost" data-action="ag-next" aria-label="Semaine suivante">›</button></div><div class="ag-days">' + jours.join('') + '</div>';
+}
+function agMoisHTML(a, ref){
+  const r = agDate(ref) || new Date(), p = new Date(r.getFullYear(), r.getMonth(), 1), fin = new Date(r.getFullYear(), r.getMonth() + 1, 0), auj = agIso(new Date());
+  let h = '<div class="ag-nav"><button class="btn sm ghost" data-action="ag-prev" aria-label="Mois précédent">‹</button><b>' + cap(AG_MOIS[r.getMonth()]) + ' ' + r.getFullYear() + '</b><button class="btn sm ghost" data-action="ag-next" aria-label="Mois suivant">›</button></div>';
+  h += '<div class="ag-mois" role="grid">' + ['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(x => '<span class="ag-mh">' + x + '</span>').join('');
+  for (let i = 0; i < agWd(p); i++) h += '<span></span>';
+  for (let n = 1; n <= fin.getDate(); n++){
+    const d = new Date(r.getFullYear(), r.getMonth(), n), iso = agIso(d), tr = a.trajets[iso], nr = agRdvDu(a, iso).length;
+    h += '<button class="ag-cell' + (iso === auj ? ' today' : '') + (tr || nr ? ' on' : '') + '" data-action="ag-jour" data-d="' + iso + '" aria-label="' + esc(agJourLong(d)) + '"><b>' + n + '</b>' +
+      (tr ? '<i class="ag-t' + (tr.off ? ' off' : '') + '">' + (tr.off ? '–' : agHDisp(tr.h).replace(' h ', ':').replace(' h', 'h')) + '</i>' : '') + (nr ? '<i class="ag-r">' + nr + ' rdv</i>' : '') + '</button>';
+  }
+  return h + '</div>';
+}
+function agOuvrir(replace){
+  const a = agGet(), st = agState();
+  const lieu = a.lieu ? '<p class="ag-lieu">' + icon('pin', 16) + ' Là-bas : <b>' + esc(a.lieu.nom) + '</b> <button class="lnk" data-action="ag-lieu">Changer</button></p>'
+    : '<p class="ag-lieu muted">' + icon('pin', 16) + ' Où vas-tu d\'habitude ? <button class="lnk" data-action="ag-lieu">Choisir « là-bas »</button></p>';
+  showOpt(sheetHead('Mon agenda') + '<div class="pad sheet-body rg ag">' + lieu +
+    '<div class="ag-actions"><button class="btn primary" data-action="ag-dicter">' + icon('mic', 17) + ' Dicter mes trajets</button>' +
+    '<button class="btn" data-action="ag-rdv-voix">' + icon('mic', 17) + ' Dicter un rendez-vous</button>' +
+    '<button class="btn ghost" data-action="ag-rdv-new">+ Rendez-vous à la main</button></div>' +
+    '<div class="ag-vues"><div class="seg" role="group" aria-label="Vue">' + [['sem', 'Semaine'], ['mois', 'Mois']].map(v => '<button data-action="ag-vue" data-v="' + v[0] + '" aria-pressed="' + (st.vue === v[0]) + '">' + v[1] + '</button>').join('') + '</div>' +
+    '<button class="btn sm ghost" data-action="ag-auj">Aujourd\'hui</button></div>' +
+    (st.vue === 'mois' ? agMoisHTML(a, st.ref) : agSemaineHTML(a, st.ref)) +
+    '<p class="muted small">Touche un jour pour le voir ou le modifier. Tout reste dans ton téléphone : rien n\'est envoyé à personne.</p></div>', 'Mon agenda', replace == null ? agDansAgenda() : replace);
+}
+
+/* ----- Un jour ----- */
+function agJour(iso, replace){
+  const a = agGet(), d = agDate(iso); if (!d) return;
+  const tr = a.trajets[iso], rs = agRdvDu(a, iso);
+  showOpt(sheetHead(cap(agJourLong(d))) + '<div class="pad sheet-body rg ag" data-ag-jour="' + iso + '">' +
+    '<section class="rg-sec"><h3>' + icon('car', 16) + ' Trajet</h3>' +
+    '<label class="ag-field">Je dois être ' + (a.lieu ? 'à <b>' + esc(a.lieu.nom) + '</b>' : 'là-bas') + ' à<input id="ag-j-h" type="time" value="' + (tr && !tr.off ? esc(tr.h) : '') + '"></label>' +
+    '<div class="mt-chips"><button class="btn sm" data-action="ag-j-off">Pas de trajet ce jour</button>' + (tr ? '<button class="btn sm ghost" data-action="ag-j-del">Effacer</button>' : '') + '</div>' +
+    (tr && tr.off ? '<p class="muted small">Pas de trajet ce jour.</p>' : '') + '</section>' +
+    '<section class="rg-sec"><h3>' + icon('calendar', 16) + ' Rendez-vous</h3>' +
+    (rs.length ? '<ul class="ag-rl">' + rs.map(r => '<li><button class="row" data-action="ag-rdv-edit" data-id="' + esc(r.id) + '"><span class="row-main"><span class="row-title">' + esc(r.t) + '</span><span class="row-meta">' + (r.h ? agHDisp(r.h) : 'Heure non précisée') + (r.l ? ' · ' + esc(r.l) : '') + '</span></span></button></li>').join('') + '</ul>' : '<p class="muted small">Aucun rendez-vous.</p>') +
+    '<div class="mt-chips"><button class="btn sm" data-action="ag-rdv-new" data-d="' + iso + '">+ Ajouter un rendez-vous</button><button class="btn sm" data-action="ag-rdv-voix" data-d="' + iso + '">' + icon('mic', 15) + ' Le dicter</button></div></section></div>' +
+    agFoot('<button class="btn" data-action="ag-retour">Retour</button>', '<button class="btn primary" data-action="ag-j-save">Enregistrer le trajet</button>'),
+    cap(agJourLong(d)), replace == null ? agDansAgenda() : replace);
+}
+function agJourSave(){
+  const p = $('#sheet-panel [data-ag-jour]'); if (!p) return;
+  const iso = p.dataset.agJour, h = ($('#ag-j-h') || {}).value || '', a = agGet();
+  if (!/^\d{2}:\d{2}$/.test(h)){ toast('Choisis une heure, ou touche « Pas de trajet ce jour ».'); return; }
+  a.trajets[iso] = { h }; agSet(a); toast('Trajet enregistré.'); S.ag.ref = iso; agOuvrir(true);
+}
+
+/* ----- Rendez-vous ----- */
+function agRdvForm(r, replace, dicte){
+  r = r || {}; const iso = r.d || agIso(new Date());
+  showOpt(sheetHead(r.id ? 'Modifier le rendez-vous' : 'Rendez-vous') + '<div class="pad sheet-body rg ag" data-ag-rdv="' + esc(r.id || '') + '">' +
+    (dicte ? '<p class="ag-info">' + icon('check', 15) + ' J\'ai compris ça. Regarde, corrige si besoin, puis enregistre.</p>' : '') +
+    '<label class="ag-field">Quoi ?<input id="ag-r-t" type="text" value="' + esc(r.t || '') + '" placeholder="Dentiste, réunion…" autocomplete="off"></label>' +
+    '<label class="ag-field">Quel jour ?<input id="ag-r-d" type="date" value="' + esc(iso) + '"></label>' +
+    '<label class="ag-field">À quelle heure ?<input id="ag-r-h" type="time" value="' + esc(r.h || '') + '"></label>' +
+    (r.amb ? '<p class="ag-warn">' + icon('alert', 14) + ' Matin ou après-midi ? J\'ai mis l\'après-midi : vérifie l\'heure.</p>' : '') +
+    '<label class="ag-field">Où ? (facultatif)<input id="ag-r-l" type="text" value="' + esc(r.l || '') + '" placeholder="Adresse ou lieu" autocomplete="off"></label>' +
+    (r.id ? '<button class="btn sm ghost" data-action="ag-rdv-del" data-id="' + esc(r.id) + '">Supprimer ce rendez-vous</button>' : '') + '</div>' +
+    agFoot('<button class="btn" data-action="ag-retour">Annuler</button>', '<button class="btn primary" data-action="ag-rdv-save">Enregistrer</button>'),
+    'Rendez-vous', replace == null ? agDansAgenda() : replace);
+}
+function agRdvSave(){
+  const p = $('#sheet-panel [data-ag-rdv]'); if (!p) return false;
+  const t = ($('#ag-r-t').value || '').trim(), d = $('#ag-r-d').value, h = $('#ag-r-h').value || '', l = ($('#ag-r-l').value || '').trim();
+  if (!t){ toast('Dis ou écris ce que c\'est.'); return false; }
+  if (!agDate(d)){ toast('Choisis le jour.'); return false; }
+  const a = agGet(), id = p.dataset.agRdv, o = a.rdv.find(x => x.id === id);
+  if (o) Object.assign(o, { t:t.slice(0, 80), d, h, l:l.slice(0, 80) }); else a.rdv.push({ id:'r' + Date.now().toString(36), t:t.slice(0, 80), d, h, l:l.slice(0, 80) });
+  agSet(a); toast('Rendez-vous enregistré.'); S.ag.ref = d; agOuvrir(true); return true;
+}
+
+/* ----- Où est « là-bas » ----- */
+function agLieuForm(replace){
+  const a = agGet();
+  showOpt(sheetHead('Là-bas') + '<div class="pad sheet-body rg ag"><p class="small">L\'endroit où tu vas d\'habitude (travail, école…). Il reste dans ton téléphone et sert à calculer ta route.</p>' +
+    '<form class="rg-form" data-agform="lieu"><input name="n" type="text" placeholder="Nom (ex. Travail)" value="' + esc(a.lieu ? a.lieu.nom : 'Travail') + '" autocomplete="off"></form>' +
+    '<form class="rg-form" data-agform="lieu"><input name="q" type="text" placeholder="Adresse ou ville" autocomplete="off"><button class="btn sm" type="submit">Chercher</button></form><div class="rg-res" id="ag-lieu-res"></div></div>' +
+    agFoot('<button class="btn" data-action="ag-retour">Retour</button>'), 'Là-bas', replace == null ? agDansAgenda() : replace);
+}
+async function agLieuCherche(q){
+  const el = $('#ag-lieu-res'); if (!el) return;
+  el.innerHTML = '<p class="muted small">Recherche…</p>';
+  const L = await chercheLieu(q, LS.get('mds.pos', null));
+  S.ag.res = L;
+  el.innerHTML = L.length ? L.map((x, i) => '<button class="row" data-action="ag-lieu-pick" data-i="' + i + '"><span class="row-main"><span class="row-title">' + esc(x.nom) + '</span><span class="row-meta">' + esc(x.label || '') + '</span></span></button>').join('') : '<p class="muted small">' + (online() ? 'Je ne trouve rien. Essaie avec la ville.' : 'Pas de réseau pour chercher une adresse.') + '</p>';
+}
+function agLieuPick(i){
+  const x = (S.ag.res || [])[i]; if (!x) return;
+  const f = $('#sheet-panel form[data-agform="lieu"] [name="n"]'), nom = ((f && f.value) || x.nom || 'Là-bas').trim().slice(0, 40);
+  const a = agGet(); a.lieu = { nom, lat:r3(x.lat), lon:r3(x.lon), adr:x.label || '' }; agSet(a);
+  try { retiensLieu(nom, x); } catch (e) {}
+  toast('Là-bas : ' + nom); agOuvrir(true);
+}
+
+/* ----- Dicter ses trajets ----- */
+function agDraft(){ const st = agState(); if (!st.draft) st.draft = { items:[], scope:agScopeDefaut() }; return st.draft; }
+function agDates(D){
+  const now = new Date(), t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return agPlage(D.scope, now).filter(d => d >= t0 && D.items.some(i => i.wd === agWd(d) && (i.off || i.h)));
+}
+const agListe = D => D.items.map(i => 'le ' + AG_JOURS[i.wd] + (i.off ? ', pas de trajet' : i.h ? ', là-bas à ' + agHSay(i.h) : ', heure à préciser')).join(' ; ');
+function agDicter(replace){
+  const D = agDraft(), manque = D.items.some(i => !i.off && !i.h), n = agDates(D).length;
+  const rows = D.items.map(i => '<li class="ag-dr' + (!i.off && !i.h ? ' need' : '') + '"><b>' + cap(AG_JOURS[i.wd]) + '</b>' +
+    (i.off ? '<span class="ag-chip off">Pas de trajet</span>' : '<input type="time" data-agf="draft-h" data-wd="' + i.wd + '" value="' + esc(i.h || '') + '" aria-label="Heure pour ' + AG_JOURS[i.wd] + '">') +
+    (i.amb ? '<small class="ag-warn">matin ou soir ?</small>' : '') +
+    '<button class="btn sm ghost" data-action="ag-dr-off" data-wd="' + i.wd + '">' + (i.off ? 'Remettre' : 'Repos') + '</button><button class="iconbtn" data-action="ag-dr-del" data-wd="' + i.wd + '" aria-label="Retirer ' + AG_JOURS[i.wd] + '">' + icon('close', 16) + '</button></li>').join('');
+  showOpt(sheetHead('Mes trajets') + '<div class="pad sheet-body rg ag">' +
+    '<p class="small">Touche le micro et dis tes jours, comme ça : <i>« Lundi, je dois être là-bas à 7 h. Mardi à 8 h. Mercredi, je commence à 9 h 30. »</i> Tu peux dire « repos » pour un jour sans trajet.</p>' +
+    '<button class="btn primary ag-bigmic" data-action="ag-mic" data-c="trajets">' + icon('mic', 20) + ' Dicter mes jours</button>' +
+    '<form class="rg-form" data-agform="texte"><input name="q" type="text" placeholder="…ou écris : lundi 7h, mardi 8h30" autocomplete="off"><button class="btn sm" type="submit">OK</button></form>' +
+    '<section class="rg-sec"><h3>Pour quelle période ?</h3><div class="ag-scopes">' + AG_SCOPES.map(s => '<button class="btn sm' + (D.scope === s[0] ? ' primary' : '') + '" data-action="ag-scope" data-s="' + s[0] + '">' + s[1] + '</button>').join('') + '</div>' +
+    '<p class="muted small">' + (n ? n + ' jour' + (n > 1 ? 's' : '') + ' concerné' + (n > 1 ? 's' : '') + ' : du ' + agJourLong(agDates(D)[0]) + ' au ' + agJourLong(agDates(D)[n - 1]) + '.' : 'Dicte au moins un jour.') + '</p></section>' +
+    (D.items.length ? '<section class="rg-sec"><h3>Ce que j\'ai noté</h3><ul class="ag-draft">' + rows + '</ul><p class="muted small">Regarde bien, et modifie une heure en la touchant si besoin.</p></section>' : '') +
+    '</div>' + agFoot('<button class="btn" data-action="ag-retour">Annuler</button>', '<button class="btn primary" data-action="ag-valider"' + (!D.items.length ? ' disabled' : '') + '>' + (manque ? 'Il manque une heure' : 'Relire et valider') + '</button>'),
+    'Mes trajets', replace == null ? agDansAgenda() : replace);
+}
+/* Ajoute ce qui vient d'être compris au brouillon (un jour redit remplace l'ancien). */
+function agFusionne(r){
+  const D = agDraft();
+  r.items.forEach(it => { const i = D.items.findIndex(x => x.wd === it.wd); if (i >= 0) D.items[i] = it; else D.items.push(it); });
+  D.items.sort((a, b) => a.wd - b.wd);
+  if (r.scope) D.scope = r.scope;
+  agDicter(true);
+}
+function agApresDictee(){
+  const D = agDraft(), manque = D.items.filter(i => !i.off && !i.h);
+  if (manque.length){ const q = 'Il me manque l\'heure pour ' + manque.map(i => AG_JOURS[i.wd]).join(' et ') + '. Dis-la moi, par exemple : ' + AG_JOURS[manque[0].wd] + ' 8 heures.'; sayShort(q); return; }
+  const q = 'J\'ai noté : ' + agListe(D) + '. Tu veux qu\'on valide ensemble pour être sûr ? Tu peux aussi regarder ce qui est écrit et le modifier.';
+  sayShort(q, () => { if (Voice.ok) askYes(() => agValider(), () => sayShort('D\'accord. Regarde, modifie si besoin, puis touche Relire et valider.')); });
+}
+/* Vérifier ensemble : la liste est relue à voix haute, puis « c'est bon ? ». */
+function agValider(){
+  const D = agDraft(); if (!D.items.length) return;
+  if (D.items.some(i => !i.off && !i.h)){ toast('Il manque une heure : touche le jour en rouge.'); agDicter(true); return; }
+  const dates = agDates(D);
+  showOpt(sheetHead('Vérifions ensemble') + '<div class="pad sheet-body rg ag"><p class="small">Voilà ce que je vais enregistrer. Si quelque chose est faux, touche « Corriger ».</p>' +
+    '<ul class="ag-recap">' + dates.map(d => { const i = D.items.find(x => x.wd === agWd(d)); return '<li><b>' + cap(agJourLong(d)) + '</b><span>' + (i.off ? 'pas de trajet' : 'là-bas à ' + agHDisp(i.h)) + '</span></li>'; }).join('') + '</ul>' +
+    '<p class="muted small">' + dates.length + ' jour' + (dates.length > 1 ? 's' : '') + ' en tout. Tu pourras toujours tout revoir et modifier dans ton agenda.</p></div>' +
+    agFoot('<button class="btn" data-action="ag-corriger">Corriger</button>', '<button class="btn primary" data-action="ag-enregistrer">Oui, enregistrer</button>'), 'Vérifier', true);
+  const q = 'Je relis : ' + agListe(D) + '. Ça fait ' + dates.length + ' jour' + (dates.length > 1 ? 's' : '') + '. C\'est bon ?';
+  sayShort(q, () => { if (Voice.ok) askYes(() => agEnregistrer(), () => { sayShort('D\'accord, dis-moi ce qu\'il faut changer.'); agDicter(true); }); });
+}
+function agEnregistrer(){
+  const D = agDraft(), dates = agDates(D), a = agGet();
+  dates.forEach(d => { const i = D.items.find(x => x.wd === agWd(d)); a.trajets[agIso(d)] = i.off ? { off:true } : { h:i.h }; });
+  agSet(a); S.ag.draft = null; S.ag.vue = 'sem'; S.ag.ref = agIso(dates[0] || new Date());
+  toast(dates.length + ' jour' + (dates.length > 1 ? 's' : '') + ' enregistré' + (dates.length > 1 ? 's' : '') + '.');
+  sayShort('C\'est enregistré. Tu peux tout revoir dans ton agenda.');
+  agOuvrir(true);
+}
+
+/* ----- La voix ----- */
+function agMic(c){ agState(); S.agCtx = c; Voice.start('agenda'); }
+function agVoix(alts){
+  const c = S.agCtx;
+  if (c === 'rdv'){
+    for (const raw of alts){
+      const r = agParseRdv(raw);
+      if (r.d || r.h || r.t !== 'Rendez-vous'){
+        if (!r.d) r.d = S.agJour || agIso(new Date());
+        agRdvForm(r, agDansAgenda(), true);
+        const q = 'Rendez-vous : ' + r.t + ', ' + agJourLong(agDate(r.d)) + (r.h ? ' à ' + agHSay(r.h) : '') + '. C\'est bon ?';
+        sayShort(q, () => { if (Voice.ok) askYes(() => agRdvSave(), () => sayShort('D\'accord, corrige à l\'écran.')); });
+        return { msg:'« ' + raw + ' »', keep:true };
+      }
+    }
+    return { msg:'Je n\'ai pas compris. Dis par exemple : dentiste jeudi à 14 heures 30.', fail:true };
+  }
+  for (const raw of alts){
+    const r = agParseTrajets(raw);
+    if (r.items.length){ agFusionne(r); agApresDictee(); return { msg:'« ' + raw + ' »', keep:true }; }
+  }
+  return { msg:'Je n\'ai pas compris. Dis par exemple : lundi 7 heures, mardi 8 heures.', fail:true };
+}
+function agCommande(s){
+  if (/ (ajoute|ajouter|note|noter|mets|mettre|nouveau|enregistre) .*(rendez vous|rdv)/.test(s)){ S.agJour = null; agMic('rdv'); return { msg:'Dis ton rendez-vous.', keep:true }; }
+  if (/ (dicte|dicter|enregistre|enregistrer|note|noter|mets|mettre) .*(trajets?|semaine|planning)/.test(s)){ agDraft(); agDicter(false); return { msg:'Dicte tes jours.', keep:true }; }
+  if (/ (mon agenda|mes rendez vous|mon planning|mes trajets) /.test(s)){ agOuvrir(false); return { msg:'Ton agenda.', keep:true }; }
+  return null;
+}
+
+/* ----- Ce que dit la Matinale ----- */
+function agDitJour(iso, quand){
+  const a = agGet(), tr = a.trajets[iso], ph = [];
+  if (tr && !tr.off && tr.h) ph.push('tu dois être ' + (a.lieu ? 'à ' + a.lieu.nom : 'là-bas') + ' à ' + agHSay(tr.h));
+  else if (tr && tr.off) ph.push('pas de trajet prévu');
+  agRdvDu(a, iso).forEach(r => ph.push('rendez-vous : ' + r.t + (r.h ? ' à ' + agHSay(r.h) : '')));
+  return ph.length ? quand + ', ' + ph.join('. ') + '.' : '';
+}
+function agAujourdhui(){
+  const a = agGet(), iso = agIso(new Date()), tr = a.trajets[iso];
+  return { phrase:agDitJour(iso, 'Aujourd\'hui'), trajet: tr && !tr.off && tr.h && a.lieu ? { h:tr.h, lieu:a.lieu } : null };
+}
+function agEcoute(){
+  const t0 = new Date(), a = agDitJour(agIso(t0), 'Aujourd\'hui'), b = agDitJour(agIso(agPlus(t0, 1)), 'Demain');
+  const txt = (a + ' ' + b).trim() || 'Tu n\'as rien de prévu aujourd\'hui ni demain.';
+  matinDire('agenda', 'Mon agenda', txt);
+}
+function agCardHTML(){
+  const a = agGet(), t0 = new Date(), iso = agIso(t0), dem = agIso(agPlus(t0, 1)), soir = t0.getHours() >= 17;
+  const vide = !Object.keys(a.trajets).length && !a.rdv.length;
+  const lignes = (i, titre, fort) => {
+    const tr = a.trajets[i], rs = agRdvDu(a, i), L = [];
+    if (tr) L.push(tr.off ? 'Pas de trajet' : icon('car', 14) + ' Là-bas à ' + agHDisp(tr.h) + (a.lieu ? ' · ' + esc(a.lieu.nom) : ''));
+    rs.forEach(r => L.push(icon('calendar', 14) + ' ' + (r.h ? agHDisp(r.h) + ' · ' : '') + esc(r.t)));
+    return L.length ? '<div class="ag-bloc' + (fort ? ' fort' : '') + '"><b>' + titre + '</b>' + L.map(x => '<p class="mt-ev">' + x + '</p>').join('') + '</div>' : '';
+  };
+  let h = '<section class="section ag-sec"><div class="wrap"><div class="matin ag-card"><div class="mt-head"><h2 class="mt-h">Mon agenda</h2><button class="iconbtn" data-action="ag-open" aria-label="Ouvrir mon agenda">' + icon('calendar', 19) + '</button></div>';
+  if (vide) h += '<p class="mt-sub">Dicte tes trajets et tes rendez-vous : la Matinale te les rappelle chaque matin, avant les informations.</p><div class="mt-chips"><button class="btn sm primary" data-action="ag-dicter">' + icon('mic', 15) + ' Dicter ma semaine</button><button class="btn sm" data-action="ag-open">Ouvrir</button></div>';
+  else {
+    const x = lignes(iso, 'Aujourd\'hui', !soir), y = lignes(dem, soir ? 'Demain : n\'oublie pas' : 'Demain', soir);
+    h += (x || y ? x + y : '<p class="mt-sub">Rien de prévu aujourd\'hui ni demain.</p>') + '<div class="mt-chips"><button class="btn sm" data-action="ag-open">Ouvrir</button><button class="btn sm ghost" data-action="ag-ecoute">' + icon('play', 15) + ' Écouter</button></div>';
+  }
+  return h + '</div></div></section>';
+}
+
+/* ----- Les touches et les formulaires ----- */
+function agClick(e){
+  const a = e.target.closest('[data-action^="ag-"]'); if (!a) return;
+  const act = a.dataset.action, st = agState();
+  switch (act){
+    case 'ag-open': agOuvrir(S.sheetOpen && agDansAgenda() ? true : false); break;
+    case 'ag-vue': st.vue = a.dataset.v === 'mois' ? 'mois' : 'sem'; agOuvrir(true); break;
+    case 'ag-prev': case 'ag-next': {
+      const d = agDate(st.ref) || new Date(), s = act === 'ag-next' ? 1 : -1;
+      st.ref = agIso(st.vue === 'mois' ? new Date(d.getFullYear(), d.getMonth() + s, 1) : agPlus(d, 7 * s)); agOuvrir(true); break;
+    }
+    case 'ag-auj': st.ref = agIso(new Date()); agOuvrir(true); break;
+    case 'ag-jour': st.ref = a.dataset.d; agJour(a.dataset.d); break;
+    case 'ag-retour': agOuvrir(true); break;
+    case 'ag-j-off': { const p = $('#sheet-panel [data-ag-jour]'); if (p){ const g = agGet(); g.trajets[p.dataset.agJour] = { off:true }; agSet(g); toast('Pas de trajet ce jour.'); agOuvrir(true); } break; }
+    case 'ag-j-del': { const p = $('#sheet-panel [data-ag-jour]'); if (p){ const g = agGet(); delete g.trajets[p.dataset.agJour]; agSet(g); toast('Trajet effacé.'); agJour(p.dataset.agJour, true); } break; }
+    case 'ag-j-save': agJourSave(); break;
+    case 'ag-rdv-new': agRdvForm({ d:a.dataset.d || agIso(new Date()) }); break;
+    case 'ag-rdv-voix': S.agJour = a.dataset.d || null; agMic('rdv'); break;
+    case 'ag-rdv-edit': { const r = agGet().rdv.find(x => x.id === a.dataset.id); if (r) agRdvForm(r); break; }
+    case 'ag-rdv-save': agRdvSave(); break;
+    case 'ag-rdv-del': { if (!a.dataset.ok){ a.dataset.ok = '1'; a.textContent = 'Confirmer la suppression'; break; } const g = agGet(); g.rdv = g.rdv.filter(x => x.id !== a.dataset.id); agSet(g); toast('Rendez-vous supprimé.'); agOuvrir(true); break; }
+    case 'ag-lieu': agLieuForm(); break;
+    case 'ag-lieu-pick': agLieuPick(Number(a.dataset.i)); break;
+    case 'ag-dicter': agDicter(S.sheetOpen && agDansAgenda() ? true : false); break;
+    case 'ag-mic': agMic(a.dataset.c || 'trajets'); break;
+    case 'ag-scope': agDraft().scope = a.dataset.s; agDicter(true); break;
+    case 'ag-dr-off': { const D = agDraft(), i = D.items.find(x => x.wd === Number(a.dataset.wd)); if (i){ if (i.off){ delete i.off; i.h = null; } else { i.off = true; i.h = null; } } agDicter(true); break; }
+    case 'ag-dr-del': { const D = agDraft(); D.items = D.items.filter(x => x.wd !== Number(a.dataset.wd)); agDicter(true); break; }
+    case 'ag-valider': agValider(); break;
+    case 'ag-corriger': agDicter(true); break;
+    case 'ag-enregistrer': agEnregistrer(); break;
+    case 'ag-ecoute': agEcoute(); break;
+  }
+}
+document.addEventListener('click', agClick);
+document.addEventListener('change', e => {
+  const t = e.target; if (!t || !t.matches || !t.matches('[data-agf="draft-h"]')) return;
+  const D = agDraft(), i = D.items.find(x => x.wd === Number(t.dataset.wd)); if (!i) return;
+  i.h = /^\d{2}:\d{2}$/.test(t.value) ? t.value : null; i.amb = false; delete i.off; agDicter(true);
+});
+document.addEventListener('submit', e => {
+  const f = e.target; if (!f || !f.matches || !f.matches('form[data-agform]')) return;
+  e.preventDefault();
+  const q = ((f.elements.q || {}).value || '').trim(); if (!q) return;
+  if (f.dataset.agform === 'lieu') agLieuCherche(q);
+  else if (f.dataset.agform === 'texte'){ const r = agParseTrajets(q); if (r.items.length){ agFusionne(r); agApresDictee(); } else toast('Je n\'ai pas compris. Écris par exemple : lundi 7h, mardi 8h30.'); }
+});
+
 function styleActuel(){ return document.documentElement.dataset.style || 'classique'; }
 function showOpt(html, label, replace){ S.nextSheetSec = document.documentElement.dataset.flux || 'sci'; showSheet(html, label, replace); }
 function openOptions(){
@@ -3889,6 +4397,7 @@ function openOptions(){
     row('opt-voix', 'headphones', 'Voix', 'Utilisée : ' + esc(vxNom()) + '. Écouter, choisir, télécharger, effacer.') +
     row('opt-style', 'palette', 'Style visuel', esc(st.nom) + (st.sombre ? '' : ' · ' + ({ light:'clair', dark:'sombre' }[th] || 'clair ou sombre selon le téléphone')) + '. ' + STYLES.length + ' styles au choix.') +
     row('opt-veh', 'car', 'Mon véhicule', vehActif() ? esc(vehActif().nom) + ' · ' + esc(vehNrj(vehActif()).nom) + '. Coût du trajet, station la moins chère, batterie.' : 'Ajoute ta voiture : itinéraire adapté, coût, station la moins chère, batterie.') +
+    row('ag-open', 'calendar', 'Mon agenda', 'Trajets et rendez-vous : dicte, vérifie, modifie. Rappelés chaque matin avant les infos.') +
     row('m-reglages', 'sun', 'Point du matin', 'Météo, lieux, point de départ, trafic, informations du matin.') +
     row('opt-micro', 'mic', 'Micro', 'Comprendre ta voix : en ligne, ou sans Internet.') +
     row('opt-fav', 'star', 'Mes favoris', 'Les découvertes que tu as gardées.') +
