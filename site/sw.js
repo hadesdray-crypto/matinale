@@ -6,7 +6,7 @@
    - L'audio (mp3) n'est gardé que si l'utilisateur le demande (bouton « Garder l'audio ») : les 7 derniers jours restent
      dans le téléphone, les plus anciens sont supprimés. Sinon, sans réseau, la voix du téléphone lit l'édition.
    - Les images libres de droits des fiches sont gardées 8 jours. */
-const APPLI = 'matinale-appli-2';      // à changer quand la liste des fichiers de l'appli change
+const APPLI = 'matinale-appli-3';      // à changer quand la liste des fichiers de l'appli change
 const AUDIO = 'matinale-audio';        // audio gardé à la demande : les 7 derniers jours seulement
 const IMAGES = 'matinale-images';      // images libres de droits des fiches : les 8 derniers jours
 const JOURS_AUDIO = 7;

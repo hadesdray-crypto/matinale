@@ -1171,7 +1171,7 @@ function secSwitchHTML(){
 function setSec(sec){ S.sec = sec === 'pol' ? 'pol' : 'sci'; if (S.tab !== 'aujourdhui') setTab('aujourdhui'); else { renderToday(); window.scrollTo(0, 0); } if (S.sec === 'pol' && !S.pol) loadPol(); fluxRacine(); }
 /* Le flux affiché colore toute l'appli : sciences en bleu, politique en rouge (dans chaque style). */
 function fluxRacine(){
-  const f = S.tab === 'aujourdhui' && S.sec === 'pol' ? 'pol' : 'sci', r = document.documentElement;
+  const f = (S.tab === 'aujourdhui' || S.tab === 'ecouter') && S.sec === 'pol' ? 'pol' : 'sci', r = document.documentElement;
   if (r.dataset.flux !== f) r.dataset.flux = f;
   $$('.fluxbar [data-f]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.f === f)));
   const bs = $('.brand-sub'); if (bs) bs.textContent = f === 'pol' ? 'Politique & monde' : 'des Sciences';
@@ -1602,15 +1602,47 @@ function renderFavs(){
 }
 
 /* ---------- Vue « Écouter » ---------- */
+/* Sélecteur Sciences / Politique & monde propre à la page Écouter (sans retourner sur Aujourd'hui). */
+function listenSwitchHTML(){
+  return '<div class="secsw" role="tablist" aria-label="Rubrique à écouter"><button role="tab" data-action="sec-ecoute" data-s="sci" aria-selected="' + (S.sec !== 'pol') + '">' + icon('atom', 17) + ' Sciences</button>' +
+    '<button role="tab" data-action="sec-ecoute" data-s="pol" aria-selected="' + (S.sec === 'pol') + '">' + icon('flag', 17) + ' Politique & monde</button></div>';
+}
+function setSecEcoute(sec){ S.sec = sec === 'pol' ? 'pol' : 'sci'; if (S.sec === 'pol' && !(S.pol && S.pol.ed)) loadPol().then(() => { if (S.tab === 'ecouter') renderListen(); }); renderListen(); fluxRacine(); window.scrollTo(0, 0); }
+function renderListenPol(){
+  const el = $('#view-ecouter'); const P = S.pol && S.pol.ed;
+  if (!P){
+    el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Écouter</h2><span class="sec-sub">Politique & monde</span></div>' + listenSwitchHTML() +
+      '<div class="empty"><p>' + (S.polLoading ? 'Chargement de la rubrique Politique & monde…' : 'La rubrique Politique & monde est préparée chaque matin.' + (online() ? '' : ' Pas de réseau pour l\'instant.')) + '</p>' + (S.polLoading ? '' : '<button class="btn sm" data-action="pol-retry">' + icon('refresh', 15) + ' Réessayer</button>') + '</div></div></section>';
+    return;
+  }
+  /* Le lecteur est préparé avec le flash politique, jamais avec l'édition des sciences. */
+  if (!Player.chapters.length || (!Player.started && Player.edDate !== P.key)){
+    const seg = fileSegment('pflash');
+    Player.load('pflash', seg ? seg.chapters : buildChapters('flash', P), 'Flash politique & monde', P.key, seg);
+  }
+  const fl = estMin(buildChapters('flash', P)), zones = ['france', 'monde'].filter(z => P.items.some(i => i.cat === z));
+  el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Écouter</h2><span class="sec-sub">Politique & monde · ' + esc(cap(longDate(P.date))) + '</span></div>' + listenSwitchHTML() +
+    '<div class="listen-grid"><div class="player"><p class="pl-label" id="pl-label"></p><h3 class="pl-title" id="pl-title"></h3><div class="pl-bar" aria-hidden="true"><i id="pl-fill"></i></div><div class="pl-time"><span id="pl-pos"></span><span id="pl-left"></span></div>' +
+    '<div class="pl-ctrls"><button class="iconbtn" data-action="prev" aria-label="Chapitre précédent">' + icon('prev', 20) + '</button><button class="iconbtn lg" data-action="skip" data-d="-1" aria-label="Reculer de 10 secondes">' + icon('back10', 26) + '</button><button class="playbtn" id="pl-toggle" data-action="toggle" aria-label="Lecture">' + icon('play', 30) + '</button><button class="iconbtn lg" data-action="skip" data-d="1" aria-label="Avancer de 10 secondes">' + icon('fwd10', 26) + '</button><button class="iconbtn" data-action="next" aria-label="Chapitre suivant">' + icon('next', 20) + '</button></div>' +
+    speedHTML('pl') + '<div class="pl-set"><button class="btn sm ghost" data-action="opt-voix">' + icon('headphones', 16) + ' Voix : <span class="pl-voix-n">' + esc(vxNom()) + '</span></button></div>' +
+    '<p class="pl-note">Lecture par la voix de synthèse de ton appareil. Pour une écoute continue, garde l\'écran allumé.</p></div>' +
+    '<div class="modes"><h3 class="sub-h">Choisir une émission</h3>' +
+    '<button class="mode" data-action="load" data-mode="pflash"><span class="mode-ic">' + icon('flag', 18) + '</span><span><b>Le flash politique & monde</b><small>' + P.items.length + ' sujets · ≈ ' + fl + ' min</small></span></button>' +
+    '<button class="mode" data-action="ask-deep" data-sec="pol"><span class="mode-ic">' + icon('mic', 18) + '</span><span><b>Approfondir un sujet</b><small>Choisis un numéro' + (Voice.ok ? ', à la voix ou au doigt' : '') + '</small></span></button>' +
+    (zones.length ? '<p class="sub-h small">Par zone</p><div class="chips wrapchips">' + zones.map(z => '<button class="chip" data-action="load" data-mode="pcat" data-cat="' + z + '">' + icon(CAT[z].icon, 15) + ' ' + esc(CAT[z].short) + ' · ' + P.items.filter(i => i.cat === z).length + '</button>').join('') + '</div>' : '') + '</div></div>' +
+    '<h3 class="sub-h">Chapitres</h3><ol class="chapters" id="chapters"></ol><h3 class="sub-h">Texte de l\'émission</h3><div class="transcript" id="transcript"></div></div></section>';
+  renderVoiceSelect(); renderChapters(); renderTranscript(); updatePlayerUI();
+}
 function renderListen(){
   const el = $('#view-ecouter'); const ed = S.edition;
+  if (S.sec === 'pol'){ renderListenPol(); return; }
   if (S.status !== 'ready' || !ed){ el.innerHTML = stateHTML(); return; }
   if (!Player.chapters.length || (!Player.started && (Player.edDate !== ed.date || (Player.engine !== 'file' && fileSegment('full'))))){
     const seg = fileSegment('full');
     Player.load('full', seg ? seg.chapters : buildChapters('full', ed), 'Édition complète', ed.date, seg);
   }
   const fl = estMin(buildChapters('flash', ed)), fu = estMin(buildChapters('full', ed));
-  el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Écouter</h2><span class="sec-sub">' + esc(cap(longDate(ed.date))) + '</span></div>' +
+  el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Écouter</h2><span class="sec-sub">Sciences · ' + esc(cap(longDate(ed.date))) + '</span></div>' + listenSwitchHTML() +
     listenNoteHTML() + '<div id="off-slot">' + offlineCardHTML() + '</div>' +
     '<div class="listen-grid"><div class="player"><p class="pl-label" id="pl-label"></p><h3 class="pl-title" id="pl-title"></h3><div class="pl-bar" aria-hidden="true"><i id="pl-fill"></i></div><div class="pl-time"><span id="pl-pos"></span><span id="pl-left"></span></div>' +
     '<div class="pl-ctrls"><button class="iconbtn" data-action="prev" aria-label="Chapitre précédent">' + icon('prev', 20) + '</button><button class="iconbtn lg" data-action="skip" data-d="-1" aria-label="Reculer de 10 secondes">' + icon('back10', 26) + '</button><button class="playbtn" id="pl-toggle" data-action="toggle" aria-label="Lecture">' + icon('play', 30) + '</button><button class="iconbtn lg" data-action="skip" data-d="1" aria-label="Avancer de 10 secondes">' + icon('fwd10', 26) + '</button><button class="iconbtn" data-action="next" aria-label="Chapitre suivant">' + icon('next', 20) + '</button></div>' +
@@ -1620,7 +1652,7 @@ function renderListen(){
     '<button class="mode" data-action="load" data-mode="flash"><span class="mode-ic">' + icon('play', 18) + '</span><span><b>Le flash</b><small>' + ed.items.length + ' titres · ≈ ' + fl + ' min</small></span></button>' +
     '<button class="mode" data-action="load" data-mode="full"><span class="mode-ic">' + icon('headphones', 18) + '</span><span><b>L\'édition complète</b><small>Tous les sujets en détail · ≈ ' + fu + ' min</small></span></button>' +
     (frHighlights(ed).length ? '<button class="mode" data-action="load" data-mode="franco"><span class="mode-ic">' + icon('bubble', 18) + '</span><span><b>Les temps forts francophones</b><small>' + frHighlights(ed).length + ' sujets · ≈ ' + estMin(buildChapters('franco', ed)) + ' min</small></span></button>' : '') +
-    (S.pol && S.pol.ed ? '<button class="mode" data-action="load" data-mode="pflash"><span class="mode-ic">' + icon('flag', 18) + '</span><span><b>Le flash politique & monde</b><small>' + S.pol.ed.items.length + ' sujets · ≈ ' + estMin(buildChapters('flash', S.pol.ed)) + ' min</small></span></button>' : '') +
+    (S.pol && S.pol.ed ? '<button class="mode" data-action="sec-ecoute" data-s="pol"><span class="mode-ic">' + icon('flag', 18) + '</span><span><b>Le flash politique & monde</b><small>' + S.pol.ed.items.length + ' sujets · ≈ ' + estMin(buildChapters('flash', S.pol.ed)) + ' min</small></span></button>' : '') +
     '<button class="mode" data-action="ask-deep"><span class="mode-ic">' + icon('mic', 18) + '</span><span><b>Approfondir un sujet</b><small>Choisis un numéro' + (Voice.ok ? ', à la voix ou au doigt' : '') + '</small></span></button>' +
     '<p class="sub-h small">Par catégorie</p><div class="chips wrapchips">' + CATS.filter(c => ed.items.some(i => i.cat === c.id)).map(c => '<button class="chip" data-action="load" data-mode="cat" data-cat="' + c.id + '">' + icon(c.icon, 15) + ' ' + esc(c.short) + '</button>').join('') + '</div></div></div>' +
     '<h3 class="sub-h">Chapitres</h3><ol class="chapters" id="chapters"></ol><h3 class="sub-h">Texte de l\'émission</h3><div class="transcript" id="transcript"></div></div></section>';
@@ -1650,7 +1682,7 @@ function buildChapters(mode, ed, cat){
   if (!ed) return [];
   const Pd = ed.podcast || {}; const items = ed.items; const ch = []; const dt = longDate(ed.date);
   if (mode === 'flash'){
-    ch.push({ title:'Ouverture', text: Pd.flashIntro || ('Bonjour, voici le flash de la Matinale des sciences du ' + dt + '.') });
+    ch.push({ title:'Ouverture', text: Pd.flashIntro || (ed.section === 'pol' ? ('Bonjour, voici le flash politique et monde du ' + dt + '.') : ('Bonjour, voici le flash de la Matinale des sciences du ' + dt + '.')) });
     items.forEach((it, i) => ch.push({ key: it.key, title: it.title, text: 'Sujet ' + (i + 1) + '. ' + (it.flash || it.dek || it.title) }));
     ch.push({ title:'Clôture', text: FLASH_ASK });
   } else if (mode === 'full'){
@@ -1662,7 +1694,7 @@ function buildChapters(mode, ed, cat){
     ch.push({ title:'Clôture', text: Pd.outro || "C'est la fin de cette édition. Rendez-vous demain matin pour de nouvelles découvertes." });
   } else if (mode === 'cat'){
     const c = CAT[cat]; const its = items.filter(i => i.cat === cat); if (!c || !its.length) return [];
-    ch.push({ title: c.label, text: 'Les nouvelles de la catégorie ' + c.label + ', dans la Matinale des sciences du ' + dt + '.' });
+    ch.push({ title: c.label, text: ed.section === 'pol' ? ('Les sujets ' + (cat === 'france' ? 'France' : 'Monde') + ' de la rubrique Politique et monde du ' + dt + '.') : ('Les nouvelles de la catégorie ' + c.label + ', dans la Matinale des sciences du ' + dt + '.') });
     its.forEach(it => ch.push({ key: it.key, title: it.title, text: 'Sujet ' + (items.indexOf(it) + 1) + '. ' + itemAudio(it) }));
   } else if (mode === 'concept'){
     if (ed.concept && ed.concept.title) ch.push({ title:'Le concept du jour', text: conceptAudio(ed.concept) });
@@ -1969,7 +2001,8 @@ function startMode(mode, opt){
   else if (mode === 'hl'){ const h = frHighlights(ed).find(x => x.id === opt.hl); if (!h) return; chapters = [{ title: h.title, text: h.audio || arr(h.text).join(' ') }]; label = 'Francophonie'; }
   else if (mode === 'notion'){ const n = notionById(opt.id); if (!n) return; chapters = [{ title: n.title, text: notionAudio(n) }]; label = 'Comprendre'; edDate = null; }
   else if (mode === 'flash'){ chapters = buildChapters('flash', ed); label = 'Le flash'; }
-  else if (mode === 'pflash'){ const P = S.pol && S.pol.ed; if (!P){ loadPol().then(e => { if (e) startMode('pflash'); }); toast('La rubrique Politique & monde se charge…'); return; } chapters = buildChapters('flash', P); label = 'Flash politique & monde'; edDate = P.key; }
+  else if (mode === 'pflash' || mode === 'pcat'){ const P = S.pol && S.pol.ed; if (!P){ loadPol().then(e => { if (e) startMode(mode, opt); }); toast('La rubrique Politique & monde se charge…'); return; }
+    if (mode === 'pcat'){ chapters = buildChapters('cat', P, opt.cat); label = 'Politique & monde · ' + ((CAT[opt.cat] || {}).label || ''); } else { chapters = buildChapters('flash', P); label = 'Flash politique & monde'; } edDate = P.key; }
   else { chapters = buildChapters('full', ed); label = 'Édition complète'; }
   if (!chapters.length) return;
   /* L'enregistrement du jour passe en premier (il continue écran éteint) ; sinon, la voix du téléphone. */
@@ -3740,6 +3773,7 @@ function onClick(e){
     case 'mic': Voice.start(a.dataset.ctx); break;
     case 'm-reglages': openMatinReglages(); break;
     case 'sec': setSec(a.dataset.s); break;
+    case 'sec-ecoute': setSecEcoute(a.dataset.s); break;
     case 'pol-retry': S.pol = null; loadPol(); renderToday(); break;
     case 'm-geo': S.matin = S.matin || {}; S.matin.wxNeed = false; matinRedraw(); matinMaj(true, true); break;
     case 'm-tr-maj': { const last = dernierTrajet(); if (last){ vbub('Je revérifie la route…', false, 2000); trajetVers(last.d, true).then(matinRedraw); } break; }
@@ -5139,7 +5173,7 @@ function vxEcoutePiper(id){
    L'édition du jour arrive toute seule. Une nouvelle version de l'appli, elle, s'annonce :
    « Nouvelle mise à jour ! » avec ce qui change → « Mettre à jour » ou « Plus tard » → « Mise à jour terminée ! ».
    Jamais pendant une lecture, une question ou le mode douche : elle attend la fin. */
-const APP_V = 7;
+const APP_V = 9;
 const Maj = { v:0, list:null, plusTard:0, t:0, last:0 };
 const majListe = l => arr(l).filter(e => e && Number(e.v) > 0 && Array.isArray(e.points));
 function majOccupe(){ return Player.playing || S.matinRun || Douche.on || !!S.awaitTrajet || (Voice.on && !Libre.on) || askOpen(); }

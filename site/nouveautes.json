@@ -1,5 +1,16 @@
 [
   {
+    "v": 9,
+    "date": "2026-11-03",
+    "titre": "Écouter : Politique & monde bien à part",
+    "points": [
+      "Dans le menu rouge (Politique & monde), l'onglet Écouter ne lance plus la Matinale des sciences : le lecteur est prêt avec le flash politique et monde.",
+      "En haut de la page Écouter, un choix Sciences / Politique & monde pour passer de l'un à l'autre sans repasser par l'accueil.",
+      "En rouge : le flash politique, « Approfondir un sujet », et l'écoute par zone (France, Monde). Les catégories scientifiques n'apparaissent plus là.",
+      "La page Écouter reste rouge tant que tu es dans Politique & monde."
+    ]
+  },
+  {
     "v": 8,
     "date": "2026-11-02",
     "titre": "Mon agenda et alerte de départ",
