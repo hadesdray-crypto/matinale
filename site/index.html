@@ -488,6 +488,8 @@ html[data-tsize="1"]{--ts:1.12} html[data-tsize="2"]{--ts:1.26} html[data-tsize=
 .secsw{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:14px 0 4px;padding:5px;border-radius:16px;background:var(--card);border:1px solid var(--rule)}
 .secsw button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:46px;padding:0 8px;border:0;border-radius:12px;background:transparent;color:var(--ink-2);font-family:var(--display);font-weight:700;font-size:14.5px;cursor:pointer}
 .secsw button[aria-selected="true"]{background:var(--accent);color:var(--on-accent)}
+/* Politique & monde : les onglets propres aux sciences (Vidéos, Francophonie, Comprendre) sont retirés */
+:root[data-flux="pol"] [data-tab="videos"],:root[data-flux="pol"] [data-tab="franco"],:root[data-flux="pol"] [data-tab="comprendre"]{display:none!important}
 .secsw button[data-s="pol"][aria-selected="true"]{background:#8C2232;color:#fff}
 .pol-mh{background:var(--band)}
 .pol-srcs{margin:6px 0 0;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
@@ -1171,7 +1173,7 @@ function secSwitchHTML(){
 function setSec(sec){ S.sec = sec === 'pol' ? 'pol' : 'sci'; if (S.tab !== 'aujourdhui') setTab('aujourdhui'); else { renderToday(); window.scrollTo(0, 0); } if (S.sec === 'pol' && !S.pol) loadPol(); fluxRacine(); }
 /* Le flux affiché colore toute l'appli : sciences en bleu, politique en rouge (dans chaque style). */
 function fluxRacine(){
-  const f = (S.tab === 'aujourdhui' || S.tab === 'ecouter') && S.sec === 'pol' ? 'pol' : 'sci', r = document.documentElement;
+  const f = S.sec === 'pol' ? 'pol' : 'sci', r = document.documentElement;
   if (r.dataset.flux !== f) r.dataset.flux = f;
   $$('.fluxbar [data-f]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.f === f)));
   const bs = $('.brand-sub'); if (bs) bs.textContent = f === 'pol' ? 'Politique & monde' : 'des Sciences';
@@ -1579,8 +1581,24 @@ function renderVideos(){
 }
 
 /* ---------- Vue « Catégories » ---------- */
+const polRowHTML = it => '<li><button class="row" data-action="open" data-key="' + esc(it.key) + '"><span class="row-main"><span class="row-title">' + t(it.title) + '</span><span class="row-meta">' + esc(dateLabel(it)) + (it.lieu ? ' · ' + esc(it.lieu) : '') + ' · ' + it.sources.length + ' source' + (it.sources.length > 1 ? 's' : '') + '</span></span></button></li>';
+function renderCatsPol(){
+  const el = $('#view-categories'); const P = S.pol && S.pol.ed;
+  if (!P){
+    el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Par zone</h2><span class="sec-sub">Politique & monde</span></div><div class="empty"><p>' + (S.polLoading ? 'Chargement de la rubrique Politique & monde…' : 'La rubrique Politique & monde est préparée chaque matin.') + '</p>' + (S.polLoading ? '' : '<button class="btn sm" data-action="pol-retry">' + icon('refresh', 15) + ' Réessayer</button>') + '</div></div></section>';
+    if (!S.polLoading) loadPol().then(() => { if (S.tab === 'categories' && S.sec === 'pol') renderCatsPol(); });
+    return;
+  }
+  el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Par zone</h2><span class="sec-sub">Politique & monde · ' + esc(cap(longDate(P.date))) + '</span></div><div class="catlist">' +
+    ['france', 'monde'].map(z => {
+      const c = CAT[z], its = P.items.filter(i => i.cat === z); if (!its.length) return '';
+      return '<section class="catblock"><header class="cb-head"><span class="cb-icon">' + icon(c.icon, 24) + '</span><div class="cb-title"><h3>' + esc(c.label) + '</h3><span class="sec-sub">' + its.length + ' sujet' + (its.length > 1 ? 's' : '') + '</span></div><button class="btn sm ghost" data-action="load" data-mode="pcat" data-cat="' + z + '">' + icon('headphones', 16) + ' Écouter</button></header>' +
+        '<ul class="rows">' + its.map(polRowHTML).join('') + '</ul></section>';
+    }).join('') + '</div></div></section>';
+}
 function renderCats(){
   const el = $('#view-categories'); const ed = S.edition;
+  if (S.sec === 'pol'){ renderCatsPol(); return; }
   if (S.status !== 'ready' || !ed){ el.innerHTML = stateHTML(); return; }
   el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Par catégorie</h2><span class="sec-sub">' + esc(cap(longDate(ed.date))) + '</span></div><div class="catlist">' +
     CATS.map(c => {
@@ -1595,8 +1613,10 @@ function renderCats(){
 function renderFavs(){
   const el = $('#view-favoris');
   const where = (S.uid && S.db && !S.prefsReadOnly) ? 'Tes favoris sont enregistrés dans ton compte et te suivent sur tous tes appareils.' : 'Tes favoris sont enregistrés dans ce navigateur.';
-  el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Favoris</h2><span class="sec-sub">' + S.favs.length + ' enregistré' + (S.favs.length > 1 ? 's' : '') + '</span></div>' +
-    (S.favs.length ? '<ul class="rows">' + S.favs.map(f => '<li><button class="row" data-action="open-fav" data-key="' + esc(f.k) + '"><span class="row-main"><span class="row-title">' + t(f.title) + '</span><span class="row-meta">' + esc((CAT[f.cat] || CAT.tech).label) + ' · édition du ' + esc(shortDate(f.date)) + '</span></span>' + evHTMLn(Number(f.level)) + '</button><button class="iconbtn fav" data-action="fav" data-key="' + esc(f.k) + '" aria-pressed="true" aria-label="Retirer des favoris">' + icon('star', 19) + '</button></li>').join('') + '</ul>'
+  const pol = S.sec === 'pol', favs = S.favs.filter(f => /^P/.test(String(f.k)) === pol), autres = S.favs.length - favs.length;
+  el.innerHTML = '<section class="section"><div class="wrap"><div class="sec-head"><h2 class="sec-title">Favoris</h2><span class="sec-sub">' + (pol ? 'Politique & monde · ' : 'Sciences · ') + favs.length + ' enregistré' + (favs.length > 1 ? 's' : '') + '</span></div>' +
+    (autres ? '<p class="muted small">' + autres + ' autre' + (autres > 1 ? 's' : '') + ' favori' + (autres > 1 ? 's' : '') + ' dans la rubrique ' + (pol ? 'Sciences' : 'Politique & monde') + '.</p>' : '') +
+    (favs.length ? '<ul class="rows">' + favs.map(f => '<li><button class="row" data-action="open-fav" data-key="' + esc(f.k) + '"><span class="row-main"><span class="row-title">' + t(f.title) + '</span><span class="row-meta">' + esc((CAT[f.cat] || CAT.tech).label) + ' · édition du ' + esc(shortDate(f.date)) + '</span></span>' + (/^P/.test(String(f.k)) ? '' : evHTMLn(Number(f.level))) + '</button><button class="iconbtn fav" data-action="fav" data-key="' + esc(f.k) + '" aria-pressed="true" aria-label="Retirer des favoris">' + icon('star', 19) + '</button></li>').join('') + '</ul>'
       : '<div class="empty">' + icon('star', 28) + '<p>Aucun favori pour l\'instant.</p><p class="muted">Touche l\'étoile d\'une découverte pour la retrouver ici.</p></div>') +
     '<p class="muted small" style="margin-top:14px">' + esc(where) + '</p></div></section>';
 }
@@ -2407,6 +2427,7 @@ function renderAll(){ renderEdPill(); renderView(S.tab); updateMini(); openPendi
 function setTab(tab, opt){
   opt = opt || {};
   if (!TABS.includes(tab)) tab = 'aujourdhui';
+  if (S.sec === 'pol' && ['videos', 'franco', 'comprendre'].includes(tab)) tab = 'aujourdhui';
   S.tab = tab;
   TABS.forEach(x => { const v = $('#view-' + x); if (v) v.hidden = x !== tab; });
   $$('.top-nav [data-tab], .tabbar [data-tab], #hdr-fav').forEach(b => b.setAttribute('aria-current', b.dataset.tab === tab ? 'page' : 'false'));
