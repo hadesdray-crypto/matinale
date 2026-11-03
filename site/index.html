@@ -2829,7 +2829,7 @@ function matinInner(){
   h += '<div class="mt-chips">' + (tr && tr.d ? yAllerBtns(tr.d) + '<button class="btn sm ghost" data-action="m-tr-maj">' + icon('refresh', 15) + ' Revérifier</button>' : '') + '<button class="btn sm" data-action="m-iti">' + icon('route', 15) + ' Nouveau trajet</button></div>';
   h += '</div>';
   if (S.watch) h += '<p class="mt-watch">' + icon('route', 15) + ' Je surveille la route vers ' + esc(S.watch.d.nom) + '. <button class="lnk" data-action="m-watch-stop">Arrêter</button></p>';
-  h += '<div class="mt-actions"><button class="btn primary" data-action="m-play">' + icon('play', 17) + ' Écouter : météo, trajet, sciences</button>' +
+  h += '<div class="mt-actions"><button class="btn primary" data-action="m-play">' + icon('play', 17) + ' Écouter : météo, trajet, ' + (S.sec === 'pol' ? 'infos' : 'sciences') + '</button>' +
     (Voice.ok ? '<button class="btn" data-action="douche">' + icon('shower', 17) + ' Mode douche</button>' : '') + '</div>' +
     '<p class="mt-foot">Météo : Météo-France (AROME, ARPEGE) via Open-Meteo · Trafic : ' + (p.tomtom ? 'TomTom et ' : 'OSRM (sans trafic) et ') + 'Bison Futé · ' + (wx ? 'mis à jour à ' + esc(hDisp(new Date(wx.at))) : '') + '</p>';
   return h;
@@ -2855,7 +2855,8 @@ function matinMaj(force, ask){
 /* Écouter : la météo, puis la route, puis les informations (le flash). */
 async function matinEcoute(){
   vbub('Je prépare ton point du matin…', false, 3000);
-  const inf = String(MPget().infos || 'sci,ask');
+  /* Dans Politique & monde : météo, trajet, puis le flash politique et monde (jamais les sciences). */
+  const inf = S.sec === 'pol' ? 'pol' : String(MPget().infos || 'sci,ask');
   S.matinRun = true; S.matinAskPol = /ask/.test(inf);
   S.matinSeq = inf.split(',').filter(x => x === 'pol' || x === 'sci');
   await meteoMaj(true, true); matinRedraw();
@@ -2864,7 +2865,7 @@ async function matinEcoute(){
   matinDire('matin-meteo', 'Météo', wx ? wx.text + (wx.horsLigne ? ' C\'est la dernière prévision gardée, il n\'y a pas de réseau.' : '') : 'Je n\'ai pas la météo pour l\'instant.');
 }
 function matinDire(mode, title, text){ S.deepFlow = false; Player.load(mode, [{ title, text }], 'Point du matin', null); renderChapters(); renderTranscript(); Player.play(); }
-const MATIN_SUITE = ' Place aux informations scientifiques.';
+const matinSuiteMot = () => S.sec === 'pol' ? ' Place aux informations politiques et du monde.' : ' Place aux informations scientifiques.';
 function matinRoute(){
   /* L'agenda d'abord : les rendez-vous du jour, puis la route si le trajet est déjà prévu (sinon on pose la question). */
   const AGJ = agAujourdhui();
@@ -2872,7 +2873,7 @@ function matinRoute(){
   S.agDit = false;
   if (AGJ.trajet && Player.synth){
     trajetVers({ nom:AGJ.trajet.lieu.nom, lat:AGJ.trajet.lieu.lat, lon:AGJ.trajet.lieu.lon }, true)
-      .then(t => { matinRedraw(); matinDire('matin-route', 'Ta route', trajetStatut(t).join(' ') + MATIN_SUITE); })
+      .then(t => { matinRedraw(); matinDire('matin-route', 'Ta route', trajetStatut(t).join(' ') + matinSuiteMot()); })
       .catch(() => matinInfos());
     return;
   }
@@ -2907,15 +2908,15 @@ function trajetReponse(raw, s){
   const non = / (non|nan|pas de trajet|pas aujourd hui|c est bon|rien|passe|passer|repos|laisse tomber|aucun) /.test(s);
   const oui = / (oui|ouais|ok|okay|yes|bien sur|d accord|exact|effectivement) /.test(s);
   const lieu = non ? '' : lieuDe(raw);
-  if (non){ S.awaitTrajet = null; matinInfos(); return { msg:'D\'accord, on passe aux sciences.', keep:true }; }
+  if (non){ S.awaitTrajet = null; matinInfos(); return { msg:'D\'accord, on passe aux ' + (S.sec === 'pol' ? 'infos' : 'sciences') + '.', keep:true }; }
   if (lieu){
     S.awaitTrajet = null; clearTimeout(S.jourT); Douche.q = '';
     (async () => {
       let L = lieuParNom(lieu);
       if (!L){ const x = (await chercheLieu(lieu, LS.get('mds.pos', null)))[0]; if (x) L = retiensLieu(lieu, x); }
-      if (!L){ matinDire('matin-route', 'Ta route', 'Je ne trouve pas ' + lieu + '.' + MATIN_SUITE); return; }
+      if (!L){ matinDire('matin-route', 'Ta route', 'Je ne trouve pas ' + lieu + '.' + matinSuiteMot()); return; }
       const t = await trajetVers(L, true); matinRedraw();
-      matinDire('matin-route', 'Ta route', trajetStatut(t).join(' ') + MATIN_SUITE);
+      matinDire('matin-route', 'Ta route', trajetStatut(t).join(' ') + matinSuiteMot());
     })();
     return { msg:'Je regarde la route vers ' + lieu + '…', keep:true };
   }
@@ -3539,7 +3540,7 @@ function onListenEnd(mode){
 function matinSuite(){
   const nx = (S.matinSeq || []).shift();
   if (!nx){ S.matinSeq = null; return false; }
-  if (nx === 'pol'){ if (S.pol && S.pol.ed) startMode('pflash'); else return matinSuite(); }
+  if (nx === 'pol'){ if (S.pol && S.pol.ed) startMode('pflash'); else loadPol().then(e => { if (e) startMode('pflash'); else if (!matinSuite()) matinFin(); }); }
   else startMode('flash');
   return true;
 }
