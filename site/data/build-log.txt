@@ -1,9 +1,24 @@
 Liens de « Comprendre » : 56 valides sur 56.
 Lecture de 42 sources (avec Gemini)…
 Sources lues : 42 ; muettes : 0 []
-Articles retenus après tri : 353
-Vidéos francophones récentes : 8
-  · Gemini gemini-flash-latest : TimeoutError The read operation timed out
+Articles retenus après tri : 504
+Vidéos francophones récentes : 0
+  · Gemini gemini-flash-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-flash-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
   · Gemini gemini-3.8-flash : HTTP 503 {
   "error": {
     "code": 503,
@@ -12,8 +27,16 @@ Vidéos francophones récentes : 8
   }
 }
 
-  · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
-  · Lot de 20 articles : 7 fiche(s) rédigée(s) par gemini-flash-lite-latest.
+  · Gemini gemini-3.8-flash : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-flash-lite-latest : réponse abîmée (Expecting property name enclosed in double quotes: line 104 ), 3 fiche(s) récupérée(s).
+  · gemini-flash-lite-latest : seulement 3 fiche(s) sur 9 demandées, on essaie le modèle suivant.
   · Gemini gemini-flash-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -30,17 +53,38 @@ Vidéos francophones récentes : 8
   }
 }
 
-  · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
+  · Gemini gemini-3.8-flash : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.8-flash : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Lot de 20 articles : 8 fiche(s) rédigée(s) par gemini-3.5-flash-lite.
+  · Gemini gemini-flash-lite-latest : réponse abîmée (Expecting property name enclosed in double quotes: line 227 ), 7 fiche(s) récupérée(s).
   · Lot de 20 articles : 7 fiche(s) rédigée(s) par gemini-flash-lite-latest.
-  · Lot de 20 articles : 4 fiche(s) rédigée(s) par gemini-flash-lite-latest.
-Tour 2 : 15 fiche(s) sur 20 voulues, on redemande les manquantes dans 45 secondes.
-  · Lot de 20 articles : 4 fiche(s) rédigée(s) par gemini-flash-lite-latest.
-  · Lot de 20 articles : 2 fiche(s) rédigée(s) par gemini-flash-lite-latest.
-  · Lot de 20 articles : 4 fiche(s) rédigée(s) par gemini-flash-lite-latest.
-Fiches détaillées : 9 pages lisibles sur 20 fiches.
-  · Gemini gemini-flash-lite-latest : réponse abîmée (Expecting ',' delimiter: line 1 column 7457 (char 7456)), 2 fiche(s) récupérée(s).
-Fiches détaillées écrites : 6.
-  · Openverse : TimeoutError The read operation timed out
-Illustrations libres de droits : 17 sur 20 fiches (3 image(s) écartée(s) par le contrôle de Gemini).
-Édition n° 16 du 2026-11-03 : 20 fiches, mode Gemini (gemini-flash-lite-latest), 8 vidéos francophones.
-Demandes à l'IA : gemini-flash-latest 3, gemini-3.8-flash 3, gemini-flash-lite-latest 32
+  · Lot de 20 articles : 6 fiche(s) rédigée(s) par gemini-flash-lite-latest.
+Fiches détaillées : 13 pages lisibles sur 20 fiches.
+  · Gemini gemini-flash-lite-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+Fiches détaillées écrites : 13.
+Images libres de droits gardées : 1.
+  · Openverse : HTTPError HTTP Error 500: Internal Server Error
+Illustrations libres de droits : 16 sur 19 fiches (12 image(s) écartée(s) par le contrôle de Gemini).
+Édition n° 17 du 2026-11-04 : 20 fiches, mode Gemini (gemini-flash-lite-latest), 0 vidéos francophones.
+Demandes à l'IA : gemini-flash-latest 4, gemini-3.8-flash 4, gemini-flash-lite-latest 40, gemini-3.5-flash-lite 1
