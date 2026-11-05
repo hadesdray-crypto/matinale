@@ -1,8 +1,9 @@
 Liens de « Comprendre » : 56 valides sur 56.
 Lecture de 42 sources (avec Gemini)…
-Sources lues : 42 ; muettes : 0 []
-Articles retenus après tri : 504
-Vidéos francophones récentes : 0
+  · ESA (technologie) : https://www.esa.int/rssfeed/Our_Activities/Space_Engineering_Technology ne répond pas (HTTPError)
+Sources lues : 41 ; muettes : 1 ['ESA (technologie)']
+Articles retenus après tri : 436
+Vidéos francophones récentes : 2
   · Gemini gemini-flash-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -35,45 +36,6 @@ Vidéos francophones récentes : 0
   }
 }
 
-  · Gemini gemini-flash-lite-latest : réponse abîmée (Expecting property name enclosed in double quotes: line 104 ), 3 fiche(s) récupérée(s).
-  · gemini-flash-lite-latest : seulement 3 fiche(s) sur 9 demandées, on essaie le modèle suivant.
-  · Gemini gemini-flash-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-flash-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Lot de 20 articles : 8 fiche(s) rédigée(s) par gemini-3.5-flash-lite.
-  · Gemini gemini-flash-lite-latest : réponse abîmée (Expecting property name enclosed in double quotes: line 227 ), 7 fiche(s) récupérée(s).
-  · Lot de 20 articles : 7 fiche(s) rédigée(s) par gemini-flash-lite-latest.
-  · Lot de 20 articles : 6 fiche(s) rédigée(s) par gemini-flash-lite-latest.
-Fiches détaillées : 13 pages lisibles sur 20 fiches.
   · Gemini gemini-flash-lite-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -82,9 +44,78 @@ Fiches détaillées : 13 pages lisibles sur 20 fiches.
   }
 }
 
-Fiches détaillées écrites : 13.
+  · Gemini gemini-flash-lite-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.5-flash-lite : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.5-flash-lite : JSONDecodeError Expecting property name enclosed in double quotes: line 16 column 7 (char 1004)
+  · Lot de 20 articles : 0 fiche(s) rédigée(s) par aucun modèle.
+  · Gemini gemini-flash-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-flash-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.8-flash : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.8-flash : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Lot de 20 articles : 9 fiche(s) rédigée(s) par gemini-flash-lite-latest.
+  · Gemini gemini-flash-lite-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Lot de 20 articles : 8 fiche(s) rédigée(s) par gemini-flash-lite-latest.
+Fiches détaillées : 10 pages lisibles sur 17 fiches.
+  · Gemini gemini-flash-lite-latest : réponse abîmée (Illegal trailing comma before end of object: line 33 column ), 1 fiche(s) récupérée(s).
+Fiches détaillées écrites : 8.
 Images libres de droits gardées : 1.
-  · Openverse : HTTPError HTTP Error 500: Internal Server Error
-Illustrations libres de droits : 16 sur 19 fiches (12 image(s) écartée(s) par le contrôle de Gemini).
-Édition n° 17 du 2026-11-04 : 20 fiches, mode Gemini (gemini-flash-lite-latest), 0 vidéos francophones.
-Demandes à l'IA : gemini-flash-latest 4, gemini-3.8-flash 4, gemini-flash-lite-latest 40, gemini-3.5-flash-lite 1
+  · Gemini gemini-flash-lite-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+Illustrations libres de droits : 15 sur 16 fiches (6 image(s) écartée(s) par le contrôle de Gemini).
+Édition n° 18 du 2026-11-05 : 17 fiches, mode Gemini (gemini-flash-lite-latest), 2 vidéos francophones.
+Demandes à l'IA : gemini-flash-latest 4, gemini-3.8-flash 4, gemini-flash-lite-latest 34, gemini-3.5-flash-lite 2
