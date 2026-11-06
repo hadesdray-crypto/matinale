@@ -1,5 +1,5 @@
 {
- "at": "2026-11-05T04:09:08+00:00",
+ "at": "2026-11-06T04:13:24+00:00",
  "liens": [
   {
    "id": "argus",
@@ -9,7 +9,7 @@
    "desc": "Marque, modèle et version, avec la plaque.",
    "etat": "ok",
    "code": 200,
-   "verifie": "2026-11-05",
+   "verifie": "2026-11-06",
    "echecs": 0
   },
   {
@@ -20,7 +20,7 @@
    "desc": "Modèle et motorisation : « Sélectionnez votre véhicule », puis la plaque.",
    "etat": "protege",
    "code": 403,
-   "verifie": "2026-11-05",
+   "verifie": "2026-11-06",
    "echecs": 0
   },
   {
@@ -31,7 +31,7 @@
    "desc": "Le rapport officiel de ton véhicule, avec ta carte grise.",
    "etat": "ok",
    "code": 200,
-   "verifie": "2026-11-05",
+   "verifie": "2026-11-06",
    "echecs": 0
   },
   {
@@ -42,7 +42,7 @@
    "desc": "Batterie utile et consommation réelle des voitures électriques.",
    "etat": "ok",
    "code": 200,
-   "verifie": "2026-11-05",
+   "verifie": "2026-11-06",
    "echecs": 0
   },
   {
@@ -53,7 +53,7 @@
    "desc": "Créer ta clé TomTom gratuite (trafic en direct).",
    "etat": "ok",
    "code": 200,
-   "verifie": "2026-11-05",
+   "verifie": "2026-11-06",
    "echecs": 0
   }
  ],
@@ -63,8 +63,8 @@
    "nom": "Météo (Open-Meteo, modèles Météo-France)",
    "etat": "ok",
    "code": 200,
-   "ms": 441,
-   "verifie": "2026-11-05",
+   "ms": 315,
+   "verifie": "2026-11-06",
    "echecs": 0
   },
   {
@@ -72,8 +72,8 @@
    "nom": "Recherche d'adresses (Géoplateforme IGN)",
    "etat": "ok",
    "code": 200,
-   "ms": 1435,
-   "verifie": "2026-11-05",
+   "ms": 1625,
+   "verifie": "2026-11-06",
    "echecs": 0
   },
   {
@@ -81,8 +81,8 @@
    "nom": "Itinéraire sans clé (OSRM)",
    "etat": "ok",
    "code": 200,
-   "ms": 845,
-   "verifie": "2026-11-05",
+   "ms": 943,
+   "verifie": "2026-11-06",
    "echecs": 0
   },
   {
@@ -90,8 +90,8 @@
    "nom": "Prix des carburants (données de l'État)",
    "etat": "ok",
    "code": 200,
-   "ms": 856,
-   "verifie": "2026-11-05",
+   "ms": 872,
+   "verifie": "2026-11-06",
    "echecs": 0
   },
   {
@@ -99,8 +99,8 @@
    "nom": "Bornes de recharge (base nationale ODRÉ)",
    "etat": "ok",
    "code": 200,
-   "ms": 629,
-   "verifie": "2026-11-05",
+   "ms": 598,
+   "verifie": "2026-11-06",
    "echecs": 0
   },
   {
@@ -108,8 +108,8 @@
    "nom": "Voix à télécharger (Piper)",
    "etat": "ok",
    "code": 200,
-   "ms": 211,
-   "verifie": "2026-11-05",
+   "ms": 108,
+   "verifie": "2026-11-06",
    "echecs": 0
   },
   {
@@ -117,8 +117,8 @@
    "nom": "Exemples des voix",
    "etat": "ok",
    "code": 200,
-   "ms": 137,
-   "verifie": "2026-11-05",
+   "ms": 303,
+   "verifie": "2026-11-06",
    "echecs": 0
   },
   {
@@ -126,19 +126,19 @@
    "nom": "Trafic Bison Futé (relevé toutes les 20 minutes)",
    "etat": "ok",
    "code": 200,
-   "ms": 199,
-   "verifie": "2026-11-05",
+   "ms": 170,
+   "verifie": "2026-11-06",
    "echecs": 0
   }
  ],
  "ia": {
   "sciences": {
-   "date": "2026-11-05",
+   "date": "2026-11-06",
    "ia": true,
-   "modele": "gemini-flash-lite-latest"
+   "modele": "gemini-3.8-flash"
   },
   "politique": {
-   "date": "2026-11-05",
+   "date": "2026-11-06",
    "ia": true,
    "modele": "gemini-flash-lite-latest"
   }
