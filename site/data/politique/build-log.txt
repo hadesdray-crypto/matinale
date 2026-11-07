@@ -1,5 +1,5 @@
 Politique & monde : lecture de 20 sources (avec Gemini)…
-Sources lues : 20 ; muettes : 0 [] ; articles : 283
+Sources lues : 20 ; muettes : 0 [] ; articles : 274
   · Gemini gemini-flash-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -32,8 +32,7 @@ Sources lues : 20 ; muettes : 0 [] ; articles : 283
   }
 }
 
-  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting ',' delimiter: line 277 column 7 (char 16838)
-Fiches détaillées : 9 pages lisibles sur 10 fiches.
-Fiches détaillées écrites : 9.
-Politique & monde n° 11 du 2026-11-06 : 10 sujets (5 France, 5 monde), mode Gemini (gemini-flash-lite-latest), fiches détaillées : 9.
-Demandes à l'IA (politique) : gemini-flash-latest 2, gemini-3.8-flash 2, gemini-flash-lite-latest 5
+Fiches détaillées : 6 pages lisibles sur 10 fiches.
+Fiches détaillées écrites : 6.
+Politique & monde n° 12 du 2026-11-07 : 10 sujets (5 France, 5 monde), mode Gemini (gemini-flash-lite-latest), fiches détaillées : 6.
+Demandes à l'IA (politique) : gemini-flash-latest 2, gemini-3.8-flash 2, gemini-flash-lite-latest 3
