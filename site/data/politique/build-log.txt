@@ -1,38 +1,6 @@
 Politique & monde : lecture de 20 sources (avec Gemini)…
-Sources lues : 20 ; muettes : 0 [] ; articles : 274
-  · Gemini gemini-flash-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-flash-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-Fiches détaillées : 6 pages lisibles sur 10 fiches.
-Fiches détaillées écrites : 6.
-Politique & monde n° 12 du 2026-11-07 : 10 sujets (5 France, 5 monde), mode Gemini (gemini-flash-lite-latest), fiches détaillées : 6.
-Demandes à l'IA (politique) : gemini-flash-latest 2, gemini-3.8-flash 2, gemini-flash-lite-latest 3
+Sources lues : 20 ; muettes : 0 [] ; articles : 218
+Fiches détaillées : 7 pages lisibles sur 10 fiches.
+Fiches détaillées écrites : 7.
+Politique & monde n° 13 du 2026-11-08 : 10 sujets (3 France, 7 monde), mode Gemini (gemini-flash-latest), fiches détaillées : 7.
+Demandes à l'IA (politique) : gemini-flash-latest 1, gemini-flash-lite-latest 3
