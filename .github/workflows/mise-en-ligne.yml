@@ -160,6 +160,10 @@ jobs:
       - name: Numéro de version de l'appli (le même que la liste des nouveautés)
         run: python3 scripts/version_appli.py
 
+      - name: Garder les voix des 14 derniers jours (pour réécouter les jours d'avant)
+        continue-on-error: true
+        run: timeout 600 python3 scripts/garder_audio.py site "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+
       - uses: actions/upload-pages-artifact@v4
         with:
           path: site

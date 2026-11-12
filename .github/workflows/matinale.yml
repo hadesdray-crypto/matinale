@@ -83,6 +83,11 @@ jobs:
         if: steps.verif.outputs.ok != 'true'
         run: python3 scripts/version_appli.py
 
+      - name: Garder les voix des 14 derniers jours (pour réécouter les jours d'avant)
+        if: steps.verif.outputs.ok != 'true'
+        continue-on-error: true
+        run: timeout 600 python3 scripts/garder_audio.py site "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+
       - uses: actions/upload-pages-artifact@v4
         if: steps.verif.outputs.ok != 'true'
         with:
