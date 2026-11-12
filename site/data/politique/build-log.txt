@@ -1,7 +1,15 @@
 Politique & monde : lecture de 20 sources (avec Gemini)…
-Sources lues : 20 ; muettes : 0 [] ; articles : 305
+Sources lues : 20 ; muettes : 0 [] ; articles : 259
   · Gemini gemini-flash-latest : TimeoutError The read operation timed out
-Fiches détaillées : 5 pages lisibles sur 10 fiches.
+  · Gemini gemini-3.8-flash : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
   · Gemini gemini-flash-lite-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -10,6 +18,7 @@ Fiches détaillées : 5 pages lisibles sur 10 fiches.
   }
 }
 
+Fiches détaillées : 5 pages lisibles sur 10 fiches.
 Fiches détaillées écrites : 5.
-Politique & monde n° 16 du 2026-11-11 : 10 sujets (5 France, 5 monde), mode Gemini (gemini-3.8-flash), fiches détaillées : 5.
-Demandes à l'IA (politique) : gemini-flash-latest 1, gemini-3.8-flash 1, gemini-flash-lite-latest 3
+Politique & monde n° 17 du 2026-11-12 : 10 sujets (4 France, 6 monde), mode Gemini (gemini-flash-lite-latest), fiches détaillées : 5.
+Demandes à l'IA (politique) : gemini-flash-latest 1, gemini-3.8-flash 2, gemini-flash-lite-latest 4

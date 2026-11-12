@@ -2,16 +2,45 @@ Liens de « Comprendre » : 56 valides sur 56.
 Lecture de 42 sources (avec Gemini)…
   · ESA (technologie) : https://www.esa.int/rssfeed/Our_Activities/Space_Engineering_Technology ne répond pas (HTTPError)
 Sources lues : 41 ; muettes : 1 ['ESA (technologie)']
-Articles retenus après tri : 483
-Vidéos francophones récentes : 0
+Articles retenus après tri : 421
+Vidéos francophones récentes : 2
   · Gemini gemini-flash-latest : TimeoutError The read operation timed out
+  · Gemini gemini-3.8-flash : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
   · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
   · Lot de 20 articles : 7 fiche(s) rédigée(s) par gemini-flash-lite-latest.
+  · Gemini gemini-flash-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
   · Gemini gemini-flash-latest : TimeoutError The read operation timed out
-  · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
-  · Lot de 20 articles : 7 fiche(s) rédigée(s) par gemini-flash-lite-latest.
-  · Gemini gemini-flash-latest : TimeoutError The read operation timed out
-  · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
+  · Gemini gemini-3.8-flash : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.8-flash : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Lot de 20 articles : 8 fiche(s) rédigée(s) par gemini-flash-lite-latest.
   · Gemini gemini-flash-lite-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -20,9 +49,8 @@ Vidéos francophones récentes : 0
   }
 }
 
-  · Lot de 20 articles : 9 fiche(s) rédigée(s) par gemini-flash-lite-latest.
-Fiches détaillées : 13 pages lisibles sur 20 fiches.
-  · Gemini gemini-flash-lite-latest : réponse abîmée (Expecting ',' delimiter: line 1 column 7604 (char 7603)), 2 fiche(s) récupérée(s).
+  · Lot de 20 articles : 8 fiche(s) rédigée(s) par gemini-flash-lite-latest.
+Fiches détaillées : 11 pages lisibles sur 20 fiches.
   · Gemini gemini-flash-lite-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -31,8 +59,6 @@ Fiches détaillées : 13 pages lisibles sur 20 fiches.
   }
 }
 
-Fiches détaillées écrites : 12.
-Images libres de droits gardées : 1.
   · Gemini gemini-flash-lite-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -41,6 +67,12 @@ Images libres de droits gardées : 1.
   }
 }
 
-Illustrations libres de droits : 16 sur 19 fiches (8 image(s) écartée(s) par le contrôle de Gemini).
-Édition n° 24 du 2026-11-11 : 20 fiches, mode Gemini (gemini-flash-lite-latest), 0 vidéos francophones.
-Demandes à l'IA : gemini-flash-latest 3, gemini-3.8-flash 3, gemini-flash-lite-latest 38
+Fiches détaillées écrites : 9.
+  · Gemini gemini-flash-lite-latest : HTTP 429 {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceede
+  · gemini-flash-lite-latest : quota du jour épuisé, ce modèle n'est plus utilisé jusqu'à demain.
+Illustrations libres de droits : 16 sur 20 fiches (9 image(s) écartée(s) par le contrôle de Gemini).
+Édition n° 25 du 2026-11-12 : 20 fiches, mode Gemini (gemini-flash-lite-latest), 2 vidéos francophones.
+Demandes à l'IA : gemini-flash-latest 3, gemini-3.8-flash 4, gemini-flash-lite-latest 30, gemini-3.5-flash-lite 9
