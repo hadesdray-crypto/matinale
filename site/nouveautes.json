@@ -1,5 +1,15 @@
 [
   {
+    "v": 10,
+    "date": "2026-11-17",
+    "titre": "Affichage : téléphone, ordinateur, portrait",
+    "points": [
+      "Nouveau : Options > Affichage. Tu choisis Automatique, Téléphone ou Ordinateur.",
+      "Si le navigateur passe en « version ordinateur » et que tout devient petit, l'appli reprend toute seule la mise en page téléphone.",
+      "Un choix Portrait garde l'écran debout."
+    ]
+  },
+  {
     "v": 9,
     "date": "2026-11-03",
     "titre": "Écouter : Politique & monde bien à part",

@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>try{if(JSON.parse(localStorage.getItem("mds.aff"))==="ordi")document.querySelector('meta[name=viewport]').content="width=1100,initial-scale=1,viewport-fit=cover"}catch(e){}</script>
 <script>(function(){var r=document.documentElement;r.dataset.style="classique";r.dataset.flux="sci";try{var g=function(k){var v=localStorage.getItem(k);return v==null?null:JSON.parse(v)};var s=g("mds.style"),t=g("mds.theme");if(/^(classique|journal|nuit|neon|contraste|doux)$/.test(s||""))r.dataset.style=s;if(t==="light"||t==="dark")r.dataset.theme=t}catch(e){}})();</script>
 <meta name="theme-color" content="#123A70" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E2A54" media="(prefers-color-scheme: dark)">
@@ -3803,6 +3804,9 @@ function onClick(e){
     case 'options': openOptions(); break;
     case 'opt-voix': openVoix(); break;
     case 'opt-style': openStyle(); break;
+    case 'opt-aff': openAffichage(); break;
+    case 'aff': LS.set('mds.aff', a.dataset.v); appliquerAffichage(); openAffichage(true); break;
+    case 'aff-or': LS.set('mds.aff-or', a.dataset.v); appliquerAffichage(); openAffichage(true); break;
     case 'opt-micro': openMicro(); break;
     case 'opt-veh': openVehicules(); break;
     case 'veh-edit': openVehForm(a.dataset.id); break;
@@ -3991,6 +3995,7 @@ function watchUpdates(){
   document.addEventListener('visibilitychange', () => { if (document.visibilityState !== 'visible') return; if (Date.now() - lastCheck > 15 * 60e3) checkUpdate(); if (Date.now() - Maj.last > 30 * 60e3) majCheck(); });
   window.addEventListener('online', () => { checkUpdate(); if (Date.now() - Maj.last > 5 * 60e3) majCheck(); });
   setInterval(() => { if (document.visibilityState === 'visible') majCheck(); }, 60 * 60e3);
+  appliquerAffichage(); addEventListener('resize', () => { clearTimeout(S._aff); S._aff = setTimeout(appliquerAffichage, 250); });
   majDebut();
   try { navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'maj') checkUpdate(); else if (e.data && e.data.type === 'audio-etat') onAudioState(e.data); }); } catch (e) {}
   swSend({ type:'audio-etat' });
@@ -4675,10 +4680,63 @@ function openOptions(){
     row('opt-veh', 'car', 'Mon véhicule', vehActif() ? esc(vehActif().nom) + ' · ' + esc(vehNrj(vehActif()).nom) + '. Coût du trajet, station la moins chère, batterie.' : 'Ajoute ta voiture : itinéraire adapté, coût, station la moins chère, batterie.') +
     row('ag-open', 'calendar', 'Mon agenda', 'Trajets et rendez-vous : dicte, vérifie, modifie. Rappelés chaque matin avant les infos.') +
     row('m-reglages', 'sun', 'Point du matin', 'Météo, lieux, point de départ, trafic, informations du matin.') +
+    row('opt-aff', 'gear', 'Affichage', 'Téléphone, ordinateur ou automatique · portrait. Actuellement : ' + esc(affNom()) + '.') +
     row('opt-micro', 'mic', 'Micro', 'Comprendre ta voix : en ligne, ou sans Internet.') +
     row('opt-fav', 'star', 'Mes favoris', 'Les découvertes que tu as gardées.') +
     row('opt-app', 'refresh', 'Application', 'Version ' + APP_V + ' · mises à jour · nouveautés.') +
     '</ul></div>', 'Options');
+}
+/* ---------- Affichage : téléphone / ordinateur / automatique, portrait ----------
+   Si le navigateur est passé en « version ordinateur », la page se montre en grand et tout devient petit :
+   en automatique, l'appli le détecte sur un téléphone et reprend la mise en page téléphone toute seule. */
+const AFF_NOMS = { auto:'Automatique', tel:'Téléphone', ordi:'Ordinateur' };
+function affNom(){ const m = LS.get('mds.aff', 'auto'); return (AFF_NOMS[m] || AFF_NOMS.auto) + (LS.get('mds.aff-or', 'libre') === 'portrait' ? ', portrait' : ''); }
+function affMedias(on){
+  /* on = 'tel' : les règles « grand écran » sont coupées, les règles « petit écran » sont forcées ; sinon, tout revient comme avant */
+  try {
+    for (const sh of Array.from(document.styleSheets)){
+      let rules; try { rules = sh.cssRules; } catch (e) { continue; }
+      for (const r of Array.from(rules)){
+        if (!(r instanceof CSSMediaRule)) continue;
+        if (r._o === undefined) r._o = r.media.mediaText;
+        const t = r._o;
+        if (/prefers-|print|orientation|hover|pointer/.test(t)) continue;
+        if (on === 'tel' && /min-width/.test(t) && !/max-width/.test(t)) r.media.mediaText = 'not all';
+        else if (on === 'tel' && /max-width/.test(t)) r.media.mediaText = 'all';
+        else if (on === 'ordi' && /min-width/.test(t) && !/max-width/.test(t)) r.media.mediaText = 'all';
+        else if (on === 'ordi' && /max-width/.test(t)) r.media.mediaText = 'not all';
+        else if (r.media.mediaText !== t) r.media.mediaText = t;
+      }
+    }
+  } catch (e) {}
+}
+function appliquerAffichage(){
+  const r = document.documentElement, mv = document.querySelector('meta[name=viewport]');
+  const mode = LS.get('mds.aff', 'auto'), petit = Math.min(screen.width || 9999, screen.height || 9999);
+  const tropLarge = petit <= 700 && window.innerWidth >= 760 && (window.devicePixelRatio || 1) > 0;
+  const tel = mode === 'tel' || (mode === 'auto' && tropLarge);
+  if (mv) mv.content = mode === 'ordi' ? 'width=1100,initial-scale=1,viewport-fit=cover' : 'width=device-width,initial-scale=1,viewport-fit=cover';
+  if (tel && tropLarge){ affMedias('tel'); r.style.zoom = String(Math.round(window.innerWidth / petit * 100) / 100); }
+  else if (mode === 'ordi' && window.innerWidth < 1000){ affMedias('ordi'); r.style.zoom = ''; }
+  else { affMedias(''); r.style.zoom = ''; }
+  try {
+    if (screen.orientation && screen.orientation.lock){
+      if (LS.get('mds.aff-or', 'libre') === 'portrait') screen.orientation.lock('portrait').catch(() => {});
+      else screen.orientation.unlock();
+    }
+  } catch (e) {}
+}
+function openAffichage(replace){
+  const m = LS.get('mds.aff', 'auto'), o = LS.get('mds.aff-or', 'libre');
+  const seg = (act, cur, L) => '<div class="seg" role="group">' + L.map(x => '<button data-action="' + act + '" data-v="' + x[0] + '" aria-pressed="' + (cur === x[0]) + '">' + x[1] + '</button>').join('') + '</div>';
+  showOpt(sheetHead('Affichage') + '<div class="pad sheet-body rg">' +
+    '<section class="rg-sec"><h3>Mise en page</h3>' + seg('aff', m, [['auto', 'Automatique'], ['tel', 'Téléphone'], ['ordi', 'Ordinateur']]) +
+    '<p class="small"><b>Automatique</b> : l\'appli se met en mode téléphone toute seule, même si le navigateur est en « version ordinateur ».</p>' +
+    '<p class="small"><b>Téléphone</b> : une colonne, gros boutons, barre du bas.</p>' +
+    '<p class="small"><b>Ordinateur</b> : grande page à plusieurs colonnes, menu en haut.</p></section>' +
+    '<section class="rg-sec"><h3>Sens de l\'écran</h3>' + seg('aff-or', o, [['libre', 'Libre'], ['portrait', 'Portrait']]) +
+    '<p class="muted small">Portrait : l\'écran reste debout. Si le téléphone tourne quand même dans le navigateur, ouvre l\'appli installée sur l\'écran d\'accueil : elle reste en portrait.</p></section>' +
+    '</div>', 'Affichage', replace);
 }
 function openStyle(replace){
   const st = styleActuel(), th = LS.get('mds.theme', 'auto'), cur = STYLES.find(x => x.id === st) || STYLES[0];
@@ -5195,7 +5253,7 @@ function vxEcoutePiper(id){
    L'édition du jour arrive toute seule. Une nouvelle version de l'appli, elle, s'annonce :
    « Nouvelle mise à jour ! » avec ce qui change → « Mettre à jour » ou « Plus tard » → « Mise à jour terminée ! ».
    Jamais pendant une lecture, une question ou le mode douche : elle attend la fin. */
-const APP_V = 9;
+const APP_V = 10;
 const Maj = { v:0, list:null, plusTard:0, t:0, last:0 };
 const majListe = l => arr(l).filter(e => e && Number(e.v) > 0 && Array.isArray(e.points));
 function majOccupe(){ return Player.playing || S.matinRun || Douche.on || !!S.awaitTrajet || (Voice.on && !Libre.on) || askOpen(); }
