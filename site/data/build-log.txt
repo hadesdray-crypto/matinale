@@ -1,52 +1,43 @@
 Liens de « Comprendre » : 56 valides sur 56.
 Lecture de 42 sources (avec Gemini)…
-  · Inserm (salle de presse) : https://presse.inserm.fr/feed/ ne répond pas (HTTPError)
-  · Inserm : https://www.inserm.fr/feed/ ne répond pas (HTTPError)
+  · CNES : https://cnes.fr/rss/actualites ne répond pas (HTTPError)
   · ESA (technologie) : https://www.esa.int/rssfeed/Our_Activities/Space_Engineering_Technology ne répond pas (HTTPError)
-Sources lues : 39 ; muettes : 3 ['Inserm (salle de presse)', 'Inserm', 'ESA (technologie)']
-Articles retenus après tri : 464
+Sources lues : 40 ; muettes : 2 ['CNES', 'ESA (technologie)']
+Articles retenus après tri : 422
 Vidéos francophones récentes : 12
-  · Gemini gemini-flash-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-flash-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Lot de 20 articles : 6 fiche(s) rédigée(s) par gemini-flash-lite-latest.
   · Gemini gemini-flash-latest : TimeoutError The read operation timed out
   · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
+  · Gemini gemini-flash-lite-latest : réponse abîmée (Expecting ',' delimiter: line 1 column 4184 (char 4183)), 2 fiche(s) récupérée(s).
+  · gemini-flash-lite-latest : seulement 2 fiche(s) sur 9 demandées, on essaie le modèle suivant.
+  · Gemini gemini-flash-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-flash-latest : TimeoutError The read operation timed out
+  · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
+  · Lot de 20 articles : 8 fiche(s) rédigée(s) par gemini-3.5-flash-lite.
+  · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
+  · gemini-flash-lite-latest : seulement 2 fiche(s) sur 9 demandées, on essaie le modèle suivant.
+  · Gemini gemini-3.5-flash-lite : JSONDecodeError Expecting property name enclosed in double quotes: line 35 column 7 (char 2200)
+  · Lot de 20 articles : 6 fiche(s) rédigée(s) par gemini-3.5-flash-lite.
   · Lot de 20 articles : 5 fiche(s) rédigée(s) par gemini-flash-lite-latest.
-  · Lot de 20 articles : 9 fiche(s) rédigée(s) par gemini-flash-lite-latest.
-Fiches détaillées : 13 pages lisibles sur 19 fiches.
-Fiches détaillées écrites : 13.
-Images libres de droits gardées : 1.
-  · Openverse : HTTPError HTTP Error 504: Gateway Timeout
-Illustrations libres de droits : 13 sur 18 fiches (13 image(s) écartée(s) par le contrôle de Gemini).
-Édition n° 31 du 2026-11-18 : 19 fiches, mode Gemini (gemini-flash-lite-latest), 12 vidéos francophones.
-Demandes à l'IA : gemini-flash-latest 3, gemini-3.8-flash 3, gemini-flash-lite-latest 37
+Tour 2 : 16 fiche(s) sur 20 voulues, on redemande les manquantes dans 45 secondes.
+  · Lot de 20 articles : 4 fiche(s) rédigée(s) par gemini-flash-lite-latest.
+  · Lot de 20 articles : 4 fiche(s) rédigée(s) par gemini-flash-lite-latest.
+  · Lot de 20 articles : 4 fiche(s) rédigée(s) par gemini-flash-lite-latest.
+Fiches détaillées : 12 pages lisibles sur 20 fiches.
+  · Gemini gemini-flash-lite-latest : JSONDecodeError Expecting property name enclosed in double quotes: line 1 column 1318 (char 1317)
+  · Gemini gemini-flash-lite-latest : réponse abîmée (Expecting ',' delimiter: line 1 column 8292 (char 8291)), 2 fiche(s) récupérée(s).
+Fiches détaillées écrites : 10.
+  · Gemini gemini-flash-lite-latest : HTTP 429 {
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceede
+  · gemini-flash-lite-latest : quota du jour épuisé, ce modèle n'est plus utilisé jusqu'à demain.
+Illustrations libres de droits : 15 sur 20 fiches (11 image(s) écartée(s) par le contrôle de Gemini).
+Édition n° 32 du 2026-11-19 : 20 fiches, mode Gemini (gemini-flash-lite-latest), 10 vidéos francophones.
+Demandes à l'IA : gemini-flash-latest 3, gemini-3.8-flash 3, gemini-flash-lite-latest 35, gemini-3.5-flash-lite 9
