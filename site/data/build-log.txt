@@ -2,7 +2,7 @@ Liens de « Comprendre » : 56 valides sur 56.
 Lecture de 42 sources (avec Gemini)…
   · ESA (technologie) : https://www.esa.int/rssfeed/Our_Activities/Space_Engineering_Technology ne répond pas (HTTPError)
 Sources lues : 41 ; muettes : 1 ['ESA (technologie)']
-Articles retenus après tri : 458
+Articles retenus après tri : 462
 Vidéos francophones récentes : 12
   · Gemini gemini-flash-latest : HTTP 503 {
   "error": {
@@ -12,30 +12,16 @@ Vidéos francophones récentes : 12
   }
 }
 
-  · Gemini gemini-flash-latest : HTTP 503 {
+  · Gemini gemini-flash-latest : HTTP 429 {
   "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 503 {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceede
+  · gemini-flash-latest : quota du jour épuisé, ce modèle n'est plus utilisé jusqu'à demain.
+  · Gemini gemini-3.8-flash : HTTP 429 {
   "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceede
+  · gemini-3.8-flash : quota du jour épuisé, ce modèle n'est plus utilisé jusqu'à demain.
   · Gemini gemini-flash-lite-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -69,27 +55,6 @@ Vidéos francophones récentes : 12
 }
 
   · Lot de 20 articles : 0 fiche(s) rédigée(s) par aucun modèle.
-  · Gemini gemini-flash-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-flash-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 429 {
-  "error": {
-    "code": 429,
-    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceede
-  · gemini-3.8-flash : quota du jour épuisé, ce modèle n'est plus utilisé jusqu'à demain.
   · Gemini gemini-flash-lite-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -133,4 +98,4 @@ Tour 3 : 0 fiche(s) sur 20 voulues, on redemande les manquantes dans 45 secondes
   · Lot de 20 articles : 0 fiche(s) rédigée(s) par aucun modèle.
   · Lot de 20 articles : 0 fiche(s) rédigée(s) par aucun modèle.
 Édition n° 37 du 2026-11-24 : 20 fiches, mode sans IA (titres et résumés des sources), 12 vidéos francophones.
-Demandes à l'IA : gemini-flash-latest 4, gemini-3.8-flash 3, gemini-flash-lite-latest 4, gemini-3.5-flash-lite 4
+Demandes à l'IA : gemini-flash-latest 2, gemini-3.8-flash 1, gemini-flash-lite-latest 4, gemini-3.5-flash-lite 4
