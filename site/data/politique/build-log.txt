@@ -1,5 +1,5 @@
 Politique & monde : lecture de 20 sources (avec Gemini)…
-Sources lues : 20 ; muettes : 0 [] ; articles : 267
+Sources lues : 20 ; muettes : 0 [] ; articles : 288
   · Gemini gemini-flash-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -32,7 +32,102 @@ Sources lues : 20 ; muettes : 0 [] ; articles : 267
   }
 }
 
-Fiches détaillées : 6 pages lisibles sur 10 fiches.
-Fiches détaillées écrites : 6.
-Politique & monde n° 28 du 2026-11-23 : 10 sujets (3 France, 7 monde), mode Gemini (gemini-flash-lite-latest), fiches détaillées : 6.
-Demandes à l'IA (politique) : gemini-flash-latest 2, gemini-3.8-flash 2, gemini-flash-lite-latest 3
+  · Gemini gemini-flash-lite-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-flash-lite-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.5-flash-lite : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.5-flash-lite : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+Gemini n'a pas répondu : nouvel essai dans 40 secondes.
+  · Gemini gemini-flash-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-flash-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.8-flash : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.8-flash : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-flash-lite-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-flash-lite-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.5-flash-lite : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.5-flash-lite : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+Politique & monde n° 29 du 2026-11-24 : 10 sujets (5 France, 5 monde), mode sans IA, fiches détaillées : 0.
+Demandes à l'IA (politique) : gemini-flash-latest 4, gemini-3.8-flash 4, gemini-flash-lite-latest 4, gemini-3.5-flash-lite 4
