@@ -1,6 +1,5 @@
 Politique & monde : lecture de 20 sources (avec Gemini)…
-  · France 24 : https://www.france24.com/fr/rss ne répond pas (HTTPError)
-Sources lues : 19 ; muettes : 1 ['France 24'] ; articles : 258
+Sources lues : 20 ; muettes : 0 [] ; articles : 279
   · Gemini gemini-flash-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -9,7 +8,8 @@ Sources lues : 19 ; muettes : 1 ['France 24'] ; articles : 258
   }
 }
 
-  · Gemini gemini-flash-latest : HTTP 503 {
+  · Gemini gemini-flash-latest : TimeoutError The read operation timed out
+  · Gemini gemini-3.8-flash : HTTP 503 {
   "error": {
     "code": 503,
     "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
@@ -17,11 +17,15 @@ Sources lues : 19 ; muettes : 1 ['France 24'] ; articles : 258
   }
 }
 
-  · Gemini gemini-3.8-flash : HTTP 429 {
+  · Gemini gemini-3.8-flash : HTTP 503 {
   "error": {
-    "code": 429,
-    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceede
-  · gemini-3.8-flash : quota du jour épuisé, ce modèle n'est plus utilisé jusqu'à demain.
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+Fiches détaillées : 4 pages lisibles sur 10 fiches.
   · Gemini gemini-flash-lite-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -54,12 +58,6 @@ Sources lues : 19 ; muettes : 1 ['France 24'] ; articles : 258
   }
 }
 
-Gemini n'a pas répondu : nouvel essai dans 40 secondes.
-  · Gemini gemini-flash-latest : HTTP 429 {
-  "error": {
-    "code": 429,
-    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceede
-  · gemini-flash-latest : quota du jour épuisé, ce modèle n'est plus utilisé jusqu'à demain.
   · Gemini gemini-flash-lite-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -92,5 +90,6 @@ Gemini n'a pas répondu : nouvel essai dans 40 secondes.
   }
 }
 
-Politique & monde n° 29 du 2026-11-24 : 10 sujets (5 France, 5 monde), mode sans IA, fiches détaillées : 0.
-Demandes à l'IA (politique) : gemini-flash-latest 3, gemini-3.8-flash 1, gemini-flash-lite-latest 4, gemini-3.5-flash-lite 4
+Fiches détaillées écrites : 0.
+Politique & monde n° 30 du 2026-11-25 : 10 sujets (4 France, 6 monde), mode Gemini (gemini-flash-lite-latest), fiches détaillées : 0.
+Demandes à l'IA (politique) : gemini-flash-latest 2, gemini-3.8-flash 2, gemini-flash-lite-latest 5, gemini-3.5-flash-lite 4
