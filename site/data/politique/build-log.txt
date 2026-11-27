@@ -1,6 +1,32 @@
 Politique & monde : lecture de 20 sources (avec Gemini)…
-Sources lues : 20 ; muettes : 0 [] ; articles : 295
-Fiches détaillées : 3 pages lisibles sur 10 fiches.
+Sources lues : 20 ; muettes : 0 [] ; articles : 275
+  · Gemini gemini-flash-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-flash-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
+Fiches détaillées : 5 pages lisibles sur 10 fiches.
+  · Gemini gemini-flash-lite-latest : HTTP 503 {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+  · Gemini gemini-flash-lite-latest : réponse abîmée (Expecting ',' delimiter: line 1 column 5066 (char 5065)), 1 fiche(s) récupérée(s).
 Fiches détaillées écrites : 3.
-Politique & monde n° 31 du 2026-11-26 : 10 sujets (5 France, 5 monde), mode Gemini (gemini-flash-latest), fiches détaillées : 3.
-Demandes à l'IA (politique) : gemini-flash-latest 1, gemini-flash-lite-latest 1
+Politique & monde n° 32 du 2026-11-27 : 10 sujets (3 France, 7 monde), mode Gemini (gemini-flash-lite-latest), fiches détaillées : 3.
+Demandes à l'IA (politique) : gemini-flash-latest 2, gemini-3.8-flash 1, gemini-flash-lite-latest 4
