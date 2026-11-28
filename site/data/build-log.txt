@@ -2,34 +2,11 @@ Liens de « Comprendre » : 56 valides sur 56.
 Lecture de 42 sources (avec Gemini)…
   · ESA (technologie) : https://www.esa.int/rssfeed/Our_Activities/Space_Engineering_Technology ne répond pas (HTTPError)
 Sources lues : 40 ; muettes : 2 ['arXiv astrophysique (prépublication)', 'ESA (technologie)']
-Articles retenus après tri : 186
+Articles retenus après tri : 238
 Vidéos francophones récentes : 12
   · Gemini gemini-flash-latest : TimeoutError The read operation timed out
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Gemini gemini-flash-lite-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Lot de 20 articles : 9 fiche(s) rédigée(s) par gemini-flash-lite-latest.
+  · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
+  · Lot de 20 articles : 5 fiche(s) rédigée(s) par gemini-flash-lite-latest.
   · Gemini gemini-flash-latest : HTTP 503 {
   "error": {
     "code": 503,
@@ -38,14 +15,10 @@ Vidéos francophones récentes : 12
   }
 }
 
-  · Gemini gemini-flash-latest : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
+  · Gemini gemini-flash-latest : TimeoutError The read operation timed out
+  · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
+  · Gemini gemini-flash-lite-latest : réponse abîmée (Expecting value: line 1 column 7793 (char 7792)), 4 fiche(s) récupérée(s).
+  · Lot de 20 articles : 4 fiche(s) rédigée(s) par gemini-flash-lite-latest.
   · Gemini gemini-3.8-flash : HTTP 503 {
   "error": {
     "code": 503,
@@ -54,18 +27,13 @@ Vidéos francophones récentes : 12
   }
 }
 
-  · Gemini gemini-3.8-flash : HTTP 503 {
-  "error": {
-    "code": 503,
-    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
-    "status": "UNAVAILABLE"
-  }
-}
-
-  · Lot de 20 articles : 9 fiche(s) rédigée(s) par gemini-flash-lite-latest.
-  · Lot de 20 articles : 9 fiche(s) rédigée(s) par gemini-flash-lite-latest.
-Fiches détaillées : 14 pages lisibles sur 20 fiches.
-Fiches détaillées écrites : 14.
-Illustrations libres de droits : 15 sur 20 fiches (16 image(s) écartée(s) par le contrôle de Gemini).
-Édition n° 40 du 2026-11-27 : 20 fiches, mode Gemini (gemini-flash-lite-latest), 11 vidéos francophones.
-Demandes à l'IA : gemini-flash-latest 3, gemini-3.8-flash 4, gemini-flash-lite-latest 43
+  · Gemini gemini-3.8-flash : TimeoutError The read operation timed out
+  · Lot de 20 articles : 8 fiche(s) rédigée(s) par gemini-flash-lite-latest.
+Fiches détaillées : 11 pages lisibles sur 17 fiches.
+  · Gemini gemini-flash-lite-latest : réponse abîmée (Expecting ',' delimiter: line 1 column 7218 (char 7217)), 2 fiche(s) récupérée(s).
+  · Gemini gemini-flash-lite-latest : réponse abîmée (Expecting ',' delimiter: line 1 column 12100 (char 12099)), 4 fiche(s) récupérée(s).
+Fiches détaillées écrites : 11.
+Images libres de droits gardées : 1.
+Illustrations libres de droits : 13 sur 16 fiches (10 image(s) écartée(s) par le contrôle de Gemini).
+Édition n° 41 du 2026-11-28 : 17 fiches, mode Gemini (gemini-flash-lite-latest), 12 vidéos francophones.
+Demandes à l'IA : gemini-flash-latest 3, gemini-3.8-flash 4, gemini-flash-lite-latest 33
